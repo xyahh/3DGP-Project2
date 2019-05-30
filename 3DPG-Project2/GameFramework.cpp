@@ -7,7 +7,7 @@
 _3DGP_USE_
 DX_USE
 
-inline GameFramework * GameFramework::Get()
+GameFramework * GameFramework::Get()
 {
 	static GameFramework* Instance = new GameFramework;
 	return Instance;
