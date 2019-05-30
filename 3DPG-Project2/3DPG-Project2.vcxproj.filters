@@ -57,9 +57,6 @@
     <ClInclude Include="DXHelper.h">
       <Filter>Header Files\DXHelper</Filter>
     </ClInclude>
-    <ClInclude Include="DXHelper2.h">
-      <Filter>Header Files\DXHelper</Filter>
-    </ClInclude>
     <ClInclude Include="GameFramework.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -121,6 +118,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders.hlsl" />
+    <FxCompile Include="Shaders.hlsl" />
   </ItemGroup>
 </Project>

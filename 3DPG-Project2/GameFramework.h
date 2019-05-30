@@ -12,64 +12,16 @@ class GameFramework
 
 public:
 
-	static GameFramework* Get()
-	{
-		static GameFramework* Instance = new GameFramework;
-		return Instance;
-	}
+	static GameFramework* Get();
 
 	template<class NewScene>
-	void ChangeScenes(BOOL popScene)
-	{
-		ThrowIfFailed(m_CommandList->Reset(m_CommandAllocator.Get(), NULL));
-
-		if (popScene)
-		{
-			if (m_Scenes.top())
-			{
-				m_Scenes.top()->Destroy();
-				delete m_Scenes.top();
-			}
-			m_Scenes.pop();
-		}
-			
-		if (!m_Device) return;
-
-		m_Scenes.push(new NewScene);	
-		m_Scenes.top()->Init(m_Device.Get(), m_CommandList.Get());
-		ThrowIfFailed(m_CommandList->Close());
-
-		ID3D12CommandList* pCommandLists[] = { m_CommandList.Get() };
-		m_CommandQueue->ExecuteCommandLists(_countof(pCommandLists), pCommandLists);
-
-		WaitForGPU();
-		if (m_Scenes.top()) m_Scenes.top()->ReleaseUploadBuffers();
-		m_Timer.Reset();
-	}
+	void ChangeScenes(BOOL popScene);
 
 	template<class StartingScene>
-	void Run(const std::string &Title, int Width, int Height)
-	{
-		if (m_Initialized) return;
-
-		m_Initialized = true;
-		InitWindow(Title, Width, Height);
-
-		CreateD3D12Device();
-		CreateCommandInterfaces();
-		CreateSwapChain();
-
-		CreateRTVDescriptorHeap();
-		CreateDSVDescriptorHeap();
-
-		CreateRenderTargetView();
-		CreateDepthStencilView();
-
-		ChangeScenes<StartingScene>(FALSE);
-		FrameworkLoop();
-	}
+	void Run(const std::string &Title, int Width, int Height);
 
 	void EnableDebugMode();
+
 	void ChangeSwapChain(); //To-Do - use way to get Window Size
 
 	LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -79,21 +31,21 @@ private:
 	GameFramework();
 	~GameFramework();
 
-	void FrameworkLoop();
 	void GameLoop();
+	void ProcessScene();
 
 	void InitFramework();
+	void InitDirectX();
 	void DestroyFramework();
 
 	void InitWindow(const std::string& title, int width, int height);
 
 	void UpdateClientRect();
 
-	void CreateD3D12Device();
+	void CreateD3Device();
 	void CreateCommandInterfaces();
 	void CreateSwapChain();
-	void CreateRTVDescriptorHeap();
-	void CreateDSVDescriptorHeap();
+	void CreateRTVDSVDescriptorHeaps();
 	void CreateRenderTargetView();
 	void CreateDepthStencilView();
 
@@ -104,54 +56,88 @@ private:
 
 private:
 
-	std::stack<Scene*>	m_Scenes;
+	std::stack<Scene*>			m_Scenes;
 
-	bool			m_ConsoleAllocated	{ false };
-	bool			m_Initialized		{ false };
+	bool						m_ConsoleAllocated	{ false };
+	bool						m_Initialized		{ false };
 
-	int				m_Width				{ 0 };
-	int				m_Height			{ 0 };
+	int							m_WndClientWidth				{ 0 };
+	int							m_WndClientHeight			{ 0 };
 
-	MSG				m_Message			{};
-	HWND			m_HWND				{ NULL };
-	HINSTANCE		m_hInstance;
+	MSG							m_Message			{};
+	HWND						m_HWND				{ NULL };
+	HINSTANCE					m_hInstance;
 
-	Timer			m_Timer;
+	Timer						m_Timer;
 
-	WRL ComPtr<IDXGIFactory4>	m_Factory;
-	WRL ComPtr<IDXGISwapChain3> m_SwapChain;
-	WRL ComPtr<ID3D12Device>	m_Device;
+	IDXGIFactory4*				m_Factory;
+	IDXGISwapChain3*			m_SwapChain;
+	ID3D12Device*				m_Device;
 
-	bool m_4XMSAA_Enabled		{ false };
-	UINT m_4XMSAA_QualityLevels	{ 0 };
+	bool						m_4XMSAA_Enabled		{ false };
+	UINT						m_4XMSAA_QualityLevels	{ 0 };
 
-	WRL ComPtr<ID3D12Resource>			m_RenderTargets[FRAME_COUNT];
-	WRL ComPtr<ID3D12DescriptorHeap>	m_RTVDescriptorHeap;
-	UINT								m_RTVDescriptorIncrementSize	{ 0 };
+	ID3D12Resource*				m_RenderTargets[FRAME_COUNT];
+	ID3D12DescriptorHeap*		m_RTVDescriptorHeap;
+	UINT						m_RTVDescriptorIncrementSize	{ 0 };
 
 
-	WRL ComPtr<ID3D12Resource>			m_DepthStencilBuffer;
-	WRL ComPtr<ID3D12DescriptorHeap>	m_DSVDescriptorHeap;
-	UINT								m_DSVDescriptorIncrementSize	{ 0 };
+	ID3D12Resource*				m_DepthStencilBuffer;
+	ID3D12DescriptorHeap*		m_DSVDescriptorHeap;
+	UINT						m_DSVDescriptorIncrementSize	{ 0 };
 
-	WRL ComPtr<ID3D12CommandQueue>			m_CommandQueue;
-	WRL ComPtr<ID3D12CommandAllocator>		m_CommandAllocator;
-	WRL ComPtr<ID3D12GraphicsCommandList>	m_CommandList;
+	ID3D12CommandQueue*			m_CommandQueue;
+	ID3D12CommandAllocator*		m_CommandAllocator;
+	ID3D12GraphicsCommandList*	m_CommandList;
+	ID3D12Fence*				m_Fence;
 
-	WRL ComPtr<ID3D12PipelineState>		m_PipelineState;
-	WRL ComPtr<ID3D12Fence>				m_Fence;
-	UINT64								m_FenceValues[FRAME_COUNT];
-	UINT								m_FrameIndex	{ 0 };
-	HANDLE								m_FenceEvent	{ NULL };
+	UINT64						m_FenceValues[FRAME_COUNT];
+	UINT						m_FrameIndex	{ 0 };
+	HANDLE						m_FenceEvent	{ NULL };
 
-#ifdef _DEBUG
-	WRL ComPtr<ID3D12Debug>				m_DebugController;
-#endif
-
-	D3D12_VIEWPORT						m_Viewport;
-	D3D12_RECT							m_ScissorRect;
+	D3D12_VIEWPORT				m_Viewport;
+	D3D12_RECT					m_ScissorRect;
 
 };
 
-_3DGP_END_
+template<class NewScene>
+inline void GameFramework::ChangeScenes(BOOL popScene)
+{
+	if (!m_Initialized) return;
+	ThrowIfFailed(m_CommandList->Reset(m_CommandAllocator, NULL));
 
+	if (popScene)
+	{
+		if (m_Scenes.top())
+		{
+			m_Scenes.top()->Destroy();
+			delete m_Scenes.top();
+		}
+		m_Scenes.pop();
+	}
+
+	m_Scenes.push(new NewScene);
+	m_Scenes.top()->Init(m_Device, m_CommandList);
+	ThrowIfFailed(m_CommandList->Close());
+
+	ID3D12CommandList* pCommandLists[] = { m_CommandList };
+	m_CommandQueue->ExecuteCommandLists(_countof(pCommandLists), pCommandLists);
+
+	WaitForGPU();
+	if (m_Scenes.top()) m_Scenes.top()->ReleaseUploadBuffers();
+	m_Timer.Reset();
+}
+
+template<class StartingScene>
+inline void GameFramework::Run(const std::string & Title, int Width, int Height)
+{
+	if (m_Initialized) return;
+
+	m_Initialized = true;
+	InitWindow(Title, Width, Height);
+	InitDirectX();
+	ChangeScenes<StartingScene>(FALSE);
+	GameLoop();
+}
+
+_3DGP_END_

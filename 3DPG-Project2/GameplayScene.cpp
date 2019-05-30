@@ -23,16 +23,15 @@ void GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* pCom
 	//Shader 0
 	{
 		Shader* pShader = new Shader;
-		pShader->CreateShader(pDevice, m_RootSignature.Get());
+		pShader->CreateShader(pDevice, m_RootSignature);
 		pShader->BuildObjects(pDevice, pCommandList, NULL);
-
 		m_Shaders[0] = pShader;
-		m_Shaders[0]->AddRef();
 	}
 }
 
 void GameplayScene::Destroy()
 {
+	m_RootSignature->Release();
 	if (m_Shaders)
 	{
 		for (int i = 0; i < m_ShaderCount; ++i)
@@ -60,7 +59,7 @@ bool GameplayScene::KeyboardMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 void GameplayScene::Render(ID3D12GraphicsCommandList * pCommandList, float Interpolation)
 {
-	pCommandList->SetGraphicsRootSignature(m_RootSignature.Get());
+	pCommandList->SetGraphicsRootSignature(m_RootSignature);
 	for (int i = 0; i < m_ShaderCount; ++i)
 	{
 		if (m_Shaders[i]) m_Shaders[i]->Render(pCommandList);

@@ -15,7 +15,7 @@ Mesh::~Mesh()
 
 void Mesh::ReleaseUploadBuffers()
 {
-	m_VertexUploadBuffer.Reset();
+	if (m_VertexUploadBuffer) m_VertexUploadBuffer->Release();
 }
 
 void Mesh::Render(ID3D12GraphicsCommandList * pCommandList)

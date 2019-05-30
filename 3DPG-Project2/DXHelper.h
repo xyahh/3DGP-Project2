@@ -11,12 +11,6 @@
 #pragma once
 #include <stdexcept>
 
-// Note that while ComPtr is used to manage the lifetime of resources on the CPU,
-// it has no understanding of the lifetime of resources on the GPU. Apps must account
-// for the GPU lifetime of resources to avoid destroying objects that may still be
-// referenced by the GPU.
-using Microsoft::WRL::ComPtr;
-
 inline std::string HrToString(HRESULT hr)
 {
 	char s_str[64] = {};
@@ -33,137 +27,101 @@ private:
 	const HRESULT m_hr;
 };
 
-#define SAFE_RELEASE(p) if (p) (p)->Release()
-
 inline void ThrowIfFailed(HRESULT hr)
 {
 	if (FAILED(hr))
-	{
 		throw HrException(hr);
-	}
 }
 
-inline HRESULT ReadDataFromFile(LPCWSTR filename, byte** data, UINT* size)
-{
-	using namespace Microsoft::WRL;
-
-	CREATEFILE2_EXTENDED_PARAMETERS extendedParams = {};
-	extendedParams.dwSize = sizeof(CREATEFILE2_EXTENDED_PARAMETERS);
-	extendedParams.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
-	extendedParams.dwFileFlags = FILE_FLAG_SEQUENTIAL_SCAN;
-	extendedParams.dwSecurityQosFlags = SECURITY_ANONYMOUS;
-	extendedParams.lpSecurityAttributes = nullptr;
-	extendedParams.hTemplateFile = nullptr;
-
-	Wrappers::FileHandle file(CreateFile2(filename, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, &extendedParams));
-	if (file.Get() == INVALID_HANDLE_VALUE)
-	{
-		throw std::exception();
-	}
-
-	FILE_STANDARD_INFO fileInfo = {};
-	if (!GetFileInformationByHandleEx(file.Get(), FileStandardInfo, &fileInfo, sizeof(fileInfo)))
-	{
-		throw std::exception();
-	}
-
-	if (fileInfo.EndOfFile.HighPart != 0)
-	{
-		throw std::exception();
-	}
-
-	*data = reinterpret_cast<byte*>(malloc(fileInfo.EndOfFile.LowPart));
-	*size = fileInfo.EndOfFile.LowPart;
-
-	if (!ReadFile(file.Get(), *data, fileInfo.EndOfFile.LowPart, nullptr, nullptr))
-	{
-		throw std::exception();
-	}
-
-	return S_OK;
-}
-
-// Assign a name to the object to aid with debugging.
-#if defined(_DEBUG) || defined(DBG)
-inline void SetName(ID3D12Object* pObject, LPCWSTR name)
-{
-	pObject->SetName(name);
-}
-inline void SetNameIndexed(ID3D12Object* pObject, LPCWSTR name, UINT index)
-{
-	WCHAR fullName[50];
-	if (swprintf_s(fullName, L"%s[%u]", name, index) > 0)
-	{
-		pObject->SetName(fullName);
-	}
-}
-#else
-inline void SetName(ID3D12Object*, LPCWSTR)
-{
-}
-inline void SetNameIndexed(ID3D12Object*, LPCWSTR, UINT)
-{
-}
-#endif
-
-// Naming helper for ComPtr<T>.
-// Assigns the name of the variable as the name of the object.
-// The indexed variant will include the index in the name of the object.
-#define NAME_D3D12_OBJECT(x) SetName((x).Get(), L#x)
-#define NAME_D3D12_OBJECT_INDEXED(x, n) SetNameIndexed((x)[n].Get(), L#x, n)
-
-inline UINT CalculateConstantBufferByteSize(UINT byteSize)
-{
-	// Constant buffer size is required to be aligned.
-	return (byteSize + (D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT - 1)) & ~(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT - 1);
-}
-
-#ifdef D3D_COMPILE_STANDARD_FILE_INCLUDE
-inline Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
-	const std::wstring& filename,
-	const D3D_SHADER_MACRO* defines,
-	const std::string& entrypoint,
-	const std::string& target)
+inline ID3DBlob* CompileShader(const std::wstring& filename,const std::string& entrypoint, const std::string& target)
 {
 	UINT compileFlags = 0;
 #if defined(_DEBUG)
 	compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
-
-	HRESULT hr;
-
-	Microsoft::WRL::ComPtr<ID3DBlob> byteCode = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> errors;
-	hr = D3DCompileFromFile(filename.c_str(), defines, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		entrypoint.c_str(), target.c_str(), compileFlags, 0, &byteCode, &errors);
-
-	if (errors != nullptr)
+	ID3DBlob* byteCode = nullptr;
+	ID3DBlob* errors;
+	ThrowIfFailed(D3DCompileFromFile(filename.c_str(), NULL, NULL,entrypoint.c_str(), target.c_str(), compileFlags, 0, &byteCode, &errors));
+	if (errors)
 	{
 		OutputDebugStringA((char*)errors->GetBufferPointer());
+		errors->Release();
 	}
-	ThrowIfFailed(hr);
-
 	return byteCode;
 }
-#endif
 
-// Resets all elements in a ComPtr array.
-template<class T>
-void ResetComPtrArray(T* comPtrArray)
+inline ID3D12Resource * CreateBufferResource(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, void * pData, UINT nBytes, D3D12_HEAP_TYPE HeapType, D3D12_RESOURCE_STATES ResourceState, ID3D12Resource ** ppUploadBuffer)
 {
-	for (auto &i : *comPtrArray)
-	{
-		i.Reset();
-	}
-}
+	ID3D12Resource* pBuffer;
 
+	D3D12_HEAP_PROPERTIES HeapProperties;
+	::ZeroMemory(&HeapProperties, sizeof(D3D12_HEAP_PROPERTIES));
+	HeapProperties.Type = HeapType;
+	HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	HeapProperties.CreationNodeMask = 1;
+	HeapProperties.VisibleNodeMask = 1;
 
-// Resets all elements in a unique_ptr array.
-template<class T>
-void ResetUniquePtrArray(T* uniquePtrArray)
-{
-	for (auto &i : *uniquePtrArray)
+	D3D12_RESOURCE_DESC ResourceDesc;
+	::ZeroMemory(&ResourceDesc, sizeof(D3D12_RESOURCE_DESC));
+	ResourceDesc.Alignment = 0;
+	ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	ResourceDesc.Width = nBytes;
+	ResourceDesc.Height = 1;
+	ResourceDesc.DepthOrArraySize = 1;
+	ResourceDesc.MipLevels = 1;
+	ResourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+	ResourceDesc.SampleDesc.Count = 1;
+	ResourceDesc.SampleDesc.Quality = 0;
+	ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	ResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	D3D12_RESOURCE_STATES ResourceInitialState;
+	if (HeapType == D3D12_HEAP_TYPE_UPLOAD)
+		ResourceInitialState = D3D12_RESOURCE_STATE_GENERIC_READ;
+	else
+		ResourceInitialState = D3D12_RESOURCE_STATE_COPY_DEST;
+
+	pDevice->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE, &ResourceDesc, ResourceInitialState, NULL, __uuidof(ID3D12Resource), (void**)&pBuffer);
+
+	switch (HeapType)
 	{
-		i.reset();
+	case D3D12_HEAP_TYPE_DEFAULT:
+		if (ppUploadBuffer)
+		{
+			HeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
+			pDevice->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE, &ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, NULL, __uuidof(ID3D12Resource), (void**)ppUploadBuffer);
+
+			void* BufferData = NULL;
+			D3D12_RANGE ReadRange{ 0, 0 };
+			(*ppUploadBuffer)->Map(0, &ReadRange, &BufferData);
+			memcpy(BufferData, pData, nBytes);
+			(*ppUploadBuffer)->Unmap(0, NULL);
+
+			pCommandList->CopyResource(pBuffer, *ppUploadBuffer);
+
+			D3D12_RESOURCE_BARRIER ResourceBarrier;
+			::ZeroMemory(&ResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
+			ResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			ResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			ResourceBarrier.Transition.pResource = pBuffer;
+			ResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+			ResourceBarrier.Transition.StateAfter = ResourceState;
+			ResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+			pCommandList->ResourceBarrier(1, &ResourceBarrier);
+		}
+		break;
+	case D3D12_HEAP_TYPE_UPLOAD:
+	{
+		D3D12_RANGE ReadRange{ 0, 0 };
+		void* pBufferData{ NULL };
+		pBuffer->Map(0, &ReadRange, &pBufferData);
+		memcpy(pBufferData, pData, nBytes);
+		pBuffer->Unmap(0, NULL);
 	}
+	break;
+	}
+
+	return pBuffer;
 }

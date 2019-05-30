@@ -1,6 +1,16 @@
 #pragma once
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <Windows.h>
+
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <tchar.h>
+#include <math.h>
+
 #include <string>
 #include <wrl.h>
 #include <shellapi.h>
@@ -13,6 +23,8 @@
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
+
+#include <Mmsystem.h>
 
 #include "DXHelper.h"
 
@@ -31,10 +43,3 @@
 #define DX_USE using namespace DirectX;
 #define DX	DirectX::
 #define DXV DirectX::PackedVector::
-#define WRL Microsoft::WRL::
-
-#define _WITH_SWAPCHAIN_FULLSCREEN_STATE
-
-#include "DXHelper2.h"
-
-

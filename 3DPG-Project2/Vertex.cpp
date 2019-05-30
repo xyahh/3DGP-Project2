@@ -14,11 +14,6 @@ Vertex::Vertex(const XMFLOAT3 & Position)
 { 
 }
 
-Vertex::Vertex(float x, float y, float z)
-	: m_Position(x, y, z)
-{
-}
-
 Vertex::~Vertex()
 {
 }

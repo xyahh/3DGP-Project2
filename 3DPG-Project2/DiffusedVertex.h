@@ -7,7 +7,6 @@ class DiffusedVertex : public Vertex
 {
 public:
 	DiffusedVertex();
-	DiffusedVertex(float x, float y, float z, const DX XMFLOAT4& Diffuse);
 	DiffusedVertex(const DX XMFLOAT3& Position, const DX XMFLOAT4& Diffuse);
 	~DiffusedVertex();
 

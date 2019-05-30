@@ -21,13 +21,13 @@ public:
 	virtual void ReleaseUploadBuffers() = 0;
 	
 
-	WRL ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* pDevice);
+	ID3D12RootSignature* CreateRootSignature(ID3D12Device* pDevice);
 	ID3D12RootSignature* GetRootSignature() const;
 
 
 protected:
 
-	WRL ComPtr<ID3D12RootSignature>	m_RootSignature;
+	ID3D12RootSignature*	m_RootSignature;
 	Shader** m_Shaders		{ NULL };
 	int		m_ShaderCount	{ 0 };
 

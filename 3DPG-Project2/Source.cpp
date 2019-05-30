@@ -4,8 +4,8 @@
 
 _3DGP_USE_
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
+int main()
 {
-	GameFramework::Get()->EnableDebugMode();
+	//GameFramework::Get()->EnableDebugMode();
 	GameFramework::Get()->Run<GameplayScene>("Hello", 500, 500);
 }

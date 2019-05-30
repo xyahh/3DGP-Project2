@@ -9,11 +9,6 @@ DiffusedVertex::DiffusedVertex()
 {
 }
 
-DiffusedVertex::DiffusedVertex(float x, float y, float z, const XMFLOAT4 & Diffuse) 
-	: Vertex(x, y, z), m_Diffuse(Diffuse)
-{
-}
-
 DiffusedVertex::DiffusedVertex(const XMFLOAT3 & Position, const XMFLOAT4 & Diffuse)
 	: Vertex(Position), m_Diffuse(Diffuse)
 {

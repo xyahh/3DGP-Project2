@@ -7,7 +7,6 @@ class Vertex
 public:
 	Vertex();
 	Vertex(const DX XMFLOAT3& Position);
-	Vertex(float x, float y, float z);
 
 	virtual ~Vertex();
 
