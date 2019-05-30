@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 _3DGP_USE_
+DX_USE
 
 WRL ComPtr<ID3D12RootSignature> Scene::CreateRootSignature(ID3D12Device* pDevice)
 {
@@ -22,7 +23,6 @@ WRL ComPtr<ID3D12RootSignature> Scene::CreateRootSignature(ID3D12Device* pDevice
 	ThrowIfFailed(pDevice->CreateRootSignature(0, pRootBlob->GetBufferPointer(), pRootBlob->GetBufferSize(), IID_PPV_ARGS(&pRootSignature)));
 
 	return pRootSignature;
-
 }
 
 ID3D12RootSignature* Scene::GetRootSignature() const

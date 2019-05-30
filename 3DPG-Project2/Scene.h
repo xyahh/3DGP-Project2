@@ -26,9 +26,8 @@ public:
 
 
 protected:
-	WRL ComPtr<ID3D12RootSignature>	m_RootSignature;
-	WRL ComPtr<ID3D12PipelineState> m_PipelineState;
 
+	WRL ComPtr<ID3D12RootSignature>	m_RootSignature;
 	Shader** m_Shaders		{ NULL };
 	int		m_ShaderCount	{ 0 };
 

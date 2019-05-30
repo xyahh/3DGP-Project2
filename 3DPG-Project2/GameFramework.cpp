@@ -5,6 +5,7 @@
 #include <io.h>
 
 _3DGP_USE_
+DX_USE
 
 GameFramework::GameFramework()
 {
@@ -95,9 +96,6 @@ void GameFramework::InitWindow(const std::string & title, int width, int height)
 		m_hInstance,
 		NULL
 	);
-
-	m_HDC = GetDC(m_HWND);
-
 	ShowWindow(m_HWND, SW_SHOW);
 	SetForegroundWindow(m_HWND);
 	SetFocus(m_HWND);
@@ -111,7 +109,7 @@ void GameFramework::UpdateClientRect()
 	m_Height = ClientRect.bottom - ClientRect.top;
 }
 
-void GameFramework::MainLoop()
+void GameFramework::FrameworkLoop()
 {
 	while (m_Message.message != WM_QUIT)
 	{
@@ -122,11 +120,7 @@ void GameFramework::MainLoop()
 			DispatchMessage(&m_Message);
 		}
 
-		m_Timer.Tick();
-		while (m_Timer.FlushAccumulatedTime())
-			m_Scenes.top()->Update(m_Timer.GetDeltaTime());
-
-		//Rendering is done in this function
+		//Rendering & Update is done in this function
 		PopulateCommandList();
 
 		ID3D12CommandList* CommandLists[] = { m_CommandList.Get() };
@@ -137,6 +131,14 @@ void GameFramework::MainLoop()
 		ThrowIfFailed(m_SwapChain->Present(1, 0));
 		MoveToNextFrame();
 	}
+}
+
+void GameFramework::GameLoop()
+{
+	m_Timer.Tick();
+	while (m_Timer.FlushAccumulatedTime())
+		m_Scenes.top()->Update(m_Timer.GetDeltaTime());
+	m_Scenes.top()->Render(m_CommandList.Get(), m_Timer.Interpolation());
 }
 
 void GameFramework::EnableDebugMode()
@@ -376,16 +378,17 @@ void GameFramework::PopulateCommandList()
 	D3D12_CPU_DESCRIPTOR_HANDLE RTVDescriptorHandle = m_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	RTVDescriptorHandle.ptr += m_FrameIndex * m_RTVDescriptorIncrementSize;
 
-	float ClearColor[4] = { 0.f, 0.125f, 0.3f, 1.f };
+	float ClearColor[4] = { 0.f, 0.25f, 0.f, 1.f };
 	m_CommandList->ClearRenderTargetView(RTVDescriptorHandle, ClearColor, 0, NULL);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DSVDescriptorHandle = m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	m_CommandList->ClearDepthStencilView(DSVDescriptorHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0, 0, NULL);
 
 	m_CommandList->OMSetRenderTargets(1, &RTVDescriptorHandle, TRUE, &DSVDescriptorHandle);
-
-	//Render here before closing the Command List and before transitioning the Resource State to present
-	m_Scenes.top()->Render(m_CommandList.Get(), m_Timer.Interpolation());
+	
+	/* Game Loop */
+	//Render here before closing the Command List and before transitioning the Resource State to present	
+	GameLoop();
 
 	ResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	ResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;

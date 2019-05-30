@@ -3,6 +3,7 @@
 #include "TriangleMesh.h"
 
 _3DGP_USE_
+DX_USE
 
 Shader::Shader()
 {
@@ -12,11 +13,8 @@ Shader::~Shader()
 {
 	if (m_PipelineStates)
 	{
-		for (int i = 0; i < m_PipelineStateCount; ++i)
-		{
-			if (m_PipelineStates[i]) m_PipelineStates[i].Reset();
-		}
-		delete[] m_PipelineStates;
+		//when comptrs are deleted, they automatically release the Interface
+		delete[] m_PipelineStates; 
 		m_PipelineStateCount = 0;
 	}
 }
@@ -33,8 +31,8 @@ D3D12_INPUT_LAYOUT_DESC Shader::CreateInputLayout()
 	InputElementDesc[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
 
 	D3D12_INPUT_LAYOUT_DESC Desc;
-	Desc.NumElements = InputElementDescCount;
 	Desc.pInputElementDescs = InputElementDesc;
+	Desc.NumElements = InputElementDescCount;
 
 	return Desc;
 }

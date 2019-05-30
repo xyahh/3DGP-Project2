@@ -13,10 +13,10 @@ TriangleMesh::TriangleMesh(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCo
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	DiffusedVertex Vertices[3];
-	Vertices[0] = DiffusedVertex(XMFLOAT3(0.f, 0.5f, 0.f), XMFLOAT4(1.f, 0.f, 0.f, 1.f));
-	Vertices[1] = DiffusedVertex(XMFLOAT3(0.5f, -0.5f, 0.f), XMFLOAT4(0.f, 1.f, 0.f, 1.f));
-	Vertices[2] = DiffusedVertex(XMFLOAT3(-0.5f, -0.5f, 0.f), XMFLOAT4(0.f, 0.f, 1.f, 1.f));
-
+	Vertices[0] = DiffusedVertex(XMFLOAT3(0.f, 0.5f, 0.25f), XMFLOAT4(1.f, 0.f, 0.f, 1.f));
+	Vertices[1] = DiffusedVertex(XMFLOAT3(0.5f, -0.5f, 0.25f), XMFLOAT4(0.f, 1.f, 0.f, 1.f));
+	Vertices[2] = DiffusedVertex(XMFLOAT3(-0.5f, -0.5f, 0.25f), XMFLOAT4(0.f, 0.f, 1.f, 1.f));
+	
 	m_VertexBuffer = CreateBufferResource(pDevice, pCommandList, Vertices, m_Vertices * m_Stride, 
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, m_VertexUploadBuffer.GetAddressOf());
 

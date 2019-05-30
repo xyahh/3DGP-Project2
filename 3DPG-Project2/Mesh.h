@@ -16,7 +16,7 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList);
 
 protected:
-	WRL ComPtr<ID3D12Resource> m_VertexBuffer;
+	WRL ComPtr<ID3D12Resource> m_VertexBuffer; //Remove this after
 	WRL ComPtr<ID3D12Resource> m_VertexUploadBuffer;
 
 	D3D12_VERTEX_BUFFER_VIEW   m_VertexBufferView;

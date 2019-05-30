@@ -2,6 +2,7 @@
 #include "Mesh.h"
 
 _3DGP_USE_
+DX_USE
 
 Mesh::Mesh(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
 {

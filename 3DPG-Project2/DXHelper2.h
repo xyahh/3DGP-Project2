@@ -1,9 +1,9 @@
 #pragma once
 
-inline ID3D12Resource* CreateBufferResource(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, 
+inline WRL ComPtr<ID3D12Resource> CreateBufferResource(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, 
 	void* pData, UINT nBytes, D3D12_HEAP_TYPE HeapType, D3D12_RESOURCE_STATES ResourceStates, ID3D12Resource** ppUploadBuffer)
 {
-	ID3D12Resource* pBuffer;
+	WRL ComPtr <ID3D12Resource> pBuffer;
 
 	D3D12_HEAP_PROPERTIES HeapProperties;
 	::ZeroMemory(&HeapProperties, sizeof(D3D12_HEAP_PROPERTIES));
@@ -28,19 +28,10 @@ inline ID3D12Resource* CreateBufferResource(ID3D12Device* pDevice, ID3D12Graphic
 	ResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
 	D3D12_RESOURCE_STATES ResourceInitialStates;
-
-	switch (HeapType)
-	{
-	case D3D12_HEAP_TYPE_UPLOAD:
+	if (HeapType == D3D12_HEAP_TYPE_UPLOAD)
 		ResourceInitialStates = D3D12_RESOURCE_STATE_GENERIC_READ;
-		break;
-	case D3D12_HEAP_TYPE_READBACK:
+	else
 		ResourceInitialStates = D3D12_RESOURCE_STATE_COPY_DEST;
-		break;
-	default:
-		ResourceInitialStates = D3D12_RESOURCE_STATE_COPY_DEST;
-		break;
-	}
 
 	ThrowIfFailed(pDevice->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE, &ResourceDesc, 
 		ResourceInitialStates, NULL, IID_PPV_ARGS(&pBuffer)));
@@ -57,19 +48,19 @@ inline ID3D12Resource* CreateBufferResource(ID3D12Device* pDevice, ID3D12Graphic
 				ThrowIfFailed(pDevice->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE, &ResourceDesc,
 					D3D12_RESOURCE_STATE_GENERIC_READ, NULL, IID_PPV_ARGS(ppUploadBuffer)));
 
-				D3D12_RANGE DeadRange	{ 0, 0 };
+				D3D12_RANGE ReadRange	{ 0, 0 };
 				UINT8* pBufferDataBegin = NULL;
-				(*ppUploadBuffer)->Map(0, &DeadRange, (void**)&pBufferDataBegin);
+				(*ppUploadBuffer)->Map(0, &ReadRange, (void**)&pBufferDataBegin);
 				memcpy(pBufferDataBegin, pData, nBytes);
 				(*ppUploadBuffer)->Unmap(0, NULL);
 
-				pCommandList->CopyResource(pBuffer, *ppUploadBuffer);
+				pCommandList->CopyResource(pBuffer.Get(), *ppUploadBuffer);
 
 				D3D12_RESOURCE_BARRIER ResourceBarrier;
 				::ZeroMemory(&ResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
 				ResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 				ResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-				ResourceBarrier.Transition.pResource = pBuffer;
+				ResourceBarrier.Transition.pResource = pBuffer.Get();
 				ResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 				ResourceBarrier.Transition.StateAfter = ResourceStates;
 				ResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;

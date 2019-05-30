@@ -66,10 +66,9 @@ public:
 		CreateDepthStencilView();
 
 		ChangeScenes<StartingScene>(FALSE);
-		MainLoop();
+		FrameworkLoop();
 	}
 
-	void MainLoop();
 	void EnableDebugMode();
 	void ChangeSwapChain(); //To-Do - use way to get Window Size
 
@@ -79,6 +78,9 @@ private:
 
 	GameFramework();
 	~GameFramework();
+
+	void FrameworkLoop();
+	void GameLoop();
 
 	void InitFramework();
 	void DestroyFramework();
@@ -111,7 +113,6 @@ private:
 	int				m_Height			{ 0 };
 
 	MSG				m_Message			{};
-	HDC				m_HDC				{ NULL };
 	HWND			m_HWND				{ NULL };
 	HINSTANCE		m_hInstance;
 

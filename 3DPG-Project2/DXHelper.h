@@ -126,7 +126,7 @@ inline Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
 	const std::string& target)
 {
 	UINT compileFlags = 0;
-#if defined(_DEBUG) || defined(DBG)
+#if defined(_DEBUG)
 	compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 

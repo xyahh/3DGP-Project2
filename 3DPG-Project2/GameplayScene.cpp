@@ -2,6 +2,7 @@
 #include "GameplayScene.h"
 
 _3DGP_USE_
+DX_USE
 
 GameplayScene::GameplayScene()
 {
@@ -60,7 +61,6 @@ bool GameplayScene::KeyboardMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 void GameplayScene::Render(ID3D12GraphicsCommandList * pCommandList, float Interpolation)
 {
 	pCommandList->SetGraphicsRootSignature(m_RootSignature.Get());
-
 	for (int i = 0; i < m_ShaderCount; ++i)
 	{
 		if (m_Shaders[i]) m_Shaders[i]->Render(pCommandList);
