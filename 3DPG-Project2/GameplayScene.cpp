@@ -20,13 +20,11 @@ void GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* pCom
 	m_ShaderCount = 1;
 	m_Shaders = new Shader*[m_ShaderCount];
 
-	//Shader 0
-	{
-		Shader* pShader = new Shader;
-		pShader->CreateShader(pDevice, m_RootSignature);
-		pShader->BuildObjects(pDevice, pCommandList, NULL);
-		m_Shaders[0] = pShader;
-	}
+	m_Shaders[0] = new Shader;
+	m_Shaders[0]->CreateShader(pDevice, m_RootSignature);
+	m_Shaders[0]->BuildObjects(pDevice, pCommandList, NULL);
+
+
 }
 
 void GameplayScene::Destroy()

@@ -8,7 +8,6 @@ Mesh::Mesh(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
 {
 }
 
-
 Mesh::~Mesh()
 {
 }

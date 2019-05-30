@@ -23,7 +23,7 @@ Shader::~Shader()
 D3D12_INPUT_LAYOUT_DESC Shader::CreateInputLayout()
 {
 	UINT InputElementCount = 2;
-	D3D12_INPUT_ELEMENT_DESC *pInputElementDesc = new D3D12_INPUT_ELEMENT_DESC[InputElementCount];
+	D3D12_INPUT_ELEMENT_DESC* pInputElementDesc = new D3D12_INPUT_ELEMENT_DESC[InputElementCount];
 
 	pInputElementDesc[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
 	pInputElementDesc[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
@@ -116,10 +116,10 @@ void Shader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSig
 	PipelineStateDesc.PS.pShaderBytecode = pPixelShaderBlob->GetBufferPointer();
 	PipelineStateDesc.PS.BytecodeLength = pPixelShaderBlob->GetBufferSize();
 
-	PipelineStateDesc.RasterizerState = CreateRasterizerState();
-	PipelineStateDesc.BlendState = CreateBlendState();
+	PipelineStateDesc.RasterizerState	= CreateRasterizerState();
+	PipelineStateDesc.BlendState		= CreateBlendState();
 	PipelineStateDesc.DepthStencilState = CreateDepthStencilState();
-	PipelineStateDesc.InputLayout = CreateInputLayout();
+	PipelineStateDesc.InputLayout		= CreateInputLayout();
 
 	PipelineStateDesc.SampleMask = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;

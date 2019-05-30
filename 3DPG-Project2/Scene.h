@@ -27,7 +27,7 @@ public:
 
 protected:
 
-	ID3D12RootSignature*	m_RootSignature;
+	ID3D12RootSignature*	m_RootSignature{ NULL };
 	Shader** m_Shaders		{ NULL };
 	int		m_ShaderCount	{ 0 };
 

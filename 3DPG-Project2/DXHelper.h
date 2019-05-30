@@ -41,7 +41,7 @@ inline ID3DBlob* CompileShader(const std::wstring& filename,const std::string& e
 #endif
 	ID3DBlob* byteCode = nullptr;
 	ID3DBlob* errors;
-	ThrowIfFailed(D3DCompileFromFile(filename.c_str(), NULL, NULL,entrypoint.c_str(), target.c_str(), compileFlags, 0, &byteCode, &errors));
+	ThrowIfFailed(D3DCompileFromFile(filename.c_str(), NULL, NULL, entrypoint.c_str(), target.c_str(), compileFlags, 0, &byteCode, &errors));
 	if (errors)
 	{
 		OutputDebugStringA((char*)errors->GetBufferPointer());

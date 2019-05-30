@@ -6,6 +6,6 @@ _3DGP_USE_
 
 int main()
 {
-	//GameFramework::Get()->EnableDebugMode();
-	GameFramework::Get()->Run<GameplayScene>("Hello", 500, 500);
+	GameFramework::Get()->EnableDebugMode();	
+	GameFramework::Get()->Run<GameplayScene>("Hello", 1920, 1080);
 }

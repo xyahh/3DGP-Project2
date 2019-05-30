@@ -15,8 +15,8 @@ TriangleMesh::TriangleMesh(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCo
 		DiffusedVertex(XMFLOAT3(-0.5f, -0.5f, 0.f), XMFLOAT4(0.f, 0.f, 1.f, 1.f))
 	};
 
-	m_Vertices = _countof(pVertices);
 	m_Stride = sizeof(DiffusedVertex);
+	m_Vertices = _countof(pVertices);
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	m_VertexBuffer = CreateBufferResource(pDevice, pCommandList, pVertices, m_Vertices * m_Stride, 

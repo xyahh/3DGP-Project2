@@ -42,4 +42,8 @@
 /* Namespace macros */
 #define DX_USE using namespace DirectX;
 #define DX	DirectX::
-#define DXV DirectX::PackedVector::
+
+/* -Explicit Child: It must be a child. Will NOT compile if T == Base.
+   -Implicit Child: Can be a child or the base itself. Will compile if T == Base.*/
+#define _3DGP_EXPLICIT_CHILD_OF_TEMPLATE_(T, Base) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value && !std::is_same<Base, T>::value>::type>
+#define _3DGP_IMPLICIT_CHILD_OF_TEMPLATE_(T, Base) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value>::type>

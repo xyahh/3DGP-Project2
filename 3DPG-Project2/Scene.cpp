@@ -17,15 +17,15 @@ ID3D12RootSignature* Scene::CreateRootSignature(ID3D12Device* pDevice)
 	RootSignatureDesc.pStaticSamplers = NULL;
 	RootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	ID3DBlob *pd3dSignatureBlob = NULL;
-	ID3DBlob *pd3dErrorBlob = NULL;
+	ID3DBlob* pSignatureBlob = NULL;
+	ID3DBlob* pErrorBlob = NULL;
 
-	ThrowIfFailed(D3D12SerializeRootSignature(&RootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &pd3dSignatureBlob, &pd3dErrorBlob));
-	ThrowIfFailed(pDevice->CreateRootSignature(0, pd3dSignatureBlob->GetBufferPointer(), 
-		pd3dSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature), (void**)&pRootSignature));
+	ThrowIfFailed(D3D12SerializeRootSignature(&RootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &pSignatureBlob, &pErrorBlob));
+	ThrowIfFailed(pDevice->CreateRootSignature(0, pSignatureBlob->GetBufferPointer(), 
+		pSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature), (void**)&pRootSignature));
 
-	if (pd3dSignatureBlob) pd3dSignatureBlob->Release();
-	if (pd3dErrorBlob) pd3dErrorBlob->Release();
+	if (pSignatureBlob) pSignatureBlob->Release();
+	if (pErrorBlob) pErrorBlob->Release();
 
 	return pRootSignature;
 }

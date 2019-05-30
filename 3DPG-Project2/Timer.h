@@ -21,6 +21,7 @@ public:
 	void  Reset();
 	float Interpolation() const;
 	float GetDeltaTime() const;
+	const std::string& GetFPS() const;
 
 private:
 	TimePoint	m_CurrentTime;
@@ -28,6 +29,10 @@ private:
 	float		m_TimeFrame;
 	float		m_TimeAccumulator;
 	float		m_ElapsedTime;
+
+	float		 m_FPSTimer;
+	std::string	 m_FPSString;
+	unsigned int m_FramesProcessed	{ 0 };
 };
 
 _3DGP_END_

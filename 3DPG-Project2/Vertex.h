@@ -7,8 +7,7 @@ class Vertex
 public:
 	Vertex();
 	Vertex(const DX XMFLOAT3& Position);
-
-	virtual ~Vertex();
+	~Vertex();
 
 protected:
 	DX XMFLOAT3 m_Position;

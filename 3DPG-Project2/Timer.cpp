@@ -20,6 +20,15 @@ void Timer::Tick()
 	m_PreviousTime = m_CurrentTime;
 	m_TimeAccumulator += m_TimeFrame;
 	m_ElapsedTime += m_TimeFrame;
+	m_FPSTimer += m_TimeFrame;
+	++m_FramesProcessed;
+	if (m_FPSTimer >= 1.f)
+	{
+		m_FPSString = std::to_string(m_FramesProcessed);
+		m_FPSTimer = 0.f;
+		m_FramesProcessed = 0;
+	}
+	
 }
 
 float Timer::GetElapsedTime() const
@@ -52,6 +61,11 @@ float Timer::GetDeltaTime() const
 	return DELTA_TIME;
 }
 
+const std::string& Timer::GetFPS() const
+{
+	return m_FPSString;
+}
+
 void Timer::Reset()
 {
 	m_CurrentTime = Time::now();
@@ -59,4 +73,5 @@ void Timer::Reset()
 	m_ElapsedTime = 0.f;
 	m_TimeAccumulator = 0.f;
 	m_TimeFrame = 0.f;
+	m_FPSTimer = 0.f;
 }
