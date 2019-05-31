@@ -35,8 +35,8 @@ private:
 	int m_ReferenceCount	{ 0 };
 
 protected:
-	GameObject**	m_Objects		{ NULL };
-	int				m_ObjectCount	{ 0 };
+	GameObject**			m_Objects		{ NULL };
+	int						m_ObjectCount	{ 0 };
 		
 	ID3D12PipelineState**	m_PipelineStates	{ NULL };
 	int						m_PipelineStateCount{ 0 };

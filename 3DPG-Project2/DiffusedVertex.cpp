@@ -5,7 +5,7 @@ _3DGP_USE_
 DX_USE
 
 DiffusedVertex::DiffusedVertex() 
-	: Vertex(), m_Diffuse(0.f, 0.f, 0.f, 0.f)
+	: Vertex(), m_Diffuse(0.f, 0.f, 0.f, 1.f)
 {
 }
 

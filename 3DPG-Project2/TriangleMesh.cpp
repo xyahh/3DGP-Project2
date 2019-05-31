@@ -21,7 +21,7 @@ TriangleMesh::TriangleMesh(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCo
 
 	m_VertexBuffer = CreateBufferResource(pDevice, pCommandList, pVertices, m_Vertices * m_Stride, 
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_VertexUploadBuffer);
-
+	
 	m_VertexBufferView.BufferLocation = m_VertexBuffer->GetGPUVirtualAddress();
 	m_VertexBufferView.SizeInBytes = m_Stride * m_Vertices;
 	m_VertexBufferView.StrideInBytes = m_Stride;

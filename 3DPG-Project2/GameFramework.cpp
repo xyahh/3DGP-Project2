@@ -113,7 +113,9 @@ void GameFramework::InitWindow(const std::string& title, int width, int height)
 	DWORD       dwStyle;
 
 	LPCTSTR lpszClass = TEXT("3DGP-Project2");
+
 	m_hInstance = GetModuleHandle(NULL);
+
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = (WNDPROC)[](HWND h, UINT u, WPARAM w, LPARAM l)->LRESULT{ return GameFramework::Get()->WndProc(h, u, w, l); };
 	wc.cbClsExtra = 0;
@@ -124,6 +126,7 @@ void GameFramework::InitWindow(const std::string& title, int width, int height)
 	wc.hbrBackground = NULL;
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = lpszClass;
+
 	RegisterClass(&wc);
 
 	dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_BORDER;
@@ -153,6 +156,18 @@ void GameFramework::UpdateClientRect()
 	::GetClientRect(m_HWND, &ClientRect);
 	m_WndClientWidth = ClientRect.right - ClientRect.left;
 	m_WndClientHeight = ClientRect.bottom - ClientRect.top;
+
+	m_Viewport.Height = m_WndClientHeight;
+	m_Viewport.Width = m_WndClientWidth;
+	m_Viewport.MinDepth = 0.f;
+	m_Viewport.MaxDepth = 1.f;
+	m_Viewport.TopLeftX = 0.f;
+	m_Viewport.TopLeftY = 0.f;
+
+	m_ScissorRect.left = 0;
+	m_ScissorRect.top = 0;
+	m_ScissorRect.bottom = static_cast<LONG>(m_WndClientHeight);
+	m_ScissorRect.right = static_cast<LONG>(m_WndClientWidth);
 }
 
 void GameFramework::GameLoop()
@@ -165,8 +180,12 @@ void GameFramework::GameLoop()
 			DispatchMessage(&m_Message);
 			continue;
 		}
-	
-		//Game Loop is called in this function
+
+		m_Timer.Tick();
+		while (m_Timer.FlushAccumulatedTime())
+			m_Scenes.top()->Update(m_Timer.GetDeltaTime());
+
+		//Render is called in this function
 		PopulateCommandList();
 
 		ID3D12CommandList* CommandLists[] = { m_CommandList };
@@ -180,7 +199,6 @@ void GameFramework::GameLoop()
 #else
 		ThrowIfFailed(m_SwapChain->Present(0, 0));
 #endif
-
 		MoveToNextFrame();
 		::SetWindowText(m_HWND, (m_WndTitle + " (FPS: " + m_Timer.GetFPS() + ")").c_str());
 	}
@@ -270,6 +288,7 @@ void GameFramework::CreateCommandInterfaces()
 	::ZeroMemory(&CommandQueueDesc, sizeof(D3D12_COMMAND_QUEUE_DESC));
 	CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 	CommandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+
 	ThrowIfFailed(m_Device->CreateCommandQueue(&CommandQueueDesc, _uuidof(ID3D12CommandQueue), (void **)&m_CommandQueue));
 
 	ThrowIfFailed(m_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void **)&m_CommandAllocator));
@@ -303,6 +322,8 @@ void GameFramework::CreateSwapChain()
 	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
 
 	ThrowIfFailed(m_Factory->MakeWindowAssociation(m_HWND, DXGI_MWA_NO_ALT_ENTER));
+
+	
 }
 
 void GameFramework::CreateRTVDSVDescriptorHeaps()
@@ -378,11 +399,6 @@ void GameFramework::CreateDepthStencilView()
 
 void GameFramework::PopulateCommandList()
 {
-	m_Timer.Tick();
-
-	while (m_Timer.FlushAccumulatedTime())
-		m_Scenes.top()->Update(m_Timer.GetDeltaTime());
-
 	ThrowIfFailed(m_CommandAllocator->Reset());
 	ThrowIfFailed(m_CommandList->Reset(m_CommandAllocator, NULL));
 

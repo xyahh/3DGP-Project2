@@ -15,8 +15,7 @@ Shader::~Shader()
 	{
 		for (int i = 0; i < m_PipelineStateCount; ++i)
 			if(m_PipelineStates[i]) m_PipelineStates[i]->Release();
-		delete[] m_PipelineStates; 
-		m_PipelineStateCount = 0;
+		delete[] m_PipelineStates;
 	}
 }
 
