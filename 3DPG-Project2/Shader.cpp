@@ -166,5 +166,4 @@ void Shader::PreRender(ID3D12GraphicsCommandList * pCommandList)
 void Shader::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamera)
 {
 	PreRender(pCommandList);
-
 }

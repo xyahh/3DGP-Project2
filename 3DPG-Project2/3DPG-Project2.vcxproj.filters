@@ -24,9 +24,6 @@
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{305d1f24-2883-4351-ac82-5f450d22a34d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Scene">
-      <UniqueIdentifier>{1db9a9f0-659d-4767-8f28-bd5fbac05a78}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Scene">
       <UniqueIdentifier>{487eb32c-818a-4810-837e-1c638846e2eb}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,9 @@
     <Filter Include="Shader Files">
       <UniqueIdentifier>{f5ab5683-5a46-4ca5-850a-3bfb0e0113a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Shader\Scene">
+      <UniqueIdentifier>{1db9a9f0-659d-4767-8f28-bd5fbac05a78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertex.h">
@@ -84,10 +84,10 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Header Files\Scene</Filter>
+      <Filter>Header Files\Shader\Scene</Filter>
     </ClInclude>
     <ClInclude Include="GameplayScene.h">
-      <Filter>Header Files\Scene</Filter>
+      <Filter>Header Files\Shader\Scene</Filter>
     </ClInclude>
     <ClInclude Include="DXMath.h">
       <Filter>Header Files\Utilities</Filter>

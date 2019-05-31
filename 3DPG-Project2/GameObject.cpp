@@ -61,7 +61,6 @@ void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamer
 void GameObject::Rotate(DX XMFLOAT3 * Axis, float Angle)
 {
 	XMMATRIX RotMat = XMMatrixRotationAxis(XMLoadFloat3(Axis), XMConvertToRadians(Angle));
-	XMMATRIX World = XMLoadFloat4x4(&m_World);
-	World = RotMat * World;
+	XMMATRIX World = RotMat * XMLoadFloat4x4(&m_World);
 	XMStoreFloat4x4(&m_World, World);
 }

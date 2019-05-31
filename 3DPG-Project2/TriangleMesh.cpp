@@ -10,9 +10,14 @@ TriangleMesh::TriangleMesh(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCo
 {
 	DiffusedVertex pVertices[] =
 	{
-		DiffusedVertex(XMFLOAT3(0.f, 0.5f, 0.f), XMFLOAT4(1.f, 0.f, 0.f, 1.f)),
-		DiffusedVertex(XMFLOAT3(0.5f, -0.5f, 0.f), XMFLOAT4(0.f, 1.f, 0.f, 1.f)),
-		DiffusedVertex(XMFLOAT3(-0.5f, -0.5f, 0.f), XMFLOAT4(0.f, 0.f, 1.f, 1.f))
+		DiffusedVertex(XMFLOAT3( 0.5f,  0.5f, 0.f), XMFLOAT4(1.f, 1.f, 1.f, 1.f)),
+		DiffusedVertex(XMFLOAT3( 0.5f, -0.5f, 0.f), XMFLOAT4(1.f, 1.f, 1.f, 1.f)),
+		DiffusedVertex(XMFLOAT3(-0.5f, -0.5f, 0.f), XMFLOAT4(1.f, 1.f, 1.f, 1.f)),
+
+		DiffusedVertex(XMFLOAT3(-0.5f, -0.5f, 0.f), XMFLOAT4(1.f, 1.f, 1.f, 1.f)),
+		DiffusedVertex(XMFLOAT3(-0.5f,  0.5f, 0.f), XMFLOAT4(1.f, 1.f, 1.f, 1.f)),
+		DiffusedVertex(XMFLOAT3( 0.5f,  0.5f, 0.f), XMFLOAT4(1.f, 1.f, 1.f, 1.f))
+
 	};
 
 	m_Stride = sizeof(DiffusedVertex);
