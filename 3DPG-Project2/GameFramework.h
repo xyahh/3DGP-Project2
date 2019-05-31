@@ -3,6 +3,7 @@
 #include <stack>
 #include "Timer.h"
 #include "Scene.h"
+#include "Camera.h"
 
 _3DGP_BEGIN_
 
@@ -15,7 +16,6 @@ public:
 
 	static GameFramework* Get();
 
-
 	_3DGP_EXPLICIT_CHILD_OF_TEMPLATE_(StartingScene, Scene)
 	void Run(const std::string&  Title, int Width, int Height)
 	{
@@ -24,6 +24,7 @@ public:
 		m_Initialized = true;
 		InitWindow(Title, Width, Height);
 		InitDirectX();
+		InitCamera();
 		ChangeScenes<StartingScene>(FALSE);
 		GameLoop();
 	}
@@ -74,6 +75,7 @@ private:
 	void DestroyFramework();
 
 	void InitWindow(const std::string&  title, int width, int height);
+	void InitCamera();
 
 	void UpdateClientRect();
 
@@ -131,8 +133,7 @@ private:
 	UINT						m_FrameIndex	{ 0 };
 	HANDLE						m_FenceEvent	{ NULL };
 
-	D3D12_VIEWPORT				m_Viewport;
-	D3D12_RECT					m_ScissorRect;
+	Camera*						m_Camera		{ NULL };
 
 };
 

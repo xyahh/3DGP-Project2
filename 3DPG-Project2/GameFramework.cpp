@@ -98,6 +98,8 @@ void GameFramework::DestroyFramework()
 	if (m_SwapChain)	m_SwapChain->Release();
 	if (m_Device)		m_Device->Release();
 	if (m_Factory)		m_Factory->Release();
+
+	if (m_Camera) delete m_Camera;
 }
 
 void GameFramework::InitWindow(const std::string& title, int width, int height)
@@ -150,24 +152,22 @@ void GameFramework::InitWindow(const std::string& title, int width, int height)
 	UpdateWindow(m_HWND);
 }
 
+void GameFramework::InitCamera()
+{
+	if (m_Camera) delete m_Camera;
+	m_Camera = new Camera;
+	m_Camera->SetViewport(0, 0, m_WndClientWidth, m_WndClientHeight);
+	m_Camera->SetScissorRect(0, 0, (LONG)m_WndClientWidth, (LONG)m_WndClientHeight);
+	m_Camera->GenerateProjMatrix(1.f, 500.f, float(m_WndClientWidth) / float(m_WndClientHeight), 90.f);
+	m_Camera->GenerateViewMatrix(XMFLOAT3(0.f, 0.f, -2.f), XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(0.f, 1.f, 0.f));
+}
+
 void GameFramework::UpdateClientRect()
 {
 	RECT ClientRect;
 	::GetClientRect(m_HWND, &ClientRect);
 	m_WndClientWidth = ClientRect.right - ClientRect.left;
 	m_WndClientHeight = ClientRect.bottom - ClientRect.top;
-
-	m_Viewport.Height = m_WndClientHeight;
-	m_Viewport.Width = m_WndClientWidth;
-	m_Viewport.MinDepth = 0.f;
-	m_Viewport.MaxDepth = 1.f;
-	m_Viewport.TopLeftX = 0.f;
-	m_Viewport.TopLeftY = 0.f;
-
-	m_ScissorRect.left = 0;
-	m_ScissorRect.top = 0;
-	m_ScissorRect.bottom = static_cast<LONG>(m_WndClientHeight);
-	m_ScissorRect.right = static_cast<LONG>(m_WndClientWidth);
 }
 
 void GameFramework::GameLoop()
@@ -402,9 +402,6 @@ void GameFramework::PopulateCommandList()
 	ThrowIfFailed(m_CommandAllocator->Reset());
 	ThrowIfFailed(m_CommandList->Reset(m_CommandAllocator, NULL));
 
-	m_CommandList->RSSetViewports(1, &m_Viewport);
-	m_CommandList->RSSetScissorRects(1, &m_ScissorRect);
-
 	D3D12_RESOURCE_BARRIER ResourceBarrier;
 	::ZeroMemory(&ResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
 	ResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -426,7 +423,7 @@ void GameFramework::PopulateCommandList()
 	m_CommandList->ClearDepthStencilView(DSVDescHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
 
 	//Render here before closing the Command List and before transitioning the Resource State to present	
-	m_Scenes.top()->Render(m_CommandList, m_Timer.Interpolation());
+	m_Scenes.top()->Render(m_CommandList, m_Camera, m_Timer.Interpolation());
 
 	ResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	ResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;

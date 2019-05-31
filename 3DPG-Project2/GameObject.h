@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.h"
+#include "Camera.h"
 
 _3DGP_BEGIN_
 
@@ -21,8 +22,9 @@ public:
 	virtual void SetShader(Shader* pShader);
 	virtual void Update(float DeltaTime);
 	virtual void PreRender();
-	virtual void Render(ID3D12GraphicsCommandList* pCommandList);
+	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera);
 
+	void Rotate(DX XMFLOAT3* Axis, float Angle);
 
 private:
 

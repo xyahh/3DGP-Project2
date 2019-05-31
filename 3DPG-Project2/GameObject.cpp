@@ -47,9 +47,21 @@ void GameObject::PreRender()
 {
 }
 
-void GameObject::Render(ID3D12GraphicsCommandList * pCommandList)
+void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamera)
 {
 	PreRender();
-	if (m_Shader) m_Shader->Render(pCommandList);
+	if (m_Shader)
+	{
+		m_Shader->UpdateShaderVariable(pCommandList, &m_World);
+		m_Shader->Render(pCommandList, pCamera);
+	}
 	if (m_Mesh) m_Mesh->Render(pCommandList);
+}
+
+void GameObject::Rotate(DX XMFLOAT3 * Axis, float Angle)
+{
+	XMMATRIX RotMat = XMMatrixRotationAxis(XMLoadFloat3(Axis), XMConvertToRadians(Angle));
+	XMMATRIX World = XMLoadFloat4x4(&m_World);
+	World = RotMat * World;
+	XMStoreFloat4x4(&m_World, World);
 }

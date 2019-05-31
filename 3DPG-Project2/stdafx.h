@@ -5,16 +5,8 @@
 #endif
 #include <Windows.h>
 
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
-#include <math.h>
-
 #include <string>
-#include <wrl.h>
-#include <shellapi.h>
-
+#include <iostream>
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
@@ -23,10 +15,6 @@
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
-
-#include <Mmsystem.h>
-
-#include "DXHelper.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
@@ -42,8 +30,13 @@
 /* Namespace macros */
 #define DX_USE using namespace DirectX;
 #define DX	DirectX::
+#define DX_BEGIN namespace DirectX {
+#define DX_END }
 
 /* -Explicit Child: It must be a child. Will NOT compile if T == Base.
    -Implicit Child: Can be a child or the base itself. Will compile if T == Base.*/
 #define _3DGP_EXPLICIT_CHILD_OF_TEMPLATE_(T, Base) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value && !std::is_same<Base, T>::value>::type>
 #define _3DGP_IMPLICIT_CHILD_OF_TEMPLATE_(T, Base) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value>::type>
+
+#include "DXHelper.h"
+#include "DXMath.h"

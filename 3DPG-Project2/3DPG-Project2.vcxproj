@@ -128,12 +128,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="DiffusedShader.h" />
     <ClInclude Include="DiffusedVertex.h" />
     <ClInclude Include="DXHelper.h" />
+    <ClInclude Include="DXMath.h" />
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameplayScene.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="RotatingObject.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stdafx.h" />
@@ -142,11 +146,14 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DiffusedShader.cpp" />
     <ClCompile Include="DiffusedVertex.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameplayScene.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="RotatingObject.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />

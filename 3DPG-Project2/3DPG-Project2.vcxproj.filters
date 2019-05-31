@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Header Files\Vertex">
       <UniqueIdentifier>{bf573f15-f0d1-4a1f-a25b-b487454591c7}</UniqueIdentifier>
     </Filter>
@@ -25,9 +21,6 @@
     <Filter Include="Header Files\Mesh">
       <UniqueIdentifier>{f8554b36-0590-45fe-afa3-0dee57bf5e19}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\DXHelper">
-      <UniqueIdentifier>{4e20cfca-1d75-4807-a6b8-adf0ce7cf149}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{305d1f24-2883-4351-ac82-5f450d22a34d}</UniqueIdentifier>
     </Filter>
@@ -39,6 +32,30 @@
     </Filter>
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{b5422088-30d8-4da2-83d6-172fc16a2052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{4e20cfca-1d75-4807-a6b8-adf0ce7cf149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Shader">
+      <UniqueIdentifier>{a25d64c4-36a5-439f-bf17-54cc5453d026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Objects">
+      <UniqueIdentifier>{d43c1719-54f9-4fd1-804b-db0467e7b929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Objects\GameObjects">
+      <UniqueIdentifier>{322810f4-670e-4927-9d04-121de2da8257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects">
+      <UniqueIdentifier>{4d17cd04-4f6f-4fcf-bae3-ed38505fceaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\GameObjects">
+      <UniqueIdentifier>{5400f38f-a829-469a-b35a-b50b4deb831f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader">
+      <UniqueIdentifier>{7f31e989-d6c7-47c0-a679-9a401bc18c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{f5ab5683-5a46-4ca5-850a-3bfb0e0113a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,7 +72,7 @@
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="DXHelper.h">
-      <Filter>Header Files\DXHelper</Filter>
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="GameFramework.h">
       <Filter>Header Files\Core</Filter>
@@ -72,11 +89,23 @@
     <ClInclude Include="GameplayScene.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="DXMath.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Objects\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="DiffusedShader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RotatingObject.h">
+      <Filter>Header Files\Objects\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,13 +140,24 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Objects\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="DiffusedShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RotatingObject.cpp">
+      <Filter>Source Files\Objects\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders.hlsl" />
+    <FxCompile Include="Shaders.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

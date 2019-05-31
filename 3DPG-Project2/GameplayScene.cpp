@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "GameplayScene.h"
 
+#include "RotatingObject.h"
+#include "TriangleMesh.h"
+#include "DiffusedShader.h"
+
 _3DGP_USE_
 DX_USE
 
@@ -17,31 +21,35 @@ void GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* pCom
 {
 	m_RootSignature = CreateRootSignature(pDevice);
 
-	m_ShaderCount = 1;
-	m_Shaders = new Shader*[m_ShaderCount];
+	m_ObjectCount = 1;
+	m_Objects = new GameObject*[m_ObjectCount];
 
-	m_Shaders[0] = new Shader;
-	m_Shaders[0]->CreateShader(pDevice, m_RootSignature);
-	m_Shaders[0]->BuildObjects(pDevice, pCommandList, NULL);
+	TriangleMesh* pMesh = new TriangleMesh(pDevice, pCommandList);
 
+	{
+		DiffusedShader* pDiffShader = new DiffusedShader;
+		pDiffShader->CreateShader(pDevice, m_RootSignature);
+		pDiffShader->CreateShaderVariables(pDevice, pCommandList);
+		
+		RotatingObject* pRotatingObject = new RotatingObject;
+		pRotatingObject->SetMesh(pMesh);
+		pRotatingObject->SetShader(pDiffShader);
+
+		m_Objects[0] = pRotatingObject;
+	}
 
 }
 
 void GameplayScene::Destroy()
 {
 	m_RootSignature->Release();
-	if (m_Shaders)
+	if (m_Objects)
 	{
-		for (int i = 0; i < m_ShaderCount; ++i)
+		for (int i = 0; i < m_ObjectCount; ++i)
 		{
-			if (m_Shaders[i])
-			{
-				m_Shaders[i]->ReleaseShaderVariables();
-				m_Shaders[i]->ReleaseObjects();
-				m_Shaders[i]->Release();
-			}
+			if (m_Objects[i]) delete m_Objects[i];
 		}
-		delete[] m_Shaders;
+		delete[] m_Objects;
 	}
 }
 
@@ -55,29 +63,32 @@ bool GameplayScene::KeyboardMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	return false;
 }
 
-void GameplayScene::Render(ID3D12GraphicsCommandList * pCommandList, float Interpolation)
+void GameplayScene::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamera, float Interpolation)
 {
+	pCamera->UpdateViewportsAndScissorRects(pCommandList);
 	pCommandList->SetGraphicsRootSignature(m_RootSignature);
-	for (int i = 0; i < m_ShaderCount; ++i)
+	pCamera->UpdateShaderVariables(pCommandList);
+
+	for (int i = 0; i < m_ObjectCount; ++i)
 	{
-		if (m_Shaders[i]) m_Shaders[i]->Render(pCommandList);
+		if (m_Objects[i]) m_Objects[i]->Render(pCommandList, pCamera);
 	}
 }
 
 void GameplayScene::Update(float DeltaTime)
 {
-	for (int i = 0; i < m_ShaderCount; ++i)
+	for (int i = 0; i < m_ObjectCount; ++i)
 	{
-		if (m_Shaders[i]) m_Shaders[i]->Update(DeltaTime);
+		if (m_Objects[i]) m_Objects[i]->Update(DeltaTime);
 	}
 }
 
 void GameplayScene::ReleaseUploadBuffers()
 {
-	if (m_Shaders)
+	if (m_Objects)
 	{
-		for (int i = 0; i < m_ShaderCount; ++i)
-			if (m_Shaders[i]) m_Shaders[i]->ReleaseUploadBuffers();
+		for (int i = 0; i < m_ObjectCount; ++i)
+			if (m_Objects[i]) m_Objects[i]->ReleaseUploadBuffers();
 	}
 }
  

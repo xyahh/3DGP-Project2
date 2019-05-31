@@ -15,7 +15,7 @@ public:
 	virtual bool MouseMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual bool KeyboardMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	virtual void Render(ID3D12GraphicsCommandList* pCommandList, float Interpolation);
+	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation);
 	virtual void Update(float DeltaTime);
 
 	virtual void ReleaseUploadBuffers();

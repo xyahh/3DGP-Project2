@@ -1,5 +1,6 @@
 #pragma once
-#include "Shader.h"
+#include "Camera.h"
+#include "GameObject.h"
 
 _3DGP_BEGIN_
 
@@ -15,7 +16,7 @@ public:
 	virtual bool MouseMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 	virtual bool KeyboardMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
-	virtual void Render(ID3D12GraphicsCommandList* pCommandList, float Interpolation) = 0;
+	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation) = 0;
 	virtual void Update(float DeltaTime) = 0;
 
 	virtual void ReleaseUploadBuffers() = 0;
@@ -28,8 +29,8 @@ public:
 protected:
 
 	ID3D12RootSignature*	m_RootSignature{ NULL };
-	Shader** m_Shaders		{ NULL };
-	int		m_ShaderCount	{ 0 };
+	GameObject**			m_Objects{ NULL };
+	int						m_ObjectCount{ 0 };
 
 };
 

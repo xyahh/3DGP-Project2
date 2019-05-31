@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Shader.h"
-#include "TriangleMesh.h"
 
 _3DGP_USE_
 DX_USE
@@ -21,16 +20,9 @@ Shader::~Shader()
 
 D3D12_INPUT_LAYOUT_DESC Shader::CreateInputLayout()
 {
-	UINT InputElementCount = 2;
-	D3D12_INPUT_ELEMENT_DESC* pInputElementDesc = new D3D12_INPUT_ELEMENT_DESC[InputElementCount];
-
-	pInputElementDesc[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
-	pInputElementDesc[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
-
 	D3D12_INPUT_LAYOUT_DESC InputLayoutDesc;
-	InputLayoutDesc.pInputElementDescs = pInputElementDesc;
-	InputLayoutDesc.NumElements = InputElementCount;
-
+	InputLayoutDesc.pInputElementDescs = NULL;
+	InputLayoutDesc.NumElements = 0;
 	return InputLayoutDesc;
 }
 
@@ -95,25 +87,33 @@ D3D12_DEPTH_STENCIL_DESC Shader::CreateDepthStencilState()
 	return DepthStencilDesc;
 }
 
+D3D12_SHADER_BYTECODE Shader::CreateVertexShader(ID3DBlob ** pShaderBlob)
+{
+	D3D12_SHADER_BYTECODE ByteCode;
+	ByteCode.BytecodeLength = 0;
+	ByteCode.pShaderBytecode = NULL;
+	return ByteCode;
+}
+
+D3D12_SHADER_BYTECODE Shader::CreatePixelShader(ID3DBlob ** pShaderBlob)
+{
+	D3D12_SHADER_BYTECODE ByteCode;
+	ByteCode.BytecodeLength = 0;
+	ByteCode.pShaderBytecode = NULL;
+	return ByteCode;
+}
+
 void Shader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
 {
-	m_PipelineStateCount = 1;
-	m_PipelineStates = new ID3D12PipelineState*[m_PipelineStateCount];
-
 	ID3DBlob* pVertexShaderBlob = NULL;
 	ID3DBlob* pPixelShaderBlob = NULL;
-	pVertexShaderBlob = CompileShader(L"Shaders.hlsl", "VSMain", "vs_5_1");
-	pPixelShaderBlob = CompileShader(L"Shaders.hlsl", "PSMain", "ps_5_1");
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateDesc;
 	::ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 	PipelineStateDesc.pRootSignature = pRootSignature;
 
-	PipelineStateDesc.VS.pShaderBytecode = pVertexShaderBlob->GetBufferPointer();
-	PipelineStateDesc.VS.BytecodeLength = pVertexShaderBlob->GetBufferSize();
-
-	PipelineStateDesc.PS.pShaderBytecode = pPixelShaderBlob->GetBufferPointer();
-	PipelineStateDesc.PS.BytecodeLength = pPixelShaderBlob->GetBufferSize();
+	PipelineStateDesc.VS = CreateVertexShader(&pVertexShaderBlob);
+	PipelineStateDesc.PS = CreatePixelShader(&pPixelShaderBlob);
 
 	PipelineStateDesc.RasterizerState	= CreateRasterizerState();
 	PipelineStateDesc.BlendState		= CreateBlendState();
@@ -147,49 +147,15 @@ void Shader::UpdateShaderVariables(ID3D12GraphicsCommandList * pCommandList)
 {
 }
 
+void Shader::UpdateShaderVariable(ID3D12GraphicsCommandList * pCommandList, DX XMFLOAT4X4 * pWorld)
+{
+	XMFLOAT4X4 World;
+	XMStoreFloat4x4(&World, XMMatrixTranspose(XMLoadFloat4x4(pWorld)));
+	pCommandList->SetGraphicsRoot32BitConstants(0, 16, &World, 0);
+}
+
 void Shader::ReleaseShaderVariables()
 {
-}
-
-void Shader::ReleaseUploadBuffers()
-{
-	if (m_Objects)
-	{
-		for (int i = 0; i < m_ObjectCount; ++i)
-		{
-			if (m_Objects[i]) m_Objects[i]->ReleaseUploadBuffers();	
-		}
-	}
-}
-
-void Shader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, void * pContext)
-{
-	TriangleMesh *pTriangleMesh = new TriangleMesh(pDevice, pCommandList);
-
-	m_ObjectCount = 1;
-
-	m_Objects = new GameObject*[m_ObjectCount];
-
-	m_Objects[0] = new GameObject();
-	m_Objects[0]->SetMesh(pTriangleMesh);
-}
-
-void Shader::ReleaseObjects()
-{
-	if (m_Objects)
-	{
-		for (int i = 0; i < m_ObjectCount; ++i)
-		{
-			if(m_Objects[i]) delete m_Objects[i];
-		}
-		delete[] m_Objects;
-	}
-}
-
-void Shader::Update(float DeltaTime)
-{
-	for (int i = 0; i < m_ObjectCount; ++i)
-		if(m_Objects[i]) m_Objects[i]->Update(DeltaTime);
 }
 
 void Shader::PreRender(ID3D12GraphicsCommandList * pCommandList)
@@ -197,10 +163,8 @@ void Shader::PreRender(ID3D12GraphicsCommandList * pCommandList)
 	pCommandList->SetPipelineState(m_PipelineStates[0]);
 }
 
-void Shader::Render(ID3D12GraphicsCommandList * pCommandList)
+void Shader::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamera)
 {
 	PreRender(pCommandList);
-	for (int i = 0; i < m_ObjectCount; ++i)
-		if (m_Objects[i])  m_Objects[i]->Render(pCommandList);
 
 }
