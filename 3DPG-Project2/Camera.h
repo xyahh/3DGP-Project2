@@ -12,7 +12,7 @@ class Camera
 {
 public:
 	Camera();
-	~Camera();
+	virtual ~Camera();
 
 	virtual void CreateShaderVariables(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual void ReleaseShaderVariables();

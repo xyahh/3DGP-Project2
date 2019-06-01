@@ -1,10 +1,9 @@
 #pragma once
-#include "Mesh.h"
+#include "Shader.h"
 #include "Camera.h"
+#include "Mesh.h"
 
 _3DGP_BEGIN_
-
-class Shader;
 
 class GameObject
 {
@@ -18,13 +17,32 @@ public:
 
 	void ReleaseUploadBuffers();
 	
-	virtual void SetMesh(Mesh* pMesh);
-	virtual void SetShader(Shader* pShader);
+	void SetMesh(Mesh* pMesh);
+	void SetShader(Shader* pShader);
+
 	virtual void Update(float DeltaTime);
 	virtual void PreRender();
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera);
 
-	void Rotate(DX XMFLOAT3* Axis, float Angle);
+	void Rotate(const DX XMFLOAT3& Axis, float Angle);
+
+	virtual void CreateShaderVariables(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pCommandList);
+	virtual void ReleaseShaderVariables();
+
+	DX XMFLOAT3 GetPosition();
+	DX XMFLOAT3 GetLook();
+	DX XMFLOAT3 GetUp();
+	DX XMFLOAT3 GetRight();
+
+	void SetPosition(const DX XMFLOAT3& Position);
+	void SetPosition(float x, float y, float z);
+
+	void MoveStrafe(float Distance);
+	void MoveUp(float Distance);
+	void MoveForward(float Distance);
+
+	void Rotate(float Pitch, float Yaw, float Roll);
 
 private:
 

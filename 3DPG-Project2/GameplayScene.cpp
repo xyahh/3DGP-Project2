@@ -20,35 +20,24 @@ void GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* pCom
 {
 	m_RootSignature = CreateRootSignature(pDevice);
 
-	m_ObjectCount = 1;
-	m_Objects = new GameObject*[m_ObjectCount];
+	m_ShaderCount = 1;
+	m_Shaders = new ObjectsShader[m_ShaderCount];
 
-	Mesh* pMesh = new DiffusedCubeMesh(pDevice, pCommandList, 12.f, 12.f, 12.f);
-
-	{
-		DiffusedShader* pDiffShader = new DiffusedShader;
-		pDiffShader->CreateShader(pDevice, m_RootSignature);
-		pDiffShader->CreateShaderVariables(pDevice, pCommandList);
-		
-		RotatingObject* pRotatingObject = new RotatingObject;
-		pRotatingObject->SetMesh(pMesh);
-		pRotatingObject->SetShader(pDiffShader);
-
-		m_Objects[0] = pRotatingObject;
-	}
-
+	m_Shaders[0].CreateShader(pDevice, m_RootSignature);
+	m_Shaders[0].BuildObjects(pDevice, pCommandList);
 }
 
 void GameplayScene::Destroy()
 {
 	m_RootSignature->Release();
-	if (m_Objects)
+	if (m_Shaders)
 	{
-		for (int i = 0; i < m_ObjectCount; ++i)
+		for (int i = 0; i < m_ShaderCount; ++i)
 		{
-			if (m_Objects[i]) delete m_Objects[i];
+			m_Shaders[i].ReleaseShaderVariables();
+			m_Shaders[i].ReleaseObjects();
 		}
-		delete[] m_Objects;
+		delete[] m_Shaders;
 	}
 }
 
@@ -67,26 +56,23 @@ void GameplayScene::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCa
 	pCamera->UpdateViewportsAndScissorRects(pCommandList);
 	pCommandList->SetGraphicsRootSignature(m_RootSignature);
 	pCamera->UpdateShaderVariables(pCommandList);
-	for (int i = 0; i < m_ObjectCount; ++i)
-	{
-		if (m_Objects[i]) m_Objects[i]->Render(pCommandList, pCamera);
-	}
+
+	for (int i = 0; i < m_ShaderCount; ++i)
+		m_Shaders[i].Render(pCommandList, pCamera, Interpolation);
 }
 
 void GameplayScene::Update(float DeltaTime)
 {
-	for (int i = 0; i < m_ObjectCount; ++i)
-	{
-		if (m_Objects[i]) m_Objects[i]->Update(DeltaTime);
-	}
+	for (int i = 0; i < m_ShaderCount; ++i)
+		m_Shaders[i].Update(DeltaTime);
 }
 
 void GameplayScene::ReleaseUploadBuffers()
 {
-	if (m_Objects)
+	if (m_Shaders)
 	{
-		for (int i = 0; i < m_ObjectCount; ++i)
-			if (m_Objects[i]) m_Objects[i]->ReleaseUploadBuffers();
+		for (int i = 0; i < m_ShaderCount; ++i)
+			m_Shaders[i].ReleaseUploadBuffers();
 	}
 }
  

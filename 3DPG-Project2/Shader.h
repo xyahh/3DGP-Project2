@@ -1,5 +1,4 @@
 #pragma once
-#include "Camera.h"
 
 struct CB_GAMEOBJECT_INFO
 {
@@ -7,6 +6,8 @@ struct CB_GAMEOBJECT_INFO
 };
 
 _3DGP_BEGIN_
+
+class Camera;
 
 class Shader
 {
@@ -28,7 +29,6 @@ public:
 	virtual void						CreateShader(ID3D12Device* pDevice, ID3D12RootSignature* pRootSignature);
 	virtual void						CreateShaderVariables(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual void						UpdateShaderVariables(ID3D12GraphicsCommandList* pCommandList);
-	virtual void						UpdateShaderVariable(ID3D12GraphicsCommandList* pCommandList, DX XMFLOAT4X4* pWorld);
 	virtual void						ReleaseShaderVariables();
 
 	virtual void						PreRender(ID3D12GraphicsCommandList* pCommandList);

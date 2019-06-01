@@ -153,13 +153,6 @@ void Shader::UpdateShaderVariables(ID3D12GraphicsCommandList * pCommandList)
 {
 }
 
-void Shader::UpdateShaderVariable(ID3D12GraphicsCommandList * pCommandList, DX XMFLOAT4X4 * pWorld)
-{
-	XMFLOAT4X4 World;
-	XMStoreFloat4x4(&World, XMMatrixTranspose(XMLoadFloat4x4(pWorld)));
-	pCommandList->SetGraphicsRoot32BitConstants(0, 16, &World, 0);
-}
-
 void Shader::ReleaseShaderVariables()
 {
 }

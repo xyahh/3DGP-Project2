@@ -7,9 +7,12 @@ class RotatingObject : public GameObject
 {
 public:
 	RotatingObject();
-	~RotatingObject();
+	virtual ~RotatingObject();
 
 	virtual void Update(float DeltaTime);
+
+	void SetRotationAxis(const DX XMFLOAT3& Axis);
+	void SetAngularSpeed(float AngularSpeed);
 
 protected:
 	DX XMFLOAT3 m_RotationAxis;

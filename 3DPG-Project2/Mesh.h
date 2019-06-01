@@ -16,17 +16,26 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList);
 
 protected:
-	ID3D12Resource* m_VertexBuffer				{ NULL };
-	ID3D12Resource* m_VertexUploadBuffer		{ NULL };
 
-	D3D12_VERTEX_BUFFER_VIEW   m_VertexBufferView;
+	ID3D12Resource* m_VertexBuffer			{ NULL };
+	ID3D12Resource* m_VertexUploadBuffer	{ NULL };
 
-	D3D12_PRIMITIVE_TOPOLOGY	m_PrimitiveTopology{ D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST };
+	ID3D12Resource* m_IndexBuffer			{ NULL };
+	ID3D12Resource* m_IndexUploadBuffer		{ NULL };
 
-	UINT m_Slot{ 0 };
-	UINT m_Vertices{ 0 };
-	UINT m_Stride{ 0 };
-	UINT m_Offset{ 0 };
+
+	D3D12_VERTEX_BUFFER_VIEW	m_VertexBufferView;
+	D3D12_INDEX_BUFFER_VIEW		m_IndexBufferView;
+
+	D3D12_PRIMITIVE_TOPOLOGY	m_PrimitiveTopology	{ D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST };
+
+	UINT m_Slot			{ 0 };
+	UINT m_VertexCount	{ 0 };
+	UINT m_Offset		{ 0 };
+
+	UINT m_IndexCount	{ 0 };
+	UINT m_StartIndex	{ 0 };
+	UINT m_BaseVertex	{ 0 };
 
 
 private:

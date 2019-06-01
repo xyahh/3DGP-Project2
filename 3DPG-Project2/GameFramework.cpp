@@ -156,8 +156,8 @@ void GameFramework::InitCamera()
 	m_Camera = new Camera;
 	m_Camera->SetViewport(0, 0, m_WndClientWidth, m_WndClientHeight);
 	m_Camera->SetScissorRect(0, 0, (LONG)m_WndClientWidth, (LONG)m_WndClientHeight);
-	m_Camera->GenerateProjMatrix(1.f, 500.f, float(m_WndClientWidth) / float(m_WndClientHeight), 90.f);
-	m_Camera->GenerateViewMatrix(XMFLOAT3(0.f, 15.f, -25.f), XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(0.f, 1.f, 0.f));
+	m_Camera->GenerateProjMatrix(1.f, 1500.f, float(m_WndClientWidth) / float(m_WndClientHeight), 90.f);
+	m_Camera->GenerateViewMatrix(XMFLOAT3(0.f, 15.f, -500.f), XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(0.f, 1.f, 0.f));
 }
 
 void GameFramework::UpdateClientRect()
@@ -441,7 +441,7 @@ void GameFramework::PopulateCommandList()
 	ThrowIfFailed(m_CommandList->Close());
 }
 
-void GameFramework::ChangeSwapChain()
+void GameFramework::ToggleFullscreen()
 {
 	WaitForGPU();
 
@@ -514,8 +514,16 @@ LRESULT GameFramework::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
 	case WM_MOUSEMOVE:
+		break;
 	case WM_KEYDOWN:
+		break;
 	case WM_KEYUP:
+		switch (wParam)
+		{
+		case VK_RETURN:
+			ToggleFullscreen();
+			break;
+		}
 		break;
 	case WM_COMMAND:
 		break;

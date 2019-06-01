@@ -62,7 +62,7 @@ public:
 		m_Timer.Reset();
 	}
 
-	void ChangeSwapChain(); //To-Do - use way to get Window Size
+	void ToggleFullscreen(); //To-Do - use way to get Window Size
 
 	LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 

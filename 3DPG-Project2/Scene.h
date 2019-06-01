@@ -1,6 +1,6 @@
 #pragma once
 #include "Camera.h"
-#include "GameObject.h"
+#include "ObjectsShader.h"
 
 _3DGP_BEGIN_
 
@@ -28,10 +28,9 @@ public:
 
 protected:
 
-	ID3D12RootSignature*	m_RootSignature{ NULL };
-	GameObject**			m_Objects{ NULL };
-	int						m_ObjectCount{ 0 };
-
+	ID3D12RootSignature*	m_RootSignature	{ NULL };
+	ObjectsShader*			m_Shaders		{ NULL };
+	int						m_ShaderCount	{ 0 };
 };
 
 _3DGP_END_
