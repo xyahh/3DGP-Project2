@@ -10,13 +10,16 @@ Mesh::Mesh(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
 
 Mesh::~Mesh()
 {
-	if (m_VertexBuffer) m_VertexBuffer->Release();
-	if (m_VertexUploadBuffer) m_VertexUploadBuffer->Release();
+	if (m_VertexBuffer) 
+		m_VertexBuffer->Release();
+	if (m_VertexUploadBuffer) 
+		m_VertexUploadBuffer->Release();
 }
 
 void Mesh::ReleaseUploadBuffers()
 {
-	if (m_VertexUploadBuffer) m_VertexUploadBuffer->Release();
+	if (m_VertexUploadBuffer) 
+		m_VertexUploadBuffer->Release();
 	m_VertexUploadBuffer = NULL;
 }
 

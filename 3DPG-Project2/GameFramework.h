@@ -17,9 +17,14 @@ public:
 	static GameFramework* Get();
 
 	_3DGP_EXPLICIT_CHILD_OF_TEMPLATE_(StartingScene, Scene)
-	void Run(const std::string&  Title, int Width, int Height)
+	void Run(const std::string&  Title, int Width, int Height, bool DebugMode=false)
 	{
 		if (m_Initialized) return;
+
+		if (DebugMode)
+			EnableDebugMode();
+		else
+			FreeConsole();
 
 		m_Initialized = true;
 		InitWindow(Title, Width, Height);
@@ -57,8 +62,6 @@ public:
 		m_Timer.Reset();
 	}
 
-	void EnableDebugMode();
-
 	void ChangeSwapChain(); //To-Do - use way to get Window Size
 
 	LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -69,6 +72,8 @@ private:
 	~GameFramework();
 
 	void GameLoop();
+
+	void EnableDebugMode();
 
 	void InitFramework();
 	void InitDirectX();
@@ -95,7 +100,7 @@ private:
 
 	std::stack<Scene*>			m_Scenes;
 
-	bool						m_ConsoleAllocated	{ false };
+	bool						m_DebugModeEnabled	{ false };
 	bool						m_Initialized		{ false };
 
 	std::string					m_WndTitle			{ "3DGP Project" };

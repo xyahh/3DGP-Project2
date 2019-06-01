@@ -12,7 +12,8 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	if (m_Mesh)		m_Mesh->Release();
+	if (m_Mesh)		
+		m_Mesh->Release();
 	if (m_Shader)
 	{
 		m_Shader->ReleaseShaderVariables();

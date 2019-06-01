@@ -2,7 +2,7 @@
 #include "GameplayScene.h"
 
 #include "RotatingObject.h"
-#include "TriangleMesh.h"
+#include "DiffusedCubeMesh.h"
 #include "DiffusedShader.h"
 
 _3DGP_USE_
@@ -11,7 +11,6 @@ DX_USE
 GameplayScene::GameplayScene()
 {
 }
-
 
 GameplayScene::~GameplayScene()
 {
@@ -24,7 +23,7 @@ void GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* pCom
 	m_ObjectCount = 1;
 	m_Objects = new GameObject*[m_ObjectCount];
 
-	TriangleMesh* pMesh = new TriangleMesh(pDevice, pCommandList);
+	Mesh* pMesh = new DiffusedCubeMesh(pDevice, pCommandList, 12.f, 12.f, 12.f);
 
 	{
 		DiffusedShader* pDiffShader = new DiffusedShader;
@@ -68,7 +67,6 @@ void GameplayScene::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCa
 	pCamera->UpdateViewportsAndScissorRects(pCommandList);
 	pCommandList->SetGraphicsRootSignature(m_RootSignature);
 	pCamera->UpdateShaderVariables(pCommandList);
-
 	for (int i = 0; i < m_ObjectCount; ++i)
 	{
 		if (m_Objects[i]) m_Objects[i]->Render(pCommandList, pCamera);

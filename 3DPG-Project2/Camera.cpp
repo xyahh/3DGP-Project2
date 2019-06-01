@@ -13,7 +13,6 @@ Camera::Camera()
 	m_ScissorRect = { 0, 0, 500, 500 };
 }
 
-
 Camera::~Camera()
 {
 }

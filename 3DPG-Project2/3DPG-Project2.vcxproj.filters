@@ -107,6 +107,9 @@
     <ClInclude Include="RotatingObject.h">
       <Filter>Header Files\Objects\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="DiffusedCubeMesh.h">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DiffusedVertex.cpp">
@@ -130,9 +133,6 @@
     <ClCompile Include="GameFramework.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -153,6 +153,12 @@
     </ClCompile>
     <ClCompile Include="RotatingObject.cpp">
       <Filter>Source Files\Objects\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="DiffusedCubeMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

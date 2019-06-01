@@ -26,7 +26,7 @@ GameFramework::~GameFramework()
 void GameFramework::InitFramework()
 {
 	m_Initialized = false;
-	m_ConsoleAllocated = false;
+	m_DebugModeEnabled = false;
 
 	m_Factory = NULL;
 	m_SwapChain = NULL;
@@ -104,8 +104,6 @@ void GameFramework::DestroyFramework()
 
 void GameFramework::InitWindow(const std::string& title, int width, int height)
 {
-	EnableMenuItem(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_GRAYED);
-
 	m_WndTitle = title;
 	m_WndClientWidth = width;
 	m_WndClientHeight = height;
@@ -159,7 +157,7 @@ void GameFramework::InitCamera()
 	m_Camera->SetViewport(0, 0, m_WndClientWidth, m_WndClientHeight);
 	m_Camera->SetScissorRect(0, 0, (LONG)m_WndClientWidth, (LONG)m_WndClientHeight);
 	m_Camera->GenerateProjMatrix(1.f, 500.f, float(m_WndClientWidth) / float(m_WndClientHeight), 90.f);
-	m_Camera->GenerateViewMatrix(XMFLOAT3(0.f, 0.f, -2.f), XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(0.f, 1.f, 0.f));
+	m_Camera->GenerateViewMatrix(XMFLOAT3(0.f, 15.f, -25.f), XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(0.f, 1.f, 0.f));
 }
 
 void GameFramework::UpdateClientRect()
@@ -206,37 +204,43 @@ void GameFramework::GameLoop()
 
 void GameFramework::EnableDebugMode()
 {
-	if (m_ConsoleAllocated) return;
+	/*  Do not allow debug mode after everything has been initialized.
+		Enabling the debug layer after creating the ID3D12 Device will
+		remove the device.
+		*/
+	if (m_DebugModeEnabled || m_Initialized) return;
 
-	m_ConsoleAllocated = true;
-	AllocConsole();
+	m_DebugModeEnabled = true;
 
-	SetConsoleTitle("3DGP Console");
-	typedef struct
+	//Console
 	{
-		char* _ptr;
-		int _cnt;
-		char* _base;
-		int _flag;
-		int _file;
-		int _charbuf;
-		int _bufsiz;
-		char* _tmpfname;
-	} FILE_COMPLETE;
+		AllocConsole();
+		SetConsoleTitle("3DGP Console");
+		typedef struct
+		{
+			char* _ptr;
+			int _cnt;
+			char* _base;
+			int _flag;
+			int _file;
+			int _charbuf;
+			int _bufsiz;
+			char* _tmpfname;
+		} FILE_COMPLETE;
 
-	*(FILE_COMPLETE*)stdout = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_OUTPUT_HANDLE)), _O_TEXT), "w");
-	*(FILE_COMPLETE*)stderr = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_ERROR_HANDLE)), _O_TEXT), "w");
-	*(FILE_COMPLETE*)stdin = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_INPUT_HANDLE)), _O_TEXT), "r");
-	setvbuf(stdout, NULL, _IONBF, 0);
-	setvbuf(stderr, NULL, _IONBF, 0);
-	setvbuf(stdin, NULL, _IONBF, 0);
-}
+		*(FILE_COMPLETE*)stdout = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_OUTPUT_HANDLE)), _O_TEXT), "w");
+		*(FILE_COMPLETE*)stderr = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_ERROR_HANDLE)), _O_TEXT), "w");
+		*(FILE_COMPLETE*)stdin = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_INPUT_HANDLE)), _O_TEXT), "r");
+		setvbuf(stdout, NULL, _IONBF, 0);
+		setvbuf(stderr, NULL, _IONBF, 0);
+		setvbuf(stdin, NULL, _IONBF, 0);
 
-void GameFramework::CreateD3Device()
-{
-
+		EnableMenuItem(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_GRAYED);
+	}
+	
+	//Debug Controller
+	{
 #if defined(_DEBUG)
-	{
 		ID3D12Debug* pDebugController;
 		ThrowIfFailed(D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void **)&pDebugController));
 		if (pDebugController)
@@ -244,9 +248,12 @@ void GameFramework::CreateD3Device()
 			pDebugController->EnableDebugLayer();
 			pDebugController->Release();
 		}
-	}
 #endif
+	}
+}
 
+void GameFramework::CreateD3Device()
+{
 	ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void **)&m_Factory));
 
 	IDXGIAdapter1 *pAdapter = NULL;
@@ -415,6 +422,7 @@ void GameFramework::PopulateCommandList()
 
 	D3D12_CPU_DESCRIPTOR_HANDLE RTVDescHandle = m_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	RTVDescHandle.ptr += (m_FrameIndex * m_RTVDescriptorIncrementSize);
+
 	D3D12_CPU_DESCRIPTOR_HANDLE DSVDescHandle = m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	m_CommandList->OMSetRenderTargets(1, &RTVDescHandle, FALSE, &DSVDescHandle);
 

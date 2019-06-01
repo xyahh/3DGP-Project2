@@ -1,55 +1,56 @@
-//*********************************************************
-//
-// Copyright (c) Microsoft. All rights reserved.
-// This code is licensed under the MIT License (MIT).
-// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-//
-//*********************************************************
 #pragma once
 #include <stdexcept>
 
-inline std::string HrToString(HRESULT hr)
-{
-	char s_str[64] = {};
-	sprintf_s(s_str, "HRESULT of 0x%08X", static_cast<UINT>(hr));
-	return std::string(s_str);
-}
+#define RANDOM_COLOR DX XMFLOAT4(\
+							rand() / float(RAND_MAX), \
+							rand() / float(RAND_MAX), \
+							rand() / float(RAND_MAX), \
+							rand() / float(RAND_MAX))
 
-class HrException : public std::runtime_error
-{
-public:
-	HrException(HRESULT hr) : std::runtime_error(HrToString(hr)), m_hr(hr) {}
-	HRESULT Error() const { return m_hr; }
-private:
-	const HRESULT m_hr;
-};
-
+// From DXSampleHelper.h 
+// Source: https://github.com/Microsoft/DirectX-Graphics-Samples
 inline void ThrowIfFailed(HRESULT hr)
 {
 	if (FAILED(hr))
-		throw HrException(hr);
+		throw std::exception();
 }
 
 inline ID3DBlob* CompileShader(const std::wstring& filename,const std::string& entrypoint, const std::string& target)
 {
-	UINT compileFlags = 0;
+	UINT uCompileFlags = 0;
 #if defined(_DEBUG)
-	compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+	uCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
-	ID3DBlob* byteCode = nullptr;
-	ID3DBlob* errors;
-	ThrowIfFailed(D3DCompileFromFile(filename.c_str(), NULL, NULL, entrypoint.c_str(), target.c_str(), compileFlags, 0, &byteCode, &errors));
-	if (errors)
+	ID3DBlob* pByteCode = nullptr;
+	ID3DBlob* pErrors = nullptr;
+
+	ThrowIfFailed(D3DCompileFromFile(filename.c_str(), NULL, NULL, entrypoint.c_str(), target.c_str(), uCompileFlags, 0, &pByteCode, &pErrors));
+
+	if (pErrors)
 	{
-		OutputDebugStringA((char*)errors->GetBufferPointer());
-		errors->Release();
+		OutputDebugStringA((char*)pErrors->GetBufferPointer());
+		pErrors->Release();
 	}
-	return byteCode;
+
+	return pByteCode;
 }
 
+inline ID3DBlob* LoadBinary(const std::wstring& filename)
+{
+	std::ifstream in(filename, std::ios::binary);
+	in.seekg(0, std::ios_base::end);
+	std::ifstream::pos_type size = (int)in.tellg();
+	in.seekg(0, std::ios_base::beg);
+
+	ID3DBlob* pBlob = NULL;
+	ThrowIfFailed(D3DCreateBlob(size, &pBlob));
+
+	in.read((char*)pBlob->GetBufferPointer(), size);
+	in.close();
+
+	return pBlob;
+}
+ 
 inline ID3D12Resource * CreateBufferResource(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, void * pData, UINT nBytes, D3D12_HEAP_TYPE HeapType, D3D12_RESOURCE_STATES ResourceState, ID3D12Resource ** ppUploadBuffer)
 {
 	ID3D12Resource* pBuffer;

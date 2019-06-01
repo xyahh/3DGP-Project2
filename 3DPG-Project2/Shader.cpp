@@ -49,17 +49,23 @@ D3D12_BLEND_DESC Shader::CreateBlendState()
 {
 	D3D12_BLEND_DESC BlendDesc;
 	::ZeroMemory(&BlendDesc, sizeof(D3D12_BLEND_DESC));
+
 	BlendDesc.AlphaToCoverageEnable = FALSE;
 	BlendDesc.IndependentBlendEnable = FALSE;
+
 	BlendDesc.RenderTarget[0].BlendEnable = FALSE;
 	BlendDesc.RenderTarget[0].LogicOpEnable = FALSE;
+
 	BlendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
 	BlendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ZERO;
 	BlendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+
 	BlendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 	BlendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 	BlendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+
 	BlendDesc.RenderTarget[0].LogicOp = D3D12_LOGIC_OP_NOOP;
+
 	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	return BlendDesc;
 }
