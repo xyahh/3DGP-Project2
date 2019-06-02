@@ -10,19 +10,20 @@ ID3D12RootSignature* Scene::CreateRootSignature(ID3D12Device* pDevice)
 
 	D3D12_ROOT_PARAMETER RootParameters[2];
 
+	/* we place the object matrix first since it is the one we are changing most often. */
 	RootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	RootParameters[0].Constants.Num32BitValues = 16;	// one matrix 4x4 = 16 (32 bit values)
 	RootParameters[0].Constants.ShaderRegister = 0;		// register 0 -> cbGameObjectInfo
-	RootParameters[0].Constants.RegisterSpace = 0;		// space 0
+	RootParameters[0].Constants.RegisterSpace = 0;		
 	RootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 
 	RootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	RootParameters[1].Constants.Num32BitValues = 32;	// two matrix 4x4 = 16 * 2 = 32 (32 bit values)
 	RootParameters[1].Constants.ShaderRegister = 1;		// register 1 -> cbCameraInfo
-	RootParameters[1].Constants.RegisterSpace = 0;		// space 0
+	RootParameters[1].Constants.RegisterSpace = 0;
 	RootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 
-	D3D12_ROOT_SIGNATURE_FLAGS RootSignatureFlags = // the three matrices (gmtxWorld, gmtxView and gmtxProj will be used in VS and NOT other places)
+	D3D12_ROOT_SIGNATURE_FLAGS RootSignatureFlags = // the three matrices (gmtxWorld, gmtxView and gmtxProj will be used in VS only)
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |

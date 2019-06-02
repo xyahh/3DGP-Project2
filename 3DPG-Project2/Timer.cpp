@@ -56,7 +56,7 @@ float Timer::Interpolation() const
 	return m_TimeAccumulator * DELTA_TIME;
 }
 
-float Timer::GetDeltaTime() const
+float Timer::GetDeltaTime()
 {
 	return DELTA_TIME;
 }

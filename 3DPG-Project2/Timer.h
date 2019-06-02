@@ -20,7 +20,7 @@ public:
 	bool  FlushAccumulatedTime();
 	void  Reset();
 	float Interpolation() const;
-	float GetDeltaTime() const;
+	static float GetDeltaTime();
 	const std::string& GetFPS() const;
 
 private:

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameFramework.h"
+
 /* Dev Console */
 #include <fcntl.h>
 #include <io.h>
@@ -141,29 +142,19 @@ void GameFramework::InitWindow(const std::string& title, int width, int height)
 		(ScreenSize.bottom - WindowRect.bottom) / 2
 	};
 
-	m_HWND = CreateWindow(lpszClass, m_WndTitle.c_str(), dwStyle, Center.x, Center.y,
+	m_hWnd = CreateWindow(lpszClass, m_WndTitle.c_str(), dwStyle, Center.x, Center.y,
 		WindowRect.right - WindowRect.left,
 		WindowRect.bottom - WindowRect.top,
 		NULL, NULL, m_hInstance, NULL);
 
-	ShowWindow(m_HWND, SW_SHOW);
-	UpdateWindow(m_HWND);
-}
-
-void GameFramework::InitCamera()
-{
-	if (m_Camera) delete m_Camera;
-	m_Camera = new Camera;
-	m_Camera->SetViewport(0, 0, m_WndClientWidth, m_WndClientHeight);
-	m_Camera->SetScissorRect(0, 0, (LONG)m_WndClientWidth, (LONG)m_WndClientHeight);
-	m_Camera->GenerateProjMatrix(1.f, 1500.f, float(m_WndClientWidth) / float(m_WndClientHeight), 90.f);
-	m_Camera->GenerateViewMatrix(XMFLOAT3(0.f, 15.f, -500.f), XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(0.f, 1.f, 0.f));
+	ShowWindow(m_hWnd, SW_SHOW);
+	UpdateWindow(m_hWnd);
 }
 
 void GameFramework::UpdateClientRect()
 {
 	RECT ClientRect;
-	::GetClientRect(m_HWND, &ClientRect);
+	::GetClientRect(m_hWnd, &ClientRect);
 	m_WndClientWidth = ClientRect.right - ClientRect.left;
 	m_WndClientHeight = ClientRect.bottom - ClientRect.top;
 }
@@ -179,7 +170,11 @@ void GameFramework::GameLoop()
 			continue;
 		}
 
+		m_Camera = m_Player->GetCamera();
+
 		m_Timer.Tick();
+
+		m_Scenes.top()->ProcessInput();
 		while (m_Timer.FlushAccumulatedTime())
 			m_Scenes.top()->Update(m_Timer.GetDeltaTime());
 
@@ -198,7 +193,7 @@ void GameFramework::GameLoop()
 		ThrowIfFailed(m_SwapChain->Present(0, 0));
 #endif
 		MoveToNextFrame();
-		::SetWindowText(m_HWND, (m_WndTitle + " (FPS: " + m_Timer.GetFPS() + ")").c_str());
+		::SetWindowText(m_hWnd, (m_WndTitle + " (FPS: " + m_Timer.GetFPS() + ")").c_str());
 	}
 }
 
@@ -318,7 +313,7 @@ void GameFramework::CreateSwapChain()
 	SwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 	SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	SwapChainDesc.OutputWindow = m_HWND;
+	SwapChainDesc.OutputWindow = m_hWnd;
 	SwapChainDesc.SampleDesc.Count = (m_4XMSAA_Enabled) ? 4 : 1;
 	SwapChainDesc.SampleDesc.Quality = (m_4XMSAA_QualityLevels) ? (m_4XMSAA_QualityLevels - 1) : 0;
 	SwapChainDesc.Windowed = TRUE;
@@ -328,7 +323,7 @@ void GameFramework::CreateSwapChain()
 
 	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
 
-	ThrowIfFailed(m_Factory->MakeWindowAssociation(m_HWND, DXGI_MWA_NO_ALT_ENTER));
+	ThrowIfFailed(m_Factory->MakeWindowAssociation(m_hWnd, DXGI_MWA_NO_ALT_ENTER));
 
 	
 }
@@ -468,7 +463,12 @@ void GameFramework::ToggleFullscreen()
 	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
 
 	CreateRenderTargetView();
+}
 
+void GameFramework::GetWindowSize(int * Width, int * Height) const
+{
+	*Width = m_WndClientWidth;
+	*Height = m_WndClientHeight;
 }
 
 void GameFramework::WaitForGPU()
@@ -505,27 +505,22 @@ void GameFramework::OnDestroy()
 
 LRESULT GameFramework::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	static Scene* pScene{ NULL };
+	pScene = m_Scenes.size() ? m_Scenes.top() : NULL;
+
 	switch (uMsg)
 	{
 	case WM_ACTIVATE:
 	case WM_SIZE:
 	case WM_LBUTTONDOWN:
-	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
+	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
 	case WM_MOUSEMOVE:
-		break;
 	case WM_KEYDOWN:
-		break;
 	case WM_KEYUP:
-		switch (wParam)
-		{
-		case VK_RETURN:
-			ToggleFullscreen();
-			break;
-		}
-		break;
 	case WM_COMMAND:
+		if(pScene) pScene->WndProc(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_PAINT:
 	{
@@ -541,4 +536,9 @@ LRESULT GameFramework::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		return(::DefWindowProc(hWnd, uMsg, wParam, lParam));
 	}
 	return 0;
+}
+
+HWND GameFramework::GetWindowHandle() const
+{
+	return m_hWnd;
 }

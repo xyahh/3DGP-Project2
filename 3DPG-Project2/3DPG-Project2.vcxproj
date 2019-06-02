@@ -124,40 +124,52 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="WagonPlayer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DiffusedCubeMesh.h" />
     <ClInclude Include="DiffusedShader.h" />
     <ClInclude Include="DiffusedVertex.h" />
     <ClInclude Include="DXHelper.h" />
     <ClInclude Include="DXMath.h" />
+    <ClInclude Include="FirstPersonCamera.h" />
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameplayScene.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ObjectsShader.h" />
+    <ClInclude Include="OBJMesh.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RotatingObject.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SpaceshipCamera.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ThirdPersonCamera.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TriangleMesh.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="WagonPlayer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DiffusedCubeMesh.cpp" />
     <ClCompile Include="DiffusedShader.cpp" />
     <ClCompile Include="DiffusedVertex.cpp" />
+    <ClCompile Include="FirstPersonCamera.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameplayScene.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ObjectsShader.cpp" />
+    <ClCompile Include="OBJMesh.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RotatingObject.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="SpaceshipCamera.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="ThirdPersonCamera.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="Vertex.cpp" />

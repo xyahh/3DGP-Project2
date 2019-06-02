@@ -1,6 +1,7 @@
 #pragma once
-#include "Camera.h"
 #include "ObjectsShader.h"
+#include "Player.h"
+#include "Camera.h"
 
 _3DGP_BEGIN_
 
@@ -10,12 +11,16 @@ public:
 	Scene() {}
 	virtual ~Scene() {}
 
-	virtual void Init(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList) = 0;
+	/*
+	The Init Builds all the Objects and ultimately returns the Main Player
+	of the Scene created.
+	*/
+	virtual Player* Init(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList) = 0;
 	virtual void Destroy() = 0;
 
-	virtual bool MouseMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
-	virtual bool KeyboardMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
+	virtual bool WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
+	virtual void ProcessInput() = 0;
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation) = 0;
 	virtual void Update(float DeltaTime) = 0;
 
@@ -27,10 +32,10 @@ public:
 
 
 protected:
-
-	ID3D12RootSignature*	m_RootSignature	{ NULL };
-	ObjectsShader*			m_Shaders		{ NULL };
-	int						m_ShaderCount	{ 0 };
+	Player*					m_Player			{ NULL };
+	ID3D12RootSignature*	m_RootSignature		{ NULL };
+	ObjectsShader*			m_ObjectShaders		{ NULL };
+	int						m_ObjectShaderCount	{ 0 };
 };
 
 _3DGP_END_

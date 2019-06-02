@@ -1,10 +1,5 @@
 #pragma once
 
-struct CB_GAMEOBJECT_INFO
-{
-	DX XMFLOAT4X4 m_World;
-};
-
 _3DGP_BEGIN_
 
 class Camera;

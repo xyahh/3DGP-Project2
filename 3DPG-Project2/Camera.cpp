@@ -1,16 +1,46 @@
 #include "stdafx.h"
 #include "Camera.h"
+#include "Player.h"
 
 _3DGP_USE_
 DX_USE
 
-Camera::Camera()
+void Camera::Init()
 {
 	XMStoreFloat4x4(&m_View, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_Proj, XMMatrixIdentity());
 
-	m_Viewport = { 0.f, 0.f, 500.f, 500.f, 0.f, 1.f };
-	m_ScissorRect = { 0, 0, 500, 500 };
+	int CX = GetSystemMetrics(SM_CXSCREEN);
+	int CY = GetSystemMetrics(SM_CYSCREEN);
+
+	m_Viewport = { 0.f, 0.f, static_cast<float>(CX), static_cast<float>(CY), 0.f, 1.f };
+	m_ScissorRect = { 0, 0, CX, CY };
+
+	m_Position = XMFLOAT3(0.f, 0.f, 0.f);
+	m_Right = XMFLOAT3(1.f, 0.f, 0.f);
+	m_Up = XMFLOAT3(0.f, 1.f, 0.f);
+	m_Look = XMFLOAT3(0.f, 0.f, 1.f);
+
+	m_Rotation = XMFLOAT3(0.f, 0.f, 0.f);
+
+	m_Offset = XMFLOAT3(0.f, 0.f, 0.f);
+	m_TimeLag = 0.f;
+	m_LookAtWorld = XMFLOAT3(0.f, 0.f, 0.f);
+	m_CameraMode = Camera::MODE::NONE;
+	m_Player = NULL;
+}
+
+Camera::Camera()
+{
+	Init();
+}
+
+Camera::Camera(Camera * pCamera)
+{
+	if (pCamera)
+		*this = *pCamera;
+	else
+		Init();
 }
 
 Camera::~Camera()
@@ -36,9 +66,41 @@ void Camera::UpdateShaderVariables(ID3D12GraphicsCommandList * pCommandList)
 	pCommandList->SetGraphicsRoot32BitConstants(1, 16, &ProjT, 16);
 }
 
+void Camera::GenerateViewMatrix()
+{
+	XMStoreFloat4x4(&m_View, XMMatrixLookAtLH(XMLoadFloat3(&m_Position), XMLoadFloat3(&m_LookAtWorld), XMLoadFloat3(&m_Up)));
+}
+
 void Camera::GenerateViewMatrix(const DX XMFLOAT3 & Position, const DX XMFLOAT3 & LookAt, const DX XMFLOAT3 & Up)
 {
-	XMStoreFloat4x4(&m_View, XMMatrixLookAtLH(XMLoadFloat3(&Position), XMLoadFloat3(&LookAt), XMLoadFloat3(&Up)));
+	m_Position = Position;
+	m_LookAtWorld = LookAt;
+	m_Up = Up;
+
+	GenerateViewMatrix();
+}
+
+void Camera::RegenerateViewMatrix()
+{
+	XMVECTOR Position = XMLoadFloat3(&m_Position);
+
+	XMVECTOR Look = XMVector3Normalize(XMLoadFloat3(&m_Look));
+	XMStoreFloat3(&m_Look, Look);
+
+	XMVECTOR Right = XMVector3Normalize(XMVector3Cross(XMLoadFloat3(&m_Up), Look));
+	XMStoreFloat3(&m_Right, Right);
+
+	XMVECTOR Up = XMVector3Normalize(XMVector3Cross(Look, Right));
+	XMStoreFloat3(&m_Up, Up);
+	
+	// Recalculate Inverse Matrix of Camera's World Transform (i.e. View Matrix)
+	m_View._11	= m_Right.x;	 m_View._12 = m_Up.x;		m_View._13 = m_Look.x;
+	m_View._21	= m_Right.y; 	 m_View._22 = m_Up.y;		m_View._23 = m_Look.y;
+	m_View._31	= m_Right.z;	 m_View._32 = m_Up.z;		m_View._33 = m_Look.z;
+
+	m_View._41 = -XMVectorGetX((XMVector3Dot(Position, Right)));
+	m_View._42 = -XMVectorGetX((XMVector3Dot(Position, Up)));
+	m_View._43 = -XMVectorGetX((XMVector3Dot(Position, Look)));
 }
 
 void Camera::GenerateProjMatrix(float Near, float Far, float AspectRatio, float FOVAngle)

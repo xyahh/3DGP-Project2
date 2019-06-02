@@ -39,14 +39,8 @@
     <Filter Include="Header Files\Objects">
       <UniqueIdentifier>{d43c1719-54f9-4fd1-804b-db0467e7b929}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Objects\GameObjects">
-      <UniqueIdentifier>{322810f4-670e-4927-9d04-121de2da8257}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{4d17cd04-4f6f-4fcf-bae3-ed38505fceaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Objects\GameObjects">
-      <UniqueIdentifier>{5400f38f-a829-469a-b35a-b50b4deb831f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{7f31e989-d6c7-47c0-a679-9a401bc18c70}</UniqueIdentifier>
@@ -56,6 +50,18 @@
     </Filter>
     <Filter Include="Header Files\Shader\Scene">
       <UniqueIdentifier>{1db9a9f0-659d-4767-8f28-bd5fbac05a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Camera">
+      <UniqueIdentifier>{fb105cb4-a227-4a9a-bbc7-81006d44da33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Camera">
+      <UniqueIdentifier>{0ced33bc-22a2-4caa-a2b8-632b2c700d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Objects\Player">
+      <UniqueIdentifier>{3e8effed-d130-4fa9-a373-3a3509977cd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Player">
+      <UniqueIdentifier>{5e105fc9-0c0d-4e9f-87d7-12e4a722f11d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -92,26 +98,44 @@
     <ClInclude Include="DXMath.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files\Objects\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="DiffusedShader.h">
       <Filter>Header Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="RotatingObject.h">
-      <Filter>Header Files\Objects\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="DiffusedCubeMesh.h">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="ObjectsShader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="OBJMesh.h">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="RotatingObject.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceshipCamera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstPersonCamera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdPersonCamera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Objects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="WagonPlayer.h">
+      <Filter>Header Files\Objects\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -142,20 +166,11 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\Objects\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="DiffusedShader.cpp">
       <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="RotatingObject.cpp">
-      <Filter>Source Files\Objects\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="DiffusedCubeMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
@@ -165,6 +180,33 @@
     </ClCompile>
     <ClCompile Include="ObjectsShader.cpp">
       <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="OBJMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="RotatingObject.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceshipCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstPersonCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdPersonCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Objects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="WagonPlayer.cpp">
+      <Filter>Source Files\Objects\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

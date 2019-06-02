@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "Player.h"
 
 _3DGP_BEGIN_
 
@@ -17,7 +18,7 @@ public:
 	static GameFramework* Get();
 
 	_3DGP_EXPLICIT_CHILD_OF_TEMPLATE_(StartingScene, Scene)
-	void Run(const std::string&  Title, int Width, int Height, bool DebugMode=false)
+	void Run(const std::string&  Title, bool DebugMode=false, int Width = GetSystemMetrics(SM_CXSCREEN), int Height = GetSystemMetrics(SM_CYSCREEN))
 	{
 		if (m_Initialized) return;
 
@@ -29,7 +30,6 @@ public:
 		m_Initialized = true;
 		InitWindow(Title, Width, Height);
 		InitDirectX();
-		InitCamera();
 		ChangeScenes<StartingScene>(FALSE);
 		GameLoop();
 	}
@@ -45,13 +45,16 @@ public:
 			if (m_Scenes.top())
 			{
 				m_Scenes.top()->Destroy();
+				m_Player = NULL;
+				m_Camera = NULL;
 				delete m_Scenes.top();
 			}
 			m_Scenes.pop();
 		}
 
 		m_Scenes.push(new NewScene);
-		m_Scenes.top()->Init(m_Device, m_CommandList);
+		m_Player = m_Scenes.top()->Init(m_Device, m_CommandList);
+		m_Camera = m_Player->GetCamera();
 		ThrowIfFailed(m_CommandList->Close());
 
 		ID3D12CommandList* pCommandLists[] = { m_CommandList };
@@ -64,7 +67,11 @@ public:
 
 	void ToggleFullscreen(); //To-Do - use way to get Window Size
 
+	void GetWindowSize(int* Width, int* Height) const;
+
 	LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
+	HWND GetWindowHandle() const;
 
 private:
 
@@ -80,7 +87,6 @@ private:
 	void DestroyFramework();
 
 	void InitWindow(const std::string&  title, int width, int height);
-	void InitCamera();
 
 	void UpdateClientRect();
 
@@ -108,7 +114,7 @@ private:
 	int							m_WndClientHeight	{ 0 };
 
 	MSG							m_Message			{};
-	HWND						m_HWND				{ NULL };
+	HWND						m_hWnd				{ NULL };
 	HINSTANCE					m_hInstance;
 
 	Timer						m_Timer;
@@ -139,7 +145,7 @@ private:
 	HANDLE						m_FenceEvent	{ NULL };
 
 	Camera*						m_Camera		{ NULL };
-
+	Player*						m_Player		{ NULL };
 };
 
 _3DGP_END_
