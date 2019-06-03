@@ -93,9 +93,10 @@ inline ID3D12Resource * CreateBufferResource(ID3D12Device * pDevice, ID3D12Graph
 			HeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
 			pDevice->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE, &ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, NULL, __uuidof(ID3D12Resource), (void**)ppUploadBuffer);
 
-			void* BufferData = NULL;
+			//Using UINT8 in case we want to only Upload part of the Resource to the Default HEAP.
+			UINT8* BufferData = NULL; 
 			D3D12_RANGE ReadRange{ 0, 0 };
-			(*ppUploadBuffer)->Map(0, &ReadRange, &BufferData);
+			(*ppUploadBuffer)->Map(0, &ReadRange, (void**)&BufferData);
 			memcpy(BufferData, pData, nBytes);
 			(*ppUploadBuffer)->Unmap(0, NULL);
 
@@ -116,8 +117,8 @@ inline ID3D12Resource * CreateBufferResource(ID3D12Device * pDevice, ID3D12Graph
 	case D3D12_HEAP_TYPE_UPLOAD:
 	{
 		D3D12_RANGE ReadRange{ 0, 0 };
-		void* pBufferData{ NULL };
-		pBuffer->Map(0, &ReadRange, &pBufferData);
+		UINT8* pBufferData{ NULL };
+		pBuffer->Map(0, &ReadRange, (void**)&pBufferData);
 		memcpy(pBufferData, pData, nBytes);
 		pBuffer->Unmap(0, NULL);
 	}

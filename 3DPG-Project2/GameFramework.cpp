@@ -174,9 +174,12 @@ void GameFramework::GameLoop()
 
 		m_Timer.Tick();
 
-		m_Scenes.top()->ProcessInput();
+
 		while (m_Timer.FlushAccumulatedTime())
+		{
+			m_Scenes.top()->ProcessInput();
 			m_Scenes.top()->Update(m_Timer.GetDeltaTime());
+		}
 
 		//Render is called in this function
 		PopulateCommandList();

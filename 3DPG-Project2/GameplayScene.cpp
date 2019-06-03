@@ -118,7 +118,7 @@ void GameplayScene::ProcessInput()
 				m_Player->Rotate(cyDelta, cxDelta, 0.0f);
 		}
 		if (dwDirection) 
-			m_Player->Move(dwDirection, 10.0f * Timer::GetDeltaTime(), true);
+			m_Player->Move(dwDirection, 100.0f * Timer::GetDeltaTime(), true);
 	}
 }
 
