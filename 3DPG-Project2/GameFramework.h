@@ -109,12 +109,12 @@ private:
 	bool						m_DebugModeEnabled	{ false };
 	bool						m_Initialized		{ false };
 
-	std::string					m_WndTitle			{ "3DGP Project" };
-	int							m_WndClientWidth	{ 0 };
-	int							m_WndClientHeight	{ 0 };
+	std::string					m_WndTitle;
+	int							m_WndClientWidth;
+	int							m_WndClientHeight;
 
-	MSG							m_Message			{};
-	HWND						m_hWnd				{ NULL };
+	MSG							m_Message;
+	HWND						m_hWnd;
 	HINSTANCE					m_hInstance;
 
 	Timer						m_Timer;

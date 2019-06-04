@@ -58,48 +58,37 @@ void ObjectsShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * p
 
 void ObjectsShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
-	//Mesh* pMesh = new DiffusedCubeMesh(pDevice, pCommandList, 12.f, 12.f, 12.f);
-	Mesh* pMesh = new OBJMesh(pDevice, pCommandList, "model.obj");
+	Mesh* pMesh = new DiffusedCubeMesh(pDevice, pCommandList, 50.f, 50.f, 50.f);
 
-	int xObjects = 1;
-	int yObjects = 1;
-	int zObjects = 1;
+	int xObjects = 7;
+	int yObjects = 7;
+	int zObjects = 7;
 	int i = 0;
 
-	//m_ObjectCount = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
-	m_ObjectCount = 1;
-
+	m_ObjectCount = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
 
 	m_Objects = new GameObject*[m_ObjectCount];
-	//float fxPadding = 120.f * 2.5f;
-	//float fyPadding = 120.f * 2.5f;
-	//float fzPadding = 120.f * 2.5f;
+	float fxPadding = 200.f;
+	float fyPadding = 200.f;
+	float fzPadding = 200.f;
 
-	GameObject* pRotatingObject{ NULL };
-	pRotatingObject = new GameObject;
-	pRotatingObject->SetMesh(pMesh);
-	//pRotatingObject->SetPosition(fxPadding * x, fyPadding * y, fzPadding * z);
-	//pRotatingObject->SetRotationAxis(XMFLOAT3(0.f, 1.f, 0.f));
-	//pRotatingObject->SetAngularSpeed(90.f);
-	m_Objects[0] = pRotatingObject;
-
-
-	//for (int x = -xObjects; x <= xObjects; ++x)
-	//{
-	//	for (int y = -yObjects; y <= yObjects; ++y)
-	//	{
-	//		for (int z = -zObjects; z <= zObjects; ++z)
-	//		{
-	//			pRotatingObject = new RotatingObject;
-	//			pRotatingObject->SetMesh(pMesh);
-	//			pRotatingObject->SetPosition(fxPadding * x, fyPadding * y, fzPadding * z);
-	//			pRotatingObject->SetRotationAxis(XMFLOAT3(0.f, 1.f, 0.f));
-	//			pRotatingObject->SetAngularSpeed(10.f * (i % 10) + 3.f);
-	//			m_Objects[i++] = pRotatingObject;
-	//
-	//		}
-	//	}
-	//}
+	RotatingObject* pRotatingObject{ NULL };
+	for (int x = -xObjects; x <= xObjects; ++x)
+	{
+		for (int y = -yObjects; y <= yObjects; ++y)
+		{
+			for (int z = -zObjects; z <= zObjects; ++z)
+			{
+				pRotatingObject = new RotatingObject;
+				pRotatingObject->SetMesh(pMesh);
+				pRotatingObject->SetPosition(fxPadding * x, fyPadding * y, fzPadding * z);
+				pRotatingObject->SetRotationAxis(XMFLOAT3(0.f, 1.f, 0.f));
+				pRotatingObject->SetAngularSpeed(10.f * (i % 10) + 3.f);
+				m_Objects[i++] = pRotatingObject;
+	
+			}
+		}
+	}
 
 	CreateShaderVariables(pDevice, pCommandList);
 

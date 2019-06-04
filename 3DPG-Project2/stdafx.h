@@ -31,7 +31,7 @@
 /* to use in CPP files */
 #define _3DGP_USE_	using namespace _3DGP_;
 
-/* Namespace macros */
+/* Other namespace macros */
 #define DX_USE using namespace DirectX;
 #define DX	DirectX::
 #define DX_BEGIN namespace DirectX {

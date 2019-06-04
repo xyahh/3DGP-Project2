@@ -15,18 +15,11 @@ WagonPlayer::WagonPlayer(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCo
 	CreateShaderVariables(pDevice, pCommandList);
 
 	m_Position = XMFLOAT3(0.f, 0.f, -50.f);
-
-	//Shader* pShader = new PlayerShader;
-	//pShader->CreateShader(pDevice, pGraphicsRootSignature);
-	//SetShader(pShader);
 }
 
 WagonPlayer::~WagonPlayer()
 {
 }
-
-_3DGP_USE_
-DX_USE
 
 Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 {
@@ -55,7 +48,7 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 
 	case Camera::MODE::SPACESHIP:
 
-		SetFriction(125.0f);
+		SetFriction(50.f);
 		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 		SetMaxVelocityXZ(400.0f);
@@ -68,15 +61,15 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 		break;
 
 	case Camera::MODE::THIRD_PERSON:
-		SetFriction(250.f);
+		SetFriction(50.f);
 		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
 
-		SetMaxVelocityXZ(125.0f);
+		SetMaxVelocityXZ(400.f);
 		SetMaxVelocityY(400.0f);
 
 		OnCameraChange(CurrentCameraMode, NewCameraMode);
 		m_Camera->SetTimeLag(0.25f);
-		m_Camera->SetOffset(XMFLOAT3(0.0f, 200.0f, -500.f));
+		m_Camera->SetOffset(XMFLOAT3(0.0f, 100.0f, -200.f));
 		break;
 
 	default:
