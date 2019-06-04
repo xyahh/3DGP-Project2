@@ -10,28 +10,12 @@ Mesh::Mesh(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
 
 Mesh::~Mesh()
 {
-	if (m_VertexBuffer) 
-		m_VertexBuffer->Release();
-	if (m_VertexUploadBuffer) 
-		m_VertexUploadBuffer->Release();
-
-	if (m_IndexBuffer)
-		m_IndexBuffer->Release();
-	if (m_IndexUploadBuffer)
-		m_IndexUploadBuffer->Release();
-
 }
 
 void Mesh::ReleaseUploadBuffers()
 {
-	if (m_VertexUploadBuffer) 
-		m_VertexUploadBuffer->Release();
-
-	if(m_IndexUploadBuffer)
-		m_IndexUploadBuffer->Release();
-
-	m_VertexUploadBuffer = NULL;
-	m_IndexUploadBuffer = NULL;
+	m_VertexUploadBuffer.Reset();
+	m_IndexUploadBuffer.Reset();
 }
 
 void Mesh::Render(ID3D12GraphicsCommandList * pCommandList)

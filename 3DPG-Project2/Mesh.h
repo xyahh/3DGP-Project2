@@ -17,11 +17,11 @@ public:
 
 protected:
 
-	ID3D12Resource* m_VertexBuffer			{ NULL };
-	ID3D12Resource* m_VertexUploadBuffer	{ NULL };
-
-	ID3D12Resource* m_IndexBuffer			{ NULL };
-	ID3D12Resource* m_IndexUploadBuffer		{ NULL };
+	MWRL ComPtr<ID3D12Resource> m_VertexBuffer;
+	MWRL ComPtr<ID3D12Resource> m_VertexUploadBuffer;
+							  
+	MWRL ComPtr<ID3D12Resource> m_IndexBuffer;
+	MWRL ComPtr<ID3D12Resource> m_IndexUploadBuffer;
 
 
 	D3D12_VERTEX_BUFFER_VIEW	m_VertexBufferView;

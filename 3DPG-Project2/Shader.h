@@ -18,8 +18,8 @@ public:
 	virtual D3D12_BLEND_DESC			CreateBlendState();
 	virtual D3D12_DEPTH_STENCIL_DESC	CreateDepthStencilState();
 
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** pShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** pShaderBlob);
+	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob);
+	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob);
 
 	virtual void						CreateShader(ID3D12Device* pDevice, ID3D12RootSignature* pRootSignature);
 	virtual void						CreateShaderVariables(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -33,8 +33,8 @@ private:
 	int m_ReferenceCount	{ 0 };
 
 protected:		
-	ID3D12PipelineState**	m_PipelineStates	{ NULL };
-	int						m_PipelineStateCount{ 0 };
+	MWRL ComPtr<ID3D12PipelineState>*	m_PipelineStates;
+	int	m_PipelineStateCount{ 0 };
 };
 
 

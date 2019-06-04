@@ -12,6 +12,8 @@
 #include <vector>
 #include <map>
 
+#include <wrl.h>
+
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <d3dcompiler.h>
@@ -36,6 +38,8 @@
 #define DX	DirectX::
 #define DX_BEGIN namespace DirectX {
 #define DX_END }
+#define STD std::
+#define MWRL Microsoft::WRL::
 
 /*
 -Explicit Child: It must be a child. Will NOT compile if T == Base.
@@ -46,3 +50,4 @@
 
 #include "DXHelper.h"
 #include "DXMath.h"
+#include "Timer.h"

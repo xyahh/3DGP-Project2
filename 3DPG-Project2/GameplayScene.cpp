@@ -21,12 +21,12 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 {
 	m_RootSignature = CreateRootSignature(pDevice);
 
-	m_Player = new WagonPlayer(pDevice, pCommandList, m_RootSignature);
+	m_Player = new WagonPlayer(pDevice, pCommandList, m_RootSignature.Get());
 
 	m_ObjectShaderCount = 1;
 	m_ObjectShaders = new ObjectsShader[m_ObjectShaderCount];
 	
-	m_ObjectShaders[0].CreateShader(pDevice, m_RootSignature);
+	m_ObjectShaders[0].CreateShader(pDevice, m_RootSignature.Get());
 	m_ObjectShaders[0].BuildObjects(pDevice, pCommandList);
 
 	return m_Player;
@@ -34,7 +34,6 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 
 void GameplayScene::Destroy()
 {
-	m_RootSignature->Release();
 	if (m_ObjectShaders)
 	{
 		for (int i = 0; i < m_ObjectShaderCount; ++i)
@@ -44,7 +43,6 @@ void GameplayScene::Destroy()
 		}
 		delete[] m_ObjectShaders;
 	}
-
 	m_Player->ReleaseShaderVariables();
 	delete m_Player;
 }
@@ -125,7 +123,7 @@ void GameplayScene::ProcessInput()
 void GameplayScene::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamera, float Interpolation)
 {
 	pCamera->UpdateViewportsAndScissorRects(pCommandList);
-	pCommandList->SetGraphicsRootSignature(m_RootSignature);
+	pCommandList->SetGraphicsRootSignature(m_RootSignature.Get());
 	pCamera->UpdateShaderVariables(pCommandList);
 
 	for (int i = 0; i < m_ObjectShaderCount; ++i)

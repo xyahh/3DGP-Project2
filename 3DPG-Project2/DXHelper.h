@@ -15,34 +15,30 @@ inline void ThrowIfFailed(HRESULT hr)
 		throw std::exception();
 }
 
-inline ID3DBlob* CompileShader(const std::wstring& filename,const std::string& entrypoint, const std::string& target)
+inline MWRL ComPtr<ID3DBlob> CompileShader(const STD wstring& filename,const STD string& entrypoint, const STD string& target)
 {
 	UINT uCompileFlags = 0;
 #if defined(_DEBUG)
 	uCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
-	ID3DBlob* pByteCode = nullptr;
-	ID3DBlob* pErrors = nullptr;
+	 MWRL ComPtr<ID3DBlob> pByteCode;
+	 MWRL ComPtr<ID3DBlob> pErrors;
 
 	ThrowIfFailed(D3DCompileFromFile(filename.c_str(), NULL, NULL, entrypoint.c_str(), target.c_str(), uCompileFlags, 0, &pByteCode, &pErrors));
 
 	if (pErrors)
-	{
 		OutputDebugStringA((char*)pErrors->GetBufferPointer());
-		pErrors->Release();
-	}
-
 	return pByteCode;
 }
 
-inline ID3DBlob* LoadBinary(const std::wstring& filename)
+inline  MWRL ComPtr<ID3DBlob> LoadBinary(const STD wstring& filename)
 {
-	std::ifstream in(filename, std::ios::binary);
-	in.seekg(0, std::ios_base::end);
-	std::ifstream::pos_type size = (int)in.tellg();
-	in.seekg(0, std::ios_base::beg);
+	STD ifstream in(filename, STD ios::binary);
+	in.seekg(0, STD ios_base::end);
+	STD ifstream::pos_type size = (int)in.tellg();
+	in.seekg(0, STD ios_base::beg);
 
-	ID3DBlob* pBlob = NULL;
+	MWRL ComPtr<ID3DBlob> pBlob;
 	ThrowIfFailed(D3DCreateBlob(size, &pBlob));
 
 	in.read((char*)pBlob->GetBufferPointer(), size);
@@ -51,9 +47,9 @@ inline ID3DBlob* LoadBinary(const std::wstring& filename)
 	return pBlob;
 }
  
-inline ID3D12Resource * CreateBufferResource(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, void * pData, UINT nBytes, D3D12_HEAP_TYPE HeapType, D3D12_RESOURCE_STATES ResourceState, ID3D12Resource ** ppUploadBuffer)
+inline MWRL ComPtr<ID3D12Resource> CreateBufferResource(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, void * pData, UINT nBytes, D3D12_HEAP_TYPE HeapType, D3D12_RESOURCE_STATES ResourceState, ID3D12Resource ** ppUploadBuffer)
 {
-	ID3D12Resource* pBuffer;
+	MWRL ComPtr<ID3D12Resource> pBuffer;
 
 	D3D12_HEAP_PROPERTIES HeapProperties;
 	::ZeroMemory(&HeapProperties, sizeof(D3D12_HEAP_PROPERTIES));
@@ -83,7 +79,7 @@ inline ID3D12Resource * CreateBufferResource(ID3D12Device * pDevice, ID3D12Graph
 	else
 		ResourceInitialState = D3D12_RESOURCE_STATE_COPY_DEST;
 
-	pDevice->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE, &ResourceDesc, ResourceInitialState, NULL, __uuidof(ID3D12Resource), (void**)&pBuffer);
+	pDevice->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE, &ResourceDesc, ResourceInitialState, NULL, IID_PPV_ARGS(&pBuffer));
 
 	switch (HeapType)
 	{
@@ -100,13 +96,13 @@ inline ID3D12Resource * CreateBufferResource(ID3D12Device * pDevice, ID3D12Graph
 			memcpy(BufferData, pData, nBytes);
 			(*ppUploadBuffer)->Unmap(0, NULL);
 
-			pCommandList->CopyResource(pBuffer, *ppUploadBuffer);
+			pCommandList->CopyResource(pBuffer.Get(), *ppUploadBuffer);
 
 			D3D12_RESOURCE_BARRIER ResourceBarrier;
 			::ZeroMemory(&ResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
 			ResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 			ResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-			ResourceBarrier.Transition.pResource = pBuffer;
+			ResourceBarrier.Transition.pResource = pBuffer.Get();
 			ResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 			ResourceBarrier.Transition.StateAfter = ResourceState;
 			ResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;

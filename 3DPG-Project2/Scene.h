@@ -27,13 +27,15 @@ public:
 	virtual void ReleaseUploadBuffers() = 0;
 	
 
-	ID3D12RootSignature* CreateRootSignature(ID3D12Device* pDevice);
+	MWRL ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* pDevice);
 	ID3D12RootSignature* GetRootSignature() const;
 
 
 protected:
+	
+	MWRL ComPtr<ID3D12RootSignature> m_RootSignature;
+	
 	Player*					m_Player			{ NULL };
-	ID3D12RootSignature*	m_RootSignature		{ NULL };
 	ObjectsShader*			m_ObjectShaders		{ NULL };
 	int						m_ObjectShaderCount	{ 0 };
 };

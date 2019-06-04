@@ -29,26 +29,11 @@ void GameFramework::InitFramework()
 	m_Initialized = false;
 	m_DebugModeEnabled = false;
 
-	m_Factory = NULL;
-	m_SwapChain = NULL;
-	m_Device = NULL;
-
-	for (int i = 0; i < FRAME_COUNT; i++) m_SwapChainBuffer[i] = NULL;
 	m_FrameIndex = 0;
-
-	m_CommandAllocator = NULL;
-	m_CommandQueue = NULL;
-	m_CommandList = NULL;
-
-	m_RTVDescriptorHeap = NULL;
-	m_DSVDescriptorHeap = NULL;
-
-	m_DepthStencilBuffer = NULL;
 
 	m_RTVDescriptorIncrementSize = 0;
 	m_DSVDescriptorIncrementSize = 0;
 
-	m_Fence = NULL;
 	m_FenceEvent = NULL;
 	for (int i = 0; i < FRAME_COUNT; ++i)
 		m_FenceValues[i] = 0;
@@ -83,27 +68,11 @@ void GameFramework::DestroyFramework()
 		m_Scenes.pop();
 	}
 	::CloseHandle(m_FenceEvent);
-
-	if (m_DepthStencilBuffer) m_DepthStencilBuffer->Release();
-	if (m_DSVDescriptorHeap) m_DSVDescriptorHeap->Release();
-
-	for (int i = 0; i < FRAME_COUNT; i++) if (m_SwapChainBuffer[i]) m_SwapChainBuffer[i]->Release();
-	if (m_RTVDescriptorHeap) m_RTVDescriptorHeap->Release();
-
-	if (m_CommandAllocator) m_CommandAllocator->Release();
-	if (m_CommandQueue)		m_CommandQueue->Release();
-	if (m_CommandList)		m_CommandList->Release();
-	if (m_Fence)			m_Fence->Release();
-
 	m_SwapChain->SetFullscreenState(FALSE, NULL);
-	if (m_SwapChain)	m_SwapChain->Release();
-	if (m_Device)		m_Device->Release();
-	if (m_Factory)		m_Factory->Release();
-
 	if (m_Camera) delete m_Camera;
 }
 
-void GameFramework::InitWindow(const std::string& title, int width, int height)
+void GameFramework::InitWindow(const STD string& title, int width, int height)
 {
 	m_WndTitle = title;
 	m_WndClientWidth = width;
@@ -184,7 +153,7 @@ void GameFramework::GameLoop()
 		//Render is called in this function
 		PopulateCommandList();
 
-		ID3D12CommandList* CommandLists[] = { m_CommandList };
+		ID3D12CommandList* CommandLists[] = { m_CommandList.Get() };
 
 		m_CommandQueue->ExecuteCommandLists(_countof(CommandLists), CommandLists);
 
@@ -239,37 +208,37 @@ void GameFramework::EnableDebugMode()
 	//Debug Controller
 	{
 #if defined(_DEBUG)
-		ID3D12Debug* pDebugController;
-		ThrowIfFailed(D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void **)&pDebugController));
+	    MWRL ComPtr<ID3D12Debug> pDebugController;
+		ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(pDebugController.GetAddressOf())));
 		if (pDebugController)
-		{
 			pDebugController->EnableDebugLayer();
-			pDebugController->Release();
-		}
 #endif
 	}
 }
 
 void GameFramework::CreateD3Device()
 {
-	ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void **)&m_Factory));
+	ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_Factory.GetAddressOf())));
 
-	IDXGIAdapter1 *pAdapter = NULL;
-
-	for (UINT i = 0; DXGI_ERROR_NOT_FOUND != m_Factory->EnumAdapters1(i, &pAdapter); ++i)
+	//Create Device
 	{
-		DXGI_ADAPTER_DESC1 AdapterDesc;
-		pAdapter->GetDesc1(&AdapterDesc);
-		if (AdapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) continue;
-		if (SUCCEEDED(D3D12CreateDevice(pAdapter, D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), (void **)&m_Device))) break;
-	}
+		MWRL ComPtr<IDXGIAdapter1> pAdapter;
 
-	if (!pAdapter)
-	{
-		m_Factory->EnumWarpAdapter(_uuidof(IDXGIFactory4), (void **)&pAdapter);
-		ThrowIfFailed(D3D12CreateDevice(pAdapter, D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), (void **)&m_Device));
-	}
+		for (UINT i = 0; DXGI_ERROR_NOT_FOUND != m_Factory->EnumAdapters1(i, &pAdapter); ++i)
+		{
+			DXGI_ADAPTER_DESC1 AdapterDesc;
+			pAdapter->GetDesc1(&AdapterDesc);
+			if (AdapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) continue;
+			if (SUCCEEDED(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&m_Device)))) break;
+		}
 
+		if (!pAdapter)
+		{
+			m_Factory->EnumWarpAdapter(IID_PPV_ARGS(&m_Factory));
+			ThrowIfFailed(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&m_Device)));
+		}
+	}
+	
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS MSAAQualityLevels;
 	MSAAQualityLevels.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	MSAAQualityLevels.SampleCount = 4;
@@ -279,12 +248,10 @@ void GameFramework::CreateD3Device()
 	m_4XMSAA_QualityLevels = MSAAQualityLevels.NumQualityLevels;
 	m_4XMSAA_Enabled = (m_4XMSAA_QualityLevels > 1) ? true : false;
 
-	ThrowIfFailed(m_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void **)&m_Fence));
+	ThrowIfFailed(m_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE,IID_PPV_ARGS(&m_Fence)));
 	for (UINT i = 0; i < FRAME_COUNT; ++i) m_FenceValues[i] = 0;
 
 	m_FenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-
-	if (pAdapter) pAdapter->Release();
 }
 
 void GameFramework::CreateCommandInterfaces()
@@ -294,11 +261,11 @@ void GameFramework::CreateCommandInterfaces()
 	CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 	CommandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-	ThrowIfFailed(m_Device->CreateCommandQueue(&CommandQueueDesc, _uuidof(ID3D12CommandQueue), (void **)&m_CommandQueue));
+	ThrowIfFailed(m_Device->CreateCommandQueue(&CommandQueueDesc, IID_PPV_ARGS(&m_CommandQueue)));
 
-	ThrowIfFailed(m_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void **)&m_CommandAllocator));
+	ThrowIfFailed(m_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_CommandAllocator)));
 
-	ThrowIfFailed(m_Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_CommandAllocator, NULL, __uuidof(ID3D12GraphicsCommandList), (void **)&m_CommandList));
+	ThrowIfFailed(m_Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_CommandAllocator.Get(), NULL, IID_PPV_ARGS(&m_CommandList)));
 	ThrowIfFailed(m_CommandList->Close());
 }
 
@@ -322,13 +289,11 @@ void GameFramework::CreateSwapChain()
 	SwapChainDesc.Windowed = TRUE;
 	SwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	ThrowIfFailed(m_Factory->CreateSwapChain(m_CommandQueue, &SwapChainDesc, (IDXGISwapChain **)&m_SwapChain));
+	ThrowIfFailed(m_Factory->CreateSwapChain(m_CommandQueue.Get(), &SwapChainDesc, (IDXGISwapChain **)m_SwapChain.GetAddressOf()));
 
 	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
 
-	ThrowIfFailed(m_Factory->MakeWindowAssociation(m_hWnd, DXGI_MWA_NO_ALT_ENTER));
-
-	
+	ThrowIfFailed(m_Factory->MakeWindowAssociation(m_hWnd, DXGI_MWA_NO_ALT_ENTER));	
 }
 
 void GameFramework::CreateRTVDSVDescriptorHeaps()
@@ -340,13 +305,13 @@ void GameFramework::CreateRTVDSVDescriptorHeaps()
 	DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	DescriptorHeapDesc.NodeMask = 0;
 
-	ThrowIfFailed(m_Device->CreateDescriptorHeap(&DescriptorHeapDesc, __uuidof(ID3D12DescriptorHeap), (void **)&m_RTVDescriptorHeap));
+	ThrowIfFailed(m_Device->CreateDescriptorHeap(&DescriptorHeapDesc, IID_PPV_ARGS(&m_RTVDescriptorHeap)));
 	m_RTVDescriptorIncrementSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	DescriptorHeapDesc.NumDescriptors = 1;
 	DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 
-	ThrowIfFailed(m_Device->CreateDescriptorHeap(&DescriptorHeapDesc, __uuidof(ID3D12DescriptorHeap), (void **)&m_DSVDescriptorHeap));
+	ThrowIfFailed(m_Device->CreateDescriptorHeap(&DescriptorHeapDesc, IID_PPV_ARGS(&m_DSVDescriptorHeap)));
 	m_DSVDescriptorIncrementSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }
 
@@ -355,8 +320,8 @@ void GameFramework::CreateRenderTargetView()
 	D3D12_CPU_DESCRIPTOR_HANDLE CPUDescriptorHandle = m_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	for (UINT i = 0; i < FRAME_COUNT; i++)
 	{
-		ThrowIfFailed(m_SwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void **)&m_SwapChainBuffer[i]));
-		m_Device->CreateRenderTargetView(m_SwapChainBuffer[i], NULL, CPUDescriptorHandle);
+		ThrowIfFailed(m_SwapChain->GetBuffer(i, IID_PPV_ARGS(&m_SwapChainBuffer[i])));
+		m_Device->CreateRenderTargetView(m_SwapChainBuffer[i].Get(), NULL, CPUDescriptorHandle);
 		CPUDescriptorHandle.ptr += m_RTVDescriptorIncrementSize;
 	}
 }
@@ -390,7 +355,7 @@ void GameFramework::CreateDepthStencilView()
 	ClearValue.DepthStencil.Stencil = 0;
 
 	ThrowIfFailed(m_Device->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE,
-		&ResourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &ClearValue, __uuidof(ID3D12Resource), (void **)&m_DepthStencilBuffer));
+		&ResourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &ClearValue, IID_PPV_ARGS(&m_DepthStencilBuffer)));
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC DSVDesc;
 	::ZeroMemory(&DSVDesc, sizeof(D3D12_DEPTH_STENCIL_VIEW_DESC));
@@ -399,19 +364,19 @@ void GameFramework::CreateDepthStencilView()
 	DSVDesc.Flags = D3D12_DSV_FLAG_NONE;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	m_Device->CreateDepthStencilView(m_DepthStencilBuffer, &DSVDesc, d3dDsvCPUDescriptorHandle);
+	m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), &DSVDesc, d3dDsvCPUDescriptorHandle);
 }
 
 void GameFramework::PopulateCommandList()
 {
 	ThrowIfFailed(m_CommandAllocator->Reset());
-	ThrowIfFailed(m_CommandList->Reset(m_CommandAllocator, NULL));
+	ThrowIfFailed(m_CommandList->Reset(m_CommandAllocator.Get(), NULL));
 
 	D3D12_RESOURCE_BARRIER ResourceBarrier;
 	::ZeroMemory(&ResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
 	ResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	ResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	ResourceBarrier.Transition.pResource = m_SwapChainBuffer[m_FrameIndex];
+	ResourceBarrier.Transition.pResource = m_SwapChainBuffer[m_FrameIndex].Get();
 	ResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	ResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	ResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
@@ -429,7 +394,7 @@ void GameFramework::PopulateCommandList()
 	m_CommandList->ClearDepthStencilView(DSVDescHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
 
 	//Render here before closing the Command List and before transitioning the Resource State to present	
-	m_Scenes.top()->Render(m_CommandList, m_Camera, m_Timer.Interpolation());
+	m_Scenes.top()->Render(m_CommandList.Get(), m_Camera, m_Timer.Interpolation());
 
 	ResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	ResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
@@ -457,13 +422,15 @@ void GameFramework::ToggleFullscreen()
 	dxgiTargetParameters.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	m_SwapChain->ResizeTarget(&dxgiTargetParameters);
 
-	for (int i = 0; i < FRAME_COUNT; i++) if (m_SwapChainBuffer[i]) m_SwapChainBuffer[i]->Release();
+	for (int i = 0; i < FRAME_COUNT; i++)
+		m_SwapChainBuffer[i].Reset();
 
 	DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
 	m_SwapChain->GetDesc(&dxgiSwapChainDesc);
 	m_SwapChain->ResizeBuffers(FRAME_COUNT, m_WndClientWidth, m_WndClientHeight, dxgiSwapChainDesc.BufferDesc.Format, dxgiSwapChainDesc.Flags);
 
 	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
+
 
 	CreateRenderTargetView();
 }
@@ -477,7 +444,7 @@ void GameFramework::GetWindowSize(int * Width, int * Height) const
 void GameFramework::WaitForGPU()
 {
 	UINT64 FenceValue = ++m_FenceValues[m_FrameIndex];
-	ThrowIfFailed(m_CommandQueue->Signal(m_Fence, FenceValue));
+	ThrowIfFailed(m_CommandQueue->Signal(m_Fence.Get(), FenceValue));
 	if (m_Fence->GetCompletedValue() < FenceValue)
 	{
 		ThrowIfFailed(m_Fence->SetEventOnCompletion(FenceValue, m_FenceEvent));
@@ -490,7 +457,7 @@ void GameFramework::MoveToNextFrame()
 	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
 
 	UINT64 nFenceValue = ++m_FenceValues[m_FrameIndex];
-	ThrowIfFailed(m_CommandQueue->Signal(m_Fence, nFenceValue));
+	ThrowIfFailed(m_CommandQueue->Signal(m_Fence.Get(), nFenceValue));
 
 	if (m_Fence->GetCompletedValue() < nFenceValue)
 	{

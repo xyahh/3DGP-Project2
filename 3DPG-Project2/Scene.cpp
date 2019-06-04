@@ -4,9 +4,9 @@
 _3DGP_USE_
 DX_USE
 
-ID3D12RootSignature* Scene::CreateRootSignature(ID3D12Device* pDevice)
+MWRL ComPtr<ID3D12RootSignature> Scene::CreateRootSignature(ID3D12Device* pDevice)
 {
-	ID3D12RootSignature *pRootSignature = NULL;
+	MWRL ComPtr<ID3D12RootSignature> pRootSignature = NULL;
 
 	D3D12_ROOT_PARAMETER RootParameters[2];
 
@@ -39,20 +39,17 @@ ID3D12RootSignature* Scene::CreateRootSignature(ID3D12Device* pDevice)
 	RootSignatureDesc.pStaticSamplers = NULL;
 	RootSignatureDesc.Flags = RootSignatureFlags;
 
-	ID3DBlob* pSignatureBlob = NULL;
-	ID3DBlob* pErrorBlob = NULL;
+	MWRL ComPtr<ID3DBlob> pSignatureBlob;
+	MWRL ComPtr<ID3DBlob> pErrorBlob;
 
 	ThrowIfFailed(D3D12SerializeRootSignature(&RootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &pSignatureBlob, &pErrorBlob));
 	ThrowIfFailed(pDevice->CreateRootSignature(0, pSignatureBlob->GetBufferPointer(), 
-		pSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature), (void**)&pRootSignature));
-
-	if (pSignatureBlob) pSignatureBlob->Release();
-	if (pErrorBlob) pErrorBlob->Release();
+		pSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&pRootSignature)));
 
 	return pRootSignature;
 }
 
 ID3D12RootSignature* Scene::GetRootSignature() const
 {
-	return m_RootSignature;
+	return m_RootSignature.Get();
 }

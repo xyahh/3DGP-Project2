@@ -29,7 +29,7 @@ DiffusedCubeMesh::DiffusedCubeMesh(ID3D12Device * pDevice, ID3D12GraphicsCommand
 		m_VertexCount = _countof(pVertices);
 
 		m_VertexBuffer = CreateBufferResource(pDevice, pCommandList, pVertices, sizeof(pVertices),
-			D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_VertexBuffer);
+			D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_VertexUploadBuffer);
 
 		m_VertexBufferView.BufferLocation = m_VertexBuffer->GetGPUVirtualAddress();
 		m_VertexBufferView.StrideInBytes = sizeof(DiffusedVertex);

@@ -26,7 +26,7 @@ D3D12_INPUT_LAYOUT_DESC DiffusedShader::CreateInputLayout()
 	return InputLayoutDesc;
 }
 
-D3D12_SHADER_BYTECODE DiffusedShader::CreateVertexShader(ID3DBlob ** pShaderBlob)
+D3D12_SHADER_BYTECODE DiffusedShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	D3D12_SHADER_BYTECODE ByteCode;
 	*pShaderBlob = CompileShader(L"Shaders.hlsl", "VSDiffused", "vs_5_1");
@@ -36,7 +36,7 @@ D3D12_SHADER_BYTECODE DiffusedShader::CreateVertexShader(ID3DBlob ** pShaderBlob
 	return ByteCode;
 }
 
-D3D12_SHADER_BYTECODE DiffusedShader::CreatePixelShader(ID3DBlob ** pShaderBlob)
+D3D12_SHADER_BYTECODE DiffusedShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	D3D12_SHADER_BYTECODE ByteCode;
 	*pShaderBlob = CompileShader(L"Shaders.hlsl", "PSDiffused", "ps_5_1");
@@ -48,7 +48,7 @@ D3D12_SHADER_BYTECODE DiffusedShader::CreatePixelShader(ID3DBlob ** pShaderBlob)
 void DiffusedShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
 {
 	m_PipelineStateCount = 1;
-	m_PipelineStates = new ID3D12PipelineState*[m_PipelineStateCount];
+	m_PipelineStates = new MWRL ComPtr<ID3D12PipelineState>[m_PipelineStateCount];
 
 	Shader::CreateShader(pDevice, pRootSignature);
 }

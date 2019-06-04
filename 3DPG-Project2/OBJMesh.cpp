@@ -16,28 +16,29 @@ std::map<std::string, ATTRIBUTE_TYPE> gAttributeMap =
 
 _3DGP_USE_
 
-OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, const std::string & filepath) 
+OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, const STD string & filepath) 
 	: Mesh(pDevice, pCommandList)
 {
-	std::vector<DiffusedVertex> pVertices;
-	std::vector<UINT>			pIndices;
+	STD vector<DiffusedVertex>	pVertices;
+	STD vector<UINT>			pIndices;
 
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	//Read OBJ File
 	{
-		std::fstream in(filepath, std::ios::in | std::ios::binary);
+		STD fstream in(filepath, STD ios::in | STD ios::binary);
 		assert(in && "OBJ File not found!");
-		std::string attribute;
+		STD string attribute;
 		float x, y, z;
 		char slash;
 		bool TexCoordsEnabled = false;
 		bool NormalsEnabled = false;
-		for (std::string line; std::getline(in, line);)
+
+		for (STD string line; STD getline(in, line);)
 		{
 			if (line.size() == 0) continue;
 
-			std::stringstream lineparser(line);
+			STD stringstream lineparser(line);
 			lineparser >> attribute;
 			switch (gAttributeMap[attribute])
 			{
@@ -54,7 +55,7 @@ OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandLis
 			case ATTRIBUTE_TYPE::POLYGON:
 			{
 				UINT vertex_index, texture_index, normal_index;
-				std::vector<UINT> pPolygon;
+				STD vector<UINT> pPolygon;
 				while (lineparser >> vertex_index)
 				{
 					--vertex_index;

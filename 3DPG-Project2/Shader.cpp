@@ -11,11 +11,7 @@ Shader::Shader()
 Shader::~Shader()
 {
 	if (m_PipelineStates)
-	{
-		for (int i = 0; i < m_PipelineStateCount; ++i)
-			if(m_PipelineStates[i]) m_PipelineStates[i]->Release();
 		delete[] m_PipelineStates;
-	}
 }
 
 D3D12_INPUT_LAYOUT_DESC Shader::CreateInputLayout()
@@ -93,7 +89,7 @@ D3D12_DEPTH_STENCIL_DESC Shader::CreateDepthStencilState()
 	return DepthStencilDesc;
 }
 
-D3D12_SHADER_BYTECODE Shader::CreateVertexShader(ID3DBlob ** pShaderBlob)
+D3D12_SHADER_BYTECODE Shader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	D3D12_SHADER_BYTECODE ByteCode;
 	ByteCode.BytecodeLength = 0;
@@ -101,7 +97,7 @@ D3D12_SHADER_BYTECODE Shader::CreateVertexShader(ID3DBlob ** pShaderBlob)
 	return ByteCode;
 }
 
-D3D12_SHADER_BYTECODE Shader::CreatePixelShader(ID3DBlob ** pShaderBlob)
+D3D12_SHADER_BYTECODE Shader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	D3D12_SHADER_BYTECODE ByteCode;
 	ByteCode.BytecodeLength = 0;
@@ -111,8 +107,8 @@ D3D12_SHADER_BYTECODE Shader::CreatePixelShader(ID3DBlob ** pShaderBlob)
 
 void Shader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
 {
-	ID3DBlob* pVertexShaderBlob = NULL;
-	ID3DBlob* pPixelShaderBlob = NULL;
+	MWRL ComPtr<ID3DBlob> pVertexShaderBlob = NULL;
+	MWRL ComPtr<ID3DBlob> pPixelShaderBlob = NULL;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateDesc;
 	::ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -134,12 +130,8 @@ void Shader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSig
 	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	PipelineStateDesc.SampleDesc.Count = 1;
 
-	ThrowIfFailed(pDevice->CreateGraphicsPipelineState(&PipelineStateDesc,
-		__uuidof(ID3D12PipelineState), (void **)&m_PipelineStates[0]));
+	ThrowIfFailed(pDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&m_PipelineStates[0])));
 	
-	if (pVertexShaderBlob) pVertexShaderBlob->Release();
-	if (pPixelShaderBlob) pPixelShaderBlob->Release();
-
 	//delete the InputElements created in CreateInputLayout() function
 	if (PipelineStateDesc.InputLayout.pInputElementDescs) 
 		delete[] PipelineStateDesc.InputLayout.pInputElementDescs;
@@ -159,7 +151,7 @@ void Shader::ReleaseShaderVariables()
 
 void Shader::PreRender(ID3D12GraphicsCommandList * pCommandList)
 {
-	pCommandList->SetPipelineState(m_PipelineStates[0]);
+	pCommandList->SetPipelineState(m_PipelineStates[0].Get());
 }
 
 void Shader::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamera)
