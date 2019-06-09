@@ -13,6 +13,7 @@
 #include <map>
 
 #include <wrl.h>
+#include <list>
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
@@ -25,6 +26,8 @@
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+
+#define KEY_PRESSED(pKeyBuffer, VirtualKey) (pKeyBuffer[VirtualKey] & 0xF0)
 
 /* to use in header files */
 #define _3DGP_BEGIN_ namespace _3DGP_ {

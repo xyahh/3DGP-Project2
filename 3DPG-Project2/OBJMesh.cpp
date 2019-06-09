@@ -16,7 +16,7 @@ std::map<std::string, ATTRIBUTE_TYPE> gAttributeMap =
 
 _3DGP_USE_
 
-OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, const STD string & filepath) 
+OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, const STD string & filepath, const DX XMFLOAT3& Scale, const DX XMFLOAT3& Offset) 
 	: Mesh(pDevice, pCommandList)
 {
 	STD vector<DiffusedVertex>	pVertices;
@@ -44,7 +44,11 @@ OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandLis
 			{
 			case ATTRIBUTE_TYPE::VERTEX:
 				if(lineparser >> x >> y >> z)
-					pVertices.emplace_back(DX XMFLOAT3(x, y, z), RANDOM_COLOR);
+					pVertices.emplace_back(DX XMFLOAT3(
+						(x * Scale.x) + Offset.x, 
+						(y * Scale.y) + Offset.y, 
+						(z * Scale.z) + Offset.z), 
+						RANDOM_COLOR);
 				break;
 			case ATTRIBUTE_TYPE::TEXCOORD:
 				TexCoordsEnabled = true;

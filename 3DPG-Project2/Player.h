@@ -121,6 +121,8 @@ public:
 	virtual void PreRender();
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera = NULL);
 
+	virtual bool ProcessInput();
+
 protected:
 
 	void OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCameraMode);

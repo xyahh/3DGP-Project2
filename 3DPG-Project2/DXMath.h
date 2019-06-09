@@ -6,6 +6,11 @@ inline bool Zero(float fValue)
 	return  fabsf(fValue) < FLT_EPSILON;
 }
 
+inline bool Equal(float a, float b) 
+{ 
+	return(Zero(a - b));
+}
+
 inline void Clamp(float lowest, float * n, float highest)
 {
 	*n = max(lowest, min(*n, highest));

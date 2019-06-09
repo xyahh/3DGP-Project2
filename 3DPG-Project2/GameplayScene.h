@@ -14,7 +14,7 @@ public:
 
 	virtual bool WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	virtual void ProcessInput();
+	virtual bool ProcessInput();
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation);
 	virtual void Update(float DeltaTime);
 
@@ -22,6 +22,8 @@ public:
 
 private:
 	POINT m_OldCursorPos;
+	float m_CurrentTimeDilation	{ 1.f };
+	float m_TargetTimeDilation	{ 1.f };
 };
 
 _3DGP_END_

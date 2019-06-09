@@ -24,6 +24,7 @@ public:
 	const std::string& GetFPS() const;
 
 private:
+
 	TimePoint	m_CurrentTime;
 	TimePoint	m_PreviousTime;
 	float		m_TimeFrame;
