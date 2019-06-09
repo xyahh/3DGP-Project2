@@ -21,7 +21,7 @@ public:
 	virtual void ReleaseUploadBuffers();
 
 private:
-	POINT m_OldCursorPos;
+	POINT m_CursorPos;
 	float m_CurrentTimeDilation	{ 1.f };
 	float m_TargetTimeDilation	{ 1.f };
 };

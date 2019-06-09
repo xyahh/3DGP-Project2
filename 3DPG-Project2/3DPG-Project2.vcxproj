@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="TimedObject.h" />
     <ClInclude Include="WagonPlayer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DiffusedCubeMesh.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TimedObject.cpp" />
     <ClCompile Include="WagonPlayer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DiffusedCubeMesh.cpp" />

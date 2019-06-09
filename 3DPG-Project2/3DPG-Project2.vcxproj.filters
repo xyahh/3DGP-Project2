@@ -48,9 +48,6 @@
     <Filter Include="Shader Files">
       <UniqueIdentifier>{f5ab5683-5a46-4ca5-850a-3bfb0e0113a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Shader\Scene">
-      <UniqueIdentifier>{1db9a9f0-659d-4767-8f28-bd5fbac05a78}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Camera">
       <UniqueIdentifier>{fb105cb4-a227-4a9a-bbc7-81006d44da33}</UniqueIdentifier>
     </Filter>
@@ -62,6 +59,9 @@
     </Filter>
     <Filter Include="Source Files\Objects\Player">
       <UniqueIdentifier>{5e105fc9-0c0d-4e9f-87d7-12e4a722f11d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{1db9a9f0-659d-4767-8f28-bd5fbac05a78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,10 +90,10 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Header Files\Shader\Scene</Filter>
+      <Filter>Header Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="GameplayScene.h">
-      <Filter>Header Files\Shader\Scene</Filter>
+      <Filter>Header Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="DXMath.h">
       <Filter>Header Files\Utilities</Filter>
@@ -136,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="WagonPlayer.h">
       <Filter>Header Files\Objects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TimedObject.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +210,9 @@
     </ClCompile>
     <ClCompile Include="WagonPlayer.cpp">
       <Filter>Source Files\Objects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TimedObject.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
