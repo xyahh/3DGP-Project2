@@ -7,7 +7,7 @@
 
 _3DGP_BEGIN_
 
-constexpr float BLOCK_LENGTH{ 25.f };
+constexpr float BLOCK_LENGTH{ 20.f };
 constexpr float RAILS_PER_SEC{ 16.f };
 constexpr float RAIL_SPAWN_RATE{ 1.f / RAILS_PER_SEC };
 constexpr float RAIL_LIFETIME{ 10.f };
@@ -32,7 +32,7 @@ public:
 
 protected:
 	Mesh*					m_RailMesh{ NULL };
-	STD vector<TimedObject> m_RailObjects;
+	STD vector<RailObject> m_RailObjects;
 	float					m_SpawnTimer{ 0.f };
 	DX XMFLOAT3				m_SpawnRotation;
 };

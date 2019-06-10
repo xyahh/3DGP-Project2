@@ -38,20 +38,6 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 		m_Camera->SetOffset(XMFLOAT3(0.0f, 1.f, 0.0f));
 		break;
 
-	case Camera::MODE::SPACESHIP:
-
-		SetFriction(50.f);
-		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
-
-		SetMaxVelocityXZ(400.0f);
-		SetMaxVelocityY(400.0f);
-
-		OnCameraChange(CurrentCameraMode, NewCameraMode);
-		m_Camera->SetTimeLag(0.0f);
-		m_Camera->SetOffset(XMFLOAT3(0.0f, 1.0f, 0.0f));
-
-		break;
-
 	case Camera::MODE::THIRD_PERSON:
 		SetFriction(50.f);
 		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -61,7 +47,7 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 
 		OnCameraChange(CurrentCameraMode, NewCameraMode);
 		m_Camera->SetTimeLag(0.25f);
-		m_Camera->SetOffset(XMFLOAT3(0.0f, 150.0f, -200.f));
+		m_Camera->SetOffset(XMFLOAT3(0.0f, 150.0f, -250.f));
 		break;
 
 	default:

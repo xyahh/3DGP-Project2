@@ -1,6 +1,6 @@
 #pragma once
 #include "Player.h"
-#include "TimedObject.h"
+#include "RailObject.h"
 
 _3DGP_BEGIN_
 

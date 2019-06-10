@@ -3,14 +3,15 @@
 
 _3DGP_BEGIN_
 
-class TimedObject : public GameObject
+class RailObject : public GameObject
 {
 public:
-	TimedObject();
-	~TimedObject();
+	RailObject();
+	~RailObject();
 
 	void SetLifetime(float Lifetime);
 	void SetBehindWagon(int WagonID);
+	int GetBehindWagonID() const { return m_BehindWagonID; }
 
 	virtual void Update(float DeltaTime);
 	bool IsExpired() const { return m_Lifetime >= m_TotalLifetime; };

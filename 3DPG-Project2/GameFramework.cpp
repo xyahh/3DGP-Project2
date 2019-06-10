@@ -389,7 +389,7 @@ void GameFramework::PopulateCommandList()
 	D3D12_CPU_DESCRIPTOR_HANDLE DSVDescHandle = m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	m_CommandList->OMSetRenderTargets(1, &RTVDescHandle, FALSE, &DSVDescHandle);
 
-	float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
+	float ClearColor[4] = { 0.f, 0.f, 0.f, 1.0f };
 	m_CommandList->ClearRenderTargetView(RTVDescHandle, ClearColor, 0, NULL);
 	m_CommandList->ClearDepthStencilView(DSVDescHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
 

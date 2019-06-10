@@ -9,17 +9,6 @@ FirstPersonCamera::FirstPersonCamera(Camera * pCamera)
 	: Camera(pCamera)
 {
 	m_CameraMode = Camera::MODE::FIRST_PERSON;
-	if (pCamera)
-	{ 
-		if (pCamera->GetMode() == Camera::MODE::SPACESHIP)
-		{
-			m_Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
-			m_Right.y = 0.0f;
-			m_Look.y = 0.0f;
-			XMStoreFloat3(&m_Right, XMVector3Normalize(XMLoadFloat3(&m_Right)));
-			XMStoreFloat3(&m_Look,  XMVector3Normalize(XMLoadFloat3(&m_Look)));
-		}
-	}
 }
 
 FirstPersonCamera::~FirstPersonCamera()
@@ -32,7 +21,6 @@ void FirstPersonCamera::Rotate(float Pitch, float Yaw, float Roll)
 	XMVECTOR Right = XMLoadFloat3(&m_Right);
 	XMVECTOR Up = XMLoadFloat3(&m_Up);
 	XMVECTOR Look = XMLoadFloat3(&m_Look);
-
 
 	if (Pitch)
 	{

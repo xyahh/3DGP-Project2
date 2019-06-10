@@ -3,7 +3,6 @@
 
 #include "FirstPersonCamera.h"
 #include "ThirdPersonCamera.h"
-#include "SpaceshipCamera.h"
 
 _3DGP_USE_
 DX_USE
@@ -118,7 +117,7 @@ void Player::Rotate(float Pitch, float Yaw, float Roll)
 			if (m_Rotation.z < -20.f) { Roll -= (m_Rotation.z + 20.f); m_Rotation.z = -20.f; }
 		}
 
-		m_Camera->Rotate(Pitch, Yaw, Roll);
+		//m_Camera->Rotate(Pitch, Yaw, Roll);
 
 		if (Yaw)
 		{
@@ -127,30 +126,6 @@ void Player::Rotate(float Pitch, float Yaw, float Roll)
 			Look = XMVector3TransformNormal(Look, RotMat);
 			Right = XMVector3TransformNormal(Right, RotMat);
 		}
-
-		break;
-	case Camera::MODE::SPACESHIP:
-	{
-		m_Camera->Rotate(Pitch, Yaw, Roll);
-		if (Pitch)
-		{
-			XMMATRIX RotMat = XMMatrixRotationAxis(Right, XMConvertToRadians(Pitch));
-			Look = XMVector3TransformNormal(Look, RotMat);
-			Up   = XMVector3TransformNormal(Up, RotMat);
-		}
-		if (Yaw)
-		{
-			XMMATRIX RotMat = XMMatrixRotationAxis(Up, XMConvertToRadians(Yaw));
-			Look = XMVector3TransformNormal(Look, RotMat);
-			Right = XMVector3TransformNormal(Right, RotMat);
-		}
-		if (Roll)
-		{
-			XMMATRIX RotMat = XMMatrixRotationAxis(Look, XMConvertToRadians(Roll));
-			Up = XMVector3TransformNormal(Up, RotMat);
-			Right = XMVector3TransformNormal(Right, RotMat);
-		}
-	}
 		break;
 	}
 
@@ -185,13 +160,12 @@ void Player::Update(float DeltaTime)
 
 	Camera::MODE CameraMode = m_Camera->GetMode();
 
-	if (CameraMode == Camera::MODE::THIRD_PERSON) 
-		m_Camera->Update(GetPosition(), DeltaTime);
+	m_Camera->Update(GetPosition(), DeltaTime);
 
 	if (m_CameraUpdatedContext) OnCameraUpdateCallback(DeltaTime);
 
 	if (CameraMode == Camera::MODE::THIRD_PERSON) 
-		m_Camera->SetLookAt(GetPosition());
+		m_Camera->SetTarget(GetPosition());
 
 	m_Camera->RegenerateViewMatrix();
 
@@ -254,39 +228,7 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 	case Camera::MODE::THIRD_PERSON:
 		pNewCamera = new ThirdPersonCamera(m_Camera);
 		break;
-	case Camera::MODE::SPACESHIP:
-		pNewCamera = new SpaceshipCamera(m_Camera);
-		break;
 	}
-
-	if (CurrentCameraMode == Camera::MODE::SPACESHIP)
-	{
-
-		XMVECTOR RightXZ = GetRightVector();
-		XMVectorSetY(RightXZ, 0.f);
-
-		XMVECTOR LookXZ = GetLookVector(); 
-		XMVectorSetY(LookXZ, 0.f);
-
-		SetRight(XMVector3Normalize(RightXZ));
-		SetLook(XMVector3Normalize(LookXZ));
-		SetUp(XMFLOAT3(0.f, 1.f, 0.f));
-
-		XMFLOAT3 DefLook(0.f, 0.f, 1.f);
-
-		m_Rotation.x = 0.f;
-		m_Rotation.y = XMVectorGetX(XMVector3AngleBetweenNormals(XMLoadFloat3(&DefLook), LookXZ));
-		m_Rotation.z = 0.f;
-
-		if (XMVectorGetX(LookXZ) < 0.f) m_Rotation.y *= -1.f;
-	}
-	else if (NewCameraMode == Camera::MODE::SPACESHIP && m_Camera)
-	{
-		SetRight(m_Camera->GetRight());
-		SetUp(m_Camera->GetUp());
-		SetLook(m_Camera->GetLook());
-	}
-
 	if (pNewCamera)
 	{
 		pNewCamera->SetMode(NewCameraMode);

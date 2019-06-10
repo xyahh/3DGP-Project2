@@ -1,9 +1,8 @@
 #include "stdafx.h"
 #include "RailObjectShader.h"
 #include "GameObject.h"
-#include "TimedObject.h"
-
-#include "DiffusedCubeMesh.h"
+#include "RailObject.h"
+#include "OBJMesh.h"
 
 _3DGP_USE_
 DX_USE
@@ -20,7 +19,7 @@ RailObjectShader::~RailObjectShader()
 
 void RailObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
-	m_RailMesh = new DiffusedCubeMesh(pDevice, pCommandList, BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
+	m_RailMesh = new OBJMesh(pDevice, pCommandList, "Rail.obj", XMFLOAT3(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH));
 	m_RailObjects.reserve((int)(RAIL_LIFETIME / RAIL_SPAWN_RATE) + 50);
 }
 
@@ -39,13 +38,21 @@ void RailObjectShader::ReleaseUploadBuffers()
 
 void RailObjectShader::AdjustPlayerPosition(WagonPlayer * pPlayer)
 {
-	GameObject* BackRail	{ NULL };
-	GameObject* FrontRail	{ NULL };
+	RailObject* BackRail	{ NULL };
+	RailObject* FrontRail	{ NULL };
+
+	int PlayerWagonID = pPlayer->GetWagonNumber();
 
 	for (auto& rail : m_RailObjects)
 	{
-		if (SubjectBehindObject(&rail, pPlayer))
-			BackRail = &rail; //get the latest rail that is behind player before breaking loop
+		if (rail.GetBehindWagonID() >= PlayerWagonID)
+		{
+			BackRail = &rail; 
+		} else  if (SubjectBehindObject(&rail, pPlayer))
+		{
+			rail.SetBehindWagon(PlayerWagonID);
+			BackRail = &rail;//get the latest rail that is behind player before breaking loop
+		}
 		else
 		{
 			FrontRail = &rail;
@@ -60,10 +67,10 @@ void RailObjectShader::AdjustPlayerPosition(WagonPlayer * pPlayer)
 		Clamp(0.f, &RailOffset, 1.f);
 
 		//interpolate the transforms to have a smoother transition.
-		pPlayer->SetPosition(XMVectorLerp(BackRail->GetPositionVector()	, FrontRail->GetPositionVector(), RailOffset));
-		pPlayer->SetRight	(XMVectorLerp(BackRail->GetRightVector()	, FrontRail->GetRightVector()	, RailOffset));
-		pPlayer->SetUp		(XMVectorLerp(BackRail->GetUpVector()		, FrontRail->GetUpVector()		, RailOffset));
-		pPlayer->SetLook	(XMVectorLerp(BackRail->GetLookVector()		, FrontRail->GetLookVector()	, RailOffset));
+		pPlayer->SetPosition(XMVectorLerp(BackRail->GetPositionVector(), FrontRail->GetPositionVector(), RailOffset));
+		pPlayer->SetRight(XMVectorLerp(BackRail->GetRightVector(), FrontRail->GetRightVector(), RailOffset));
+		pPlayer->SetUp(XMVectorLerp(BackRail->GetUpVector(), FrontRail->GetUpVector(), RailOffset));
+		pPlayer->SetLook(XMVectorLerp(BackRail->GetLookVector(), FrontRail->GetLookVector(), RailOffset));
 	}
 }
 
@@ -102,7 +109,7 @@ void RailObjectShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera *
 
 void RailObjectShader::SpawnRail()
 {
-	TimedObject RailObject;
+	RailObject RailObject;
 	RailObject.SetLifetime(RAIL_LIFETIME);
 
 	if (m_RailObjects.size() > 0)
@@ -115,7 +122,7 @@ void RailObjectShader::SpawnRail()
 	else
 	{
 		RailObject.SetPosition(XMVectorZero());
-		RailObject.MoveForward(BLOCK_LENGTH * 10.f); //10 blocks ahead
+		RailObject.MoveForward(BLOCK_LENGTH * 20.f); //10 blocks ahead
 	}
 
 	m_RailObjects.push_back(std::move(RailObject));

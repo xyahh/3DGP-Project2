@@ -89,17 +89,37 @@ bool GameplayScene::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void GameplayScene::ProcessInput()
 {
-	//return;
-		
 	static UCHAR pKeyBuffer[256];
-	DWORD dwDirection = 0;
+	const static float RotationScale{ 3.f };
+	XMFLOAT3 Rotation = XMFLOAT3(0.f, 0.f, 0.f);
+
 	if (::GetKeyboardState(pKeyBuffer))
 	{
-		KEY_PRESSED(pKeyBuffer, 'A')
-		{
-			m_pRailObjectShader->SetSpawnRotation(XMFLOAT3(1.f, 0.f, 0.f));
-		}
+		KEY_PRESSED(pKeyBuffer, VK_UP)
+			Rotation.x = 1.f * RotationScale;
+
+		KEY_PRESSED(pKeyBuffer, VK_DOWN)
+			Rotation.x = -1.f* RotationScale;
+
+		KEY_PRESSED(pKeyBuffer, VK_LEFT)
+			Rotation.y = -1.f* RotationScale;
+
+		KEY_PRESSED(pKeyBuffer, VK_RIGHT)
+			Rotation.y = 1.f* RotationScale;
+
+		KEY_PRESSED(pKeyBuffer, 'Q')
+			Rotation.z = 1.f* RotationScale; //make roll stronger to feel a bigger difference
+
+		KEY_PRESSED(pKeyBuffer, 'E')
+			Rotation.z = -1.f* RotationScale;
+
+		KEY_PRESSED(pKeyBuffer, VK_SPACE)
+			m_TargetTimeDilation = 0.1f; //slow down time by 10
+		else
+			m_TargetTimeDilation = 1.f;
 	}
+
+	m_pRailObjectShader->SetSpawnRotation(Rotation);
 
 	float cxDelta = 0.0f, cyDelta = 0.0f;
 
@@ -118,10 +138,7 @@ void GameplayScene::ProcessInput()
 	{
 		if (cxDelta || cyDelta)
 		{
-			if (pKeyBuffer[VK_RBUTTON] & 0xF0)
-				m_Wagons[0].GetCamera()->Rotate(cyDelta, 0.0f, -cxDelta);
-			else
-				m_Wagons[0].GetCamera()->Rotate(cyDelta, cxDelta, 0.0f);
+			m_Wagons[0].GetCamera()->Rotate(cyDelta, cxDelta, 0.f);
 		}
 	}
 }

@@ -20,12 +20,11 @@ void Camera::Init()
 	m_Right = XMFLOAT3(1.f, 0.f, 0.f);
 	m_Up = XMFLOAT3(0.f, 1.f, 0.f);
 	m_Look = XMFLOAT3(0.f, 0.f, 1.f);
-
-	m_Rotation = XMFLOAT3(0.f, 0.f, 0.f);
+	m_Rotation = XMFLOAT4(0.f, 0.f, 0.f, 1.f);
 
 	m_Offset = XMFLOAT3(0.f, 0.f, 0.f);
 	m_TimeLag = 0.f;
-	m_LookAtWorld = XMFLOAT3(0.f, 0.f, 0.f);
+	m_Target = XMFLOAT3(0.f, 0.f, 0.f);
 	m_CameraMode = Camera::MODE::NONE;
 	m_Player = NULL;
 }
@@ -68,13 +67,13 @@ void Camera::UpdateShaderVariables(ID3D12GraphicsCommandList * pCommandList)
 
 void Camera::GenerateViewMatrix()
 {
-	XMStoreFloat4x4(&m_View, XMMatrixLookAtLH(XMLoadFloat3(&m_Position), XMLoadFloat3(&m_LookAtWorld), XMLoadFloat3(&m_Up)));
+	XMStoreFloat4x4(&m_View, XMMatrixLookAtLH(XMLoadFloat3(&m_Position), XMLoadFloat3(&m_Target), XMLoadFloat3(&m_Up)));
 }
 
 void Camera::GenerateViewMatrix(const DX XMFLOAT3 & Position, const DX XMFLOAT3 & LookAt, const DX XMFLOAT3 & Up)
 {
 	m_Position = Position;
-	m_LookAtWorld = LookAt;
+	m_Target = LookAt;
 	m_Up = Up;
 
 	GenerateViewMatrix();

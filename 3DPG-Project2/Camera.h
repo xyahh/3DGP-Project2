@@ -13,8 +13,7 @@ public:
 	{
 		NONE,
 		FIRST_PERSON,
-		THIRD_PERSON,
-		SPACESHIP
+		THIRD_PERSON
 	};
 
 private:
@@ -72,11 +71,11 @@ public:
 
 	void SetLookAtPosition(const DX XMFLOAT3& LookAtWorld)
 	{
-		m_LookAtWorld = LookAtWorld;
+		m_Target = LookAtWorld;
 	}
 	DX XMFLOAT3 GetLookAtPosition() const
 	{
-		return m_LookAtWorld;
+		return m_Target;
 	}
 
 	DX XMFLOAT3 GetRight() const
@@ -92,13 +91,6 @@ public:
 	DX XMFLOAT3 GetLook() const
 	{
 		return m_Look;
-	}
-
-	void GetRotationValues(float* pPitchOut, float* pYawOut, float* pRollOut) const
-	{
-		if (pPitchOut)	*pPitchOut	= m_Rotation.x;
-		if (pYawOut)	*pYawOut	= m_Rotation.y;
-		if (pRollOut)	*pRollOut	= m_Rotation.z;
 	}
 
 	void SetOffset(const DX XMFLOAT3& Offset)
@@ -141,7 +133,6 @@ public:
 		return m_ScissorRect;
 	}
 
-
 	virtual void Move(const DX XMFLOAT3& Displacement)
 	{
 		m_Position.x += Displacement.x;
@@ -151,7 +142,7 @@ public:
 
 	virtual void Rotate(float Pitch, float Yaw, float Roll) {}
 	virtual void Update(const DX XMFLOAT3& LookAt, float DeltaTime) {}
-	virtual void SetLookAt(const DX XMFLOAT3& LookAt) {}
+	virtual void SetTarget(const DX XMFLOAT3& LookAt) {}
 
 protected:
 
@@ -163,15 +154,13 @@ protected:
 	DX XMFLOAT3		m_Up;
 	DX XMFLOAT3		m_Look;
 
-	DX XMFLOAT3		m_Rotation;
-
 	Camera::MODE	m_CameraMode;
 
-	DX XMFLOAT3		m_LookAtWorld;
+	DX XMFLOAT3		m_Target;
 	DX XMFLOAT3		m_Offset;
+	DX XMFLOAT4		m_Rotation;
 
 	float			m_TimeLag;
-
 
 	DX XMFLOAT4X4	m_View;
 	DX XMFLOAT4X4	m_Proj;
