@@ -1,14 +1,14 @@
 #pragma once
 #include <float.h>
 
-inline bool Zero(float fValue)
+inline bool Zero(float fValue, float fEpsilon = FLT_EPSILON)
 {
-	return  fabsf(fValue) < FLT_EPSILON;
+	return  fabsf(fValue) < fEpsilon;
 }
 
-inline bool Equal(float a, float b) 
+inline bool Equal(float a, float b, float Epsilon = FLT_EPSILON) 
 { 
-	return(Zero(a - b));
+	return(Zero(a - b, Epsilon));
 }
 
 inline void Clamp(float lowest, float * n, float highest)

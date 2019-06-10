@@ -148,7 +148,6 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="ThirdPersonCamera.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="TriangleMesh.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +173,6 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="ThirdPersonCamera.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>

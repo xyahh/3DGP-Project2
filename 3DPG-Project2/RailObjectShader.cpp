@@ -107,6 +107,7 @@ void RailObjectShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera *
 		i.Render(pCommandList, pCamera);
 }
 
+
 void RailObjectShader::SpawnRail()
 {
 	RailObject RailObject;
@@ -118,15 +119,24 @@ void RailObjectShader::SpawnRail()
 		RailObject.MoveForward(BLOCK_LENGTH);
 		RailObject.Rotate(m_SpawnRotation.x, m_SpawnRotation.y, m_SpawnRotation.z);
 
+		m_RailObjects.push_back(std::move(RailObject));
+		m_RailObjects.back().SetMesh(m_RailMesh);
 	}
 	else
 	{
 		RailObject.SetPosition(XMVectorZero());
-		RailObject.MoveForward(BLOCK_LENGTH * 20.f); //10 blocks ahead
+		for (int i = 0; i < 20; ++i)
+		{
+			RailObject.SetLifetime(RAIL_LIFETIME + (20 - i) * RAIL_SPAWN_RATE);
+			m_RailObjects.push_back(RailObject);
+			m_RailObjects.back().SetMesh(m_RailMesh);
+			RailObject.MoveForward(BLOCK_LENGTH); //10 blocks ahead
+		}
+
+		
 	}
 
-	m_RailObjects.push_back(std::move(RailObject));
-	m_RailObjects.back().SetMesh(m_RailMesh);
+	
 }
 
 

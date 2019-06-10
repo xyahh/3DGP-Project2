@@ -7,7 +7,7 @@
 
 _3DGP_BEGIN_
 
-constexpr float BLOCK_LENGTH{ 20.f };
+constexpr float BLOCK_LENGTH{ 50.f };
 constexpr float RAILS_PER_SEC{ 16.f };
 constexpr float RAIL_SPAWN_RATE{ 1.f / RAILS_PER_SEC };
 constexpr float RAIL_LIFETIME{ 10.f };

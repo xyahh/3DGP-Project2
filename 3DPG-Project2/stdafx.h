@@ -51,6 +51,10 @@
 #define _3DGP_EXPLICIT_CHILD_OF_TEMPLATE_(T, Base) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value && !std::is_same<Base, T>::value>::type>
 #define _3DGP_IMPLICIT_CHILD_OF_TEMPLATE_(T, Base) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value>::type>
 
+_3DGP_BEGIN_
+constexpr DX XMFLOAT3 gWorldUp { DX XMFLOAT3(0.f, 1.f, 0.f) };
+_3DGP_END_
+
 #include "DXHelper.h"
 #include "DXMath.h"
 #include "Timer.h"

@@ -74,9 +74,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="TriangleMesh.h">
-      <Filter>Header Files\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="DXHelper.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
@@ -152,9 +149,6 @@
       <Filter>Source Files\Vertex</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="TriangleMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">

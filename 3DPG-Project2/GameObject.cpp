@@ -153,11 +153,11 @@ void GameObject::MoveForward(float Distance)
 
 void GameObject::Rotate(float Pitch, float Yaw, float Roll)
 {
-	XMMATRIX RotMax = XMMatrixRotationRollPitchYaw(
+	XMMATRIX RotMat = XMMatrixRotationRollPitchYaw(
 		XMConvertToRadians(Pitch), 
 		XMConvertToRadians(Yaw), 
 		XMConvertToRadians(Roll));
-	XMStoreFloat4x4(&m_World, XMMatrixMultiply(RotMax, XMLoadFloat4x4(&m_World)));
+	XMStoreFloat4x4(&m_World, XMMatrixMultiply(RotMat, XMLoadFloat4x4(&m_World)));
 }
 
 void XM_CALLCONV GameObject::SetPosition(DX XMVECTOR_P0 Position)

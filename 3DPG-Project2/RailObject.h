@@ -16,7 +16,6 @@ public:
 	virtual void Update(float DeltaTime);
 	bool IsExpired() const { return m_Lifetime >= m_TotalLifetime; };
 
-
 private:
 
 	int		m_BehindWagonID	{ -1 };

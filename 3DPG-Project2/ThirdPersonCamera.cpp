@@ -41,8 +41,7 @@ void ThirdPersonCamera::Update(const DX XMFLOAT3 & LookAt, float DeltaTime)
 
 void ThirdPersonCamera::SetTarget(const DX XMFLOAT3 & Target)
 {
-	XMFLOAT3 GlobalUp(0.f, 1.f, 0.f);
-	XMVECTOR Up = XMLoadFloat3(&GlobalUp);
+	XMVECTOR Up = XMLoadFloat3(&gWorldUp);
 	Up = XMVector3Transform(Up, XMMatrixRotationQuaternion(XMLoadFloat4(&m_Rotation)));
 
 	XMFLOAT4X4 LookAtMat;

@@ -6,7 +6,7 @@
 
 enum ATTRIBUTE_TYPE { VERTEX, TEXCOORD, NORMAL, POLYGON };
 
-std::map<std::string, ATTRIBUTE_TYPE> gAttributeMap =
+STD map<STD string, ATTRIBUTE_TYPE> gAttributeMap =
 {
 	{"v",	ATTRIBUTE_TYPE::VERTEX		},
 	{"vt",	ATTRIBUTE_TYPE::TEXCOORD	},
