@@ -21,7 +21,6 @@ public:
 	void SetShader(Shader* pShader);
 
 	virtual void Update(float DeltaTime);
-	virtual void PreRender();
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera);
 
 	void Rotate(const DX XMFLOAT3& Axis, float Angle);
@@ -30,12 +29,18 @@ public:
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pCommandList);
 	virtual void ReleaseShaderVariables();
 
-	DX XMFLOAT3 GetPosition();
-	DX XMFLOAT3 GetLook();
-	DX XMFLOAT3 GetUp();
-	DX XMFLOAT3 GetRight();
+	DX XMFLOAT3 GetPosition() const;
+	DX XMFLOAT3 GetRight() const;
+	DX XMFLOAT3 GetUp() const;
+	DX XMFLOAT3 GetLook() const;
+
+	DX XMVECTOR XM_CALLCONV GetPositionVector() const;
+	DX XMVECTOR XM_CALLCONV GetRightVector() const;
+	DX XMVECTOR XM_CALLCONV GetUpVector() const;
+	DX XMVECTOR XM_CALLCONV GetLookVector() const;
 
 	void SetPosition(const DX XMFLOAT3& Position);
+	void XM_CALLCONV SetPosition(DX XMVECTOR_P0 Position);
 	void SetPosition(float x, float y, float z);
 
 	void MoveStrafe(float Distance);
@@ -43,6 +48,17 @@ public:
 	void MoveForward(float Distance);
 
 	void Rotate(float Pitch, float Yaw, float Roll);
+
+protected:
+	void SetRight(const DX XMFLOAT3& Right);
+	void SetUp(const DX XMFLOAT3& Up);
+	void SetLook(const DX XMFLOAT3& Look);
+
+
+	void XM_CALLCONV SetRight(DX XMVECTOR_P0 Right);
+	void XM_CALLCONV SetUp(DX XMVECTOR_P0 Up);
+	void XM_CALLCONV SetLook(DX XMVECTOR_P0 Look);
+
 
 private:
 

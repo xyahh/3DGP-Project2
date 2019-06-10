@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "WagonPlayer.h"
+#include "RailObjectShader.h"
 
 _3DGP_BEGIN_
 

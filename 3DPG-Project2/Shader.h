@@ -26,7 +26,6 @@ public:
 	virtual void						UpdateShaderVariables(ID3D12GraphicsCommandList* pCommandList);
 	virtual void						ReleaseShaderVariables();
 
-	virtual void						PreRender(ID3D12GraphicsCommandList* pCommandList);
 	virtual	void						Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera);
 
 private:

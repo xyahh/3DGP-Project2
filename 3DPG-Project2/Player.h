@@ -17,26 +17,6 @@ public:
 	Player();
 	virtual ~Player();
 
-	DX XMFLOAT3 GetPosition() const
-	{
-		return m_Position;
-	}
-
-	DX XMFLOAT3 GetRight() const
-	{
-		return m_Right;
-	}
-
-	DX XMFLOAT3 GetUp() const
-	{
-		return m_Up;
-	}
-
-	DX XMFLOAT3 GetLook() const
-	{
-		return m_Look;
-	}
-
 	void SetFriction(float Friction)
 	{
 		m_Friction = Friction;
@@ -60,11 +40,6 @@ public:
 	void SetVelocity(const DX XMFLOAT3& Velocity)
 	{
 		m_Velocity = Velocity;
-	}
-
-	void SetPosition(const DX XMFLOAT3& Position)
-	{
-		m_Position = Position;
 	}
 
 	DX XMFLOAT3 GetVelocity() const
@@ -103,7 +78,6 @@ public:
 	virtual void OnCameraUpdateCallback(float DeltaTime) {}
 	void SetCameraUpdatedContext(LPVOID pContext) { m_CameraUpdatedContext = pContext; }
 
-
 	virtual void CreateShaderVariables(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual void ReleaseShaderVariables();
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pCommandList);
@@ -113,7 +87,6 @@ public:
 		return NULL;
 	}
 
-	virtual void PreRender();
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera = NULL);
 
 protected:
@@ -121,12 +94,6 @@ protected:
 	void OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCameraMode);
 
 protected:
-
-	DX XMFLOAT3		m_Position;
-
-	DX XMFLOAT3		m_Right;
-	DX XMFLOAT3		m_Up;
-	DX XMFLOAT3		m_Look;
 
 	DX XMFLOAT3		m_Rotation;
 

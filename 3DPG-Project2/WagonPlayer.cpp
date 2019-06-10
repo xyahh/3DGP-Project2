@@ -68,7 +68,8 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 		break;
 	}
 
-	m_Camera->SetPosition(XMFLOAT3(0.f, 0.f, m_Position.z + 0.1f)); //To avoid Eye == Target
+	XMFLOAT3 Pos = GetPosition();
+	m_Camera->SetPosition(XMFLOAT3(0.f, 0.f, Pos.z + 0.1f)); //To avoid Eye == Target
 
 	m_Camera->GenerateProjMatrix(1.01f, 5000.0f, AspectRatio, 60.0f);
 	m_Camera->SetViewport(0, 0, WinWidth, WinHeight, 0.0f, 1.0f);

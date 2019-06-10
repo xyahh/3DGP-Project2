@@ -10,10 +10,6 @@ DX_USE
 
 Player::Player()
 	: m_Camera(NULL)
-	, m_Position(0.f, 0.f, 0.f)
-	, m_Right(1.f, 0.f, 0.f)
-	, m_Up(0.f, 1.f, 0.f)
-	, m_Look(0.f, 0.f, 1.f)
 	, m_Velocity(0.f, 0.f, 0.f)
 	, m_Gravity(0.f, 0.f, 0.f)
 	, m_MaxVelocityXZ(0.f)
@@ -35,9 +31,9 @@ Player::~Player()
 void Player::Move(ULONG Direction, float Distance, bool bVelocity)
 {
 	XMVECTOR Displacement = XMVectorZero();
-	XMVECTOR Look = XMLoadFloat3(&m_Look);
-	XMVECTOR Right = XMLoadFloat3(&m_Right);
-	XMVECTOR Up = XMLoadFloat3(&m_Up);
+	XMVECTOR Look = GetLookVector();
+	XMVECTOR Right = GetRightVector();
+	XMVECTOR Up = GetUpVector();
 
 	if (Direction)
 	{
@@ -62,7 +58,7 @@ void Player::Move(const DX XMFLOAT3 & Shift, bool bVelocity)
 		XMStoreFloat3(&m_Velocity, XMVectorAdd(XMLoadFloat3(&m_Velocity), XMLoadFloat3(&Shift)));
 	else
 	{
-		XMStoreFloat3(&m_Position, XMVectorAdd(XMLoadFloat3(&m_Position), XMLoadFloat3(&Shift)));
+		SetPosition(XMVectorAdd(GetPositionVector(), XMLoadFloat3(&Shift)));
 		m_Camera->Move(Shift);
 	}
 
@@ -70,6 +66,11 @@ void Player::Move(const DX XMFLOAT3 & Shift, bool bVelocity)
 
 void Player::Rotate(float Pitch, float Yaw, float Roll)
 {
+
+	XMVECTOR Right	= GetRightVector();
+	XMVECTOR Up		= GetUpVector();
+	XMVECTOR Look	= GetLookVector();
+
 	Camera::MODE CameraMode = m_Camera->GetMode();
 	switch (CameraMode)
 	{
@@ -98,19 +99,15 @@ void Player::Rotate(float Pitch, float Yaw, float Roll)
 
 		if (Yaw)
 		{
-			XMMATRIX RotMat = XMMatrixRotationAxis(XMLoadFloat3(&m_Up), XMConvertToRadians(Yaw));
+			XMMATRIX RotMat = XMMatrixRotationAxis(Up, XMConvertToRadians(Yaw));
 			
-			XMStoreFloat3(&m_Look, XMVector3TransformNormal(XMLoadFloat3(&m_Look), RotMat));
-			XMStoreFloat3(&m_Right, XMVector3TransformNormal(XMLoadFloat3(&m_Right), RotMat));
+			Look = XMVector3TransformNormal(Look, RotMat);
+			Right = XMVector3TransformNormal(Right, RotMat);
 		}
 
 		break;
 	case Camera::MODE::SPACESHIP:
 	{
-		XMVECTOR Right	= XMLoadFloat3(&m_Right);
-		XMVECTOR Up		= XMLoadFloat3(&m_Up);
-		XMVECTOR Look	= XMLoadFloat3(&m_Look);
-
 		m_Camera->Rotate(Pitch, Yaw, Roll);
 		if (Pitch)
 		{
@@ -130,18 +127,13 @@ void Player::Rotate(float Pitch, float Yaw, float Roll)
 			Up = XMVector3TransformNormal(Up, RotMat);
 			Right = XMVector3TransformNormal(Right, RotMat);
 		}
-
-		Look = XMVector3Normalize(Look);
-		XMStoreFloat3(&m_Look, Look);
-
-		Right = XMVector3Normalize(XMVector3Cross(Up, Look));
-		XMStoreFloat3(&m_Right, Right);
-
-		Up = XMVector3Normalize(XMVector3Cross(Look, Right));
-		XMStoreFloat3(&m_Up, Up);
 	}
 		break;
 	}
+
+	SetLook(XMVector3Normalize(Look));
+	SetRight(XMVector3Normalize(XMVector3Cross(Up, Look)));
+	SetUp(XMVector3Normalize(XMVector3Cross(Look, Right)));
 }
 
 void Player::Update(float DeltaTime)
@@ -171,12 +163,12 @@ void Player::Update(float DeltaTime)
 	Camera::MODE CameraMode = m_Camera->GetMode();
 
 	if (CameraMode == Camera::MODE::THIRD_PERSON) 
-		m_Camera->Update(m_Position, DeltaTime);
+		m_Camera->Update(GetPosition(), DeltaTime);
 
 	if (m_CameraUpdatedContext) OnCameraUpdateCallback(DeltaTime);
 
 	if (CameraMode == Camera::MODE::THIRD_PERSON) 
-		m_Camera->SetLookAt(m_Position);
+		m_Camera->SetLookAt(GetPosition());
 
 	m_Camera->RegenerateViewMatrix();
 
@@ -223,26 +215,30 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 
 	if (CurrentCameraMode == Camera::MODE::SPACESHIP)
 	{
-		XMFLOAT3 RightXZ(m_Right.x, 0.f, m_Right.z);
-		XMFLOAT3 LookXZ(m_Look.x, 0.f, m_Look.z);
 
-		XMStoreFloat3(&m_Right, XMVector3Normalize(XMLoadFloat3(&RightXZ)));
-		XMStoreFloat3(&m_Look, XMVector3Normalize(XMLoadFloat3(&LookXZ)));
-		m_Up = XMFLOAT3(0.f, 1.f, 0.f);
+		XMVECTOR RightXZ = GetRightVector();
+		XMVectorSetY(RightXZ, 0.f);
+
+		XMVECTOR LookXZ = GetLookVector(); 
+		XMVectorSetY(LookXZ, 0.f);
+
+		SetRight(XMVector3Normalize(RightXZ));
+		SetLook(XMVector3Normalize(LookXZ));
+		SetUp(XMFLOAT3(0.f, 1.f, 0.f));
 
 		XMFLOAT3 DefLook(0.f, 0.f, 1.f);
 
 		m_Rotation.x = 0.f;
-		m_Rotation.y = XMVectorGetX(XMVector3AngleBetweenNormals(XMLoadFloat3(&DefLook), XMLoadFloat3(&m_Look)));
+		m_Rotation.y = XMVectorGetX(XMVector3AngleBetweenNormals(XMLoadFloat3(&DefLook), LookXZ));
 		m_Rotation.z = 0.f;
 
-		if (m_Look.x < 0.f) m_Rotation.y *= -1.f;
+		if (XMVectorGetX(LookXZ) < 0.f) m_Rotation.y *= -1.f;
 	}
 	else if (NewCameraMode == Camera::MODE::SPACESHIP && m_Camera)
 	{
-		m_Right = m_Camera->GetRight();
-		m_Up = m_Camera->GetUp();
-		m_Look = m_Camera->GetLook();
+		SetRight(m_Camera->GetRight());
+		SetUp(m_Camera->GetUp());
+		SetLook(m_Camera->GetLook());
 	}
 
 	if (pNewCamera)
@@ -252,25 +248,6 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 	}
 	if (m_Camera) delete m_Camera;
 	m_Camera = pNewCamera;
-}
-
-void Player::PreRender()
-{
-	m_World._11 = m_Right.x;
-	m_World._12 = m_Right.y;
-	m_World._13 = m_Right.z;
-
-	m_World._21 = m_Up.x;
-	m_World._22 = m_Up.y;
-	m_World._23 = m_Up.z;
-
-	m_World._31 = m_Look.x;
-	m_World._32 = m_Look.y;
-	m_World._33 = m_Look.z;
-
-	m_World._41 = m_Position.x;
-	m_World._42 = m_Position.y;
-	m_World._43 = m_Position.z;
 }
 
 void Player::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera)

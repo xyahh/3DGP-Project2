@@ -43,14 +43,8 @@ void GameObject::Update(float DeltaTime)
 {
 }
 
-void GameObject::PreRender()
-{
-}
-
 void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamera)
 {
-	PreRender();
-
 	UpdateShaderVariables(pCommandList);
 
 	if (m_Shader) m_Shader->Render(pCommandList, pCamera);
@@ -79,30 +73,53 @@ void GameObject::ReleaseShaderVariables()
 {
 }
 
-XMFLOAT3 GameObject::GetPosition()
+XMFLOAT3 GameObject::GetPosition() const
 {
 	return XMFLOAT3(m_World._41, m_World._42, m_World._43);
 }
 
-XMFLOAT3 GameObject::GetLook()
+XMFLOAT3 GameObject::GetRight() const
 {
-	XMFLOAT3 Look(m_World._31, m_World._32, m_World._33);
-	XMStoreFloat3(&Look, XMVector3Normalize(XMLoadFloat3(&Look)));
-	return Look;
+	XMFLOAT3 Right;
+	XMStoreFloat3(&Right, GetRightVector());
+	return Right;
 }
 
-XMFLOAT3 GameObject::GetUp()
+XMFLOAT3 GameObject::GetUp() const
 {
-	XMFLOAT3 Up(m_World._21, m_World._22, m_World._23);
-	XMStoreFloat3(&Up, XMVector3Normalize(XMLoadFloat3(&Up)));
+	XMFLOAT3 Up;
+	XMStoreFloat3(&Up, GetUpVector());
 	return Up;
 }
 
-XMFLOAT3 GameObject::GetRight()
+XMFLOAT3 GameObject::GetLook() const
+{
+	XMFLOAT3 Look;
+	XMStoreFloat3(&Look, GetLookVector());
+	return Look;
+}
+
+DX XMVECTOR XM_CALLCONV GameObject::GetPositionVector() const
+{
+	return XMLoadFloat3(&GetPosition());
+}
+
+DX XMVECTOR XM_CALLCONV GameObject::GetRightVector() const
 {
 	XMFLOAT3 Right(m_World._11, m_World._12, m_World._13);
-	XMStoreFloat3(&Right, XMVector3Normalize(XMLoadFloat3(&Right)));
-	return Right;
+	return XMVector3Normalize(XMLoadFloat3(&Right));
+}
+
+DX XMVECTOR XM_CALLCONV GameObject::GetUpVector() const
+{
+	XMFLOAT3 Up(m_World._21, m_World._22, m_World._23);
+	return XMVector3Normalize(XMLoadFloat3(&Up));
+}
+
+DX XMVECTOR XM_CALLCONV GameObject::GetLookVector() const
+{
+	XMFLOAT3 Look(m_World._31, m_World._32, m_World._33);
+	return XMVector3Normalize(XMLoadFloat3(&Look));
 }
 
 void GameObject::SetPosition(const DX XMFLOAT3 & Position)
@@ -150,4 +167,53 @@ void GameObject::Rotate(float Pitch, float Yaw, float Roll)
 		XMConvertToRadians(Yaw), 
 		XMConvertToRadians(Roll));
 	XMStoreFloat4x4(&m_World, XMMatrixMultiply(RotMax, XMLoadFloat4x4(&m_World)));
+}
+
+void XM_CALLCONV GameObject::SetPosition(DX XMVECTOR_P0 Position)
+{
+	XMFLOAT3 Pos;
+	XMStoreFloat3(&Pos, Position);
+	SetPosition(Pos);
+}
+
+void GameObject::SetRight(const DX XMFLOAT3 & Right)
+{
+	m_World._11 = Right.x;
+	m_World._12 = Right.y;
+	m_World._13 = Right.z;
+}
+
+void GameObject::SetUp(const DX XMFLOAT3 & Up)
+{
+	m_World._21 = Up.x;
+	m_World._22 = Up.y;
+	m_World._23 = Up.z;
+}
+
+void GameObject::SetLook(const DX XMFLOAT3 & Look)
+{
+	m_World._31 = Look.x;
+	m_World._32 = Look.y;
+	m_World._33 = Look.z;
+}
+
+void XM_CALLCONV GameObject::SetRight(DX XMVECTOR_P0 Right)
+{
+	XMFLOAT3 InRight;
+	XMStoreFloat3(&InRight, Right);
+	SetRight(InRight);
+}
+
+void XM_CALLCONV GameObject::SetUp(DX XMVECTOR_P0 Up)
+{
+	XMFLOAT3 InUp;
+	XMStoreFloat3(&InUp, Up);
+	SetUp(InUp);
+}
+
+void XM_CALLCONV GameObject::SetLook(DX XMVECTOR_P0 Look)
+{
+	XMFLOAT3 InLook;
+	XMStoreFloat3(&InLook, Look);
+	SetLook(InLook);
 }

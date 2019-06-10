@@ -149,12 +149,7 @@ void Shader::ReleaseShaderVariables()
 {
 }
 
-void Shader::PreRender(ID3D12GraphicsCommandList * pCommandList)
-{
-	pCommandList->SetPipelineState(m_PipelineStates[0].Get());
-}
-
 void Shader::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamera)
 {
-	PreRender(pCommandList);
+	pCommandList->SetPipelineState(m_PipelineStates[0].Get());
 }
