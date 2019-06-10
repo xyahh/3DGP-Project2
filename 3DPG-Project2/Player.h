@@ -11,11 +11,6 @@
 
 _3DGP_BEGIN_
 
-/*
-Protected to hide the GameObject interface from the outside.
-This is because we are handling different GetPosition, GetRight, etc functions
-and therefore we need to hide to avoid confusion
-*/
 class Player : public GameObject
 {
 public:
@@ -120,8 +115,6 @@ public:
 
 	virtual void PreRender();
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera = NULL);
-
-	virtual bool ProcessInput();
 
 protected:
 

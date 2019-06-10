@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "ObjectsShader.h"
 
+#include "GameFramework.h"
+#include "WagonPlayer.h"
+
 #include "RotatingObject.h"
 #include "DiffusedCubeMesh.h"
 #include "OBJMesh.h"
@@ -58,74 +61,44 @@ void ObjectsShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * p
 
 void ObjectsShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
-	Mesh* pMesh = new DiffusedCubeMesh(pDevice, pCommandList, 50.f, 50.f, 50.f);
-
-	int xObjects = 7;
-	int yObjects = 7;
-	int zObjects = 7;
-	int i = 0;
-
-	m_ObjectCount = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
-
-	m_Objects = new GameObject*[m_ObjectCount];
-	float fxPadding = 200.f;
-	float fyPadding = 200.f;
-	float fzPadding = 200.f;
-
-	RotatingObject* pRotatingObject{ NULL };
-	for (int x = -xObjects; x <= xObjects; ++x)
+	WagonPlayer* pPlayer = dynamic_cast<WagonPlayer*>(GameFramework::Get()->GetCurrentPlayer());
+	if (!pPlayer)
 	{
-		for (int y = -yObjects; y <= yObjects; ++y)
-		{
-			for (int z = -zObjects; z <= zObjects; ++z)
-			{
-				pRotatingObject = new RotatingObject;
-				pRotatingObject->SetMesh(pMesh);
-				pRotatingObject->SetPosition(fxPadding * x, fyPadding * y, fzPadding * z);
-				pRotatingObject->SetRotationAxis(XMFLOAT3(0.f, 1.f, 0.f));
-				pRotatingObject->SetAngularSpeed(10.f * (i % 10) + 3.f);
-				m_Objects[i++] = pRotatingObject;
-	
-			}
-		}
+		printf("Player is not wagon player!\n");
+		return;
 	}
 
+	Mesh* pMesh = new OBJMesh(pDevice, pCommandList, "Rail.obj", XMFLOAT3(75.f, 75.f, -75.f), XMFLOAT3(0.f, 0.f, 0.f));
 	CreateShaderVariables(pDevice, pCommandList);
 
 }
 
 void ObjectsShader::ReleaseUploadBuffers()
 {
-	if (m_Objects)
+	for (auto& i : m_Objects)
 	{
-		for (int i = 0; i < m_ObjectCount; ++i)
-		{
-			if (m_Objects[i]) m_Objects[i]->ReleaseUploadBuffers();
-		}
+		if (i) i->ReleaseUploadBuffers();
 	}
 }
 
 void ObjectsShader::Update(float DeltaTime)
 {
-	for (int i = 0; i < m_ObjectCount; ++i)
-		m_Objects[i]->Update(DeltaTime);
+	for (auto& i : m_Objects)
+		i->Update(DeltaTime);
 }
 
 void ObjectsShader::ReleaseObjects()
 {
-	if (m_Objects)
+	for (auto& i : m_Objects)
 	{
-		for (int i = 0; i < m_ObjectCount; ++i)
-		{
-			if (m_Objects[i]) delete m_Objects[i];
-		}
-		delete[] m_Objects;
+		if (i) delete i;
 	}
+	m_Objects.clear();
 }
 
 void ObjectsShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, float Interpolation)
 {
 	Shader::Render(pCommandList, pCamera);
-	for (int i = 0; i < m_ObjectCount; ++i)
-		m_Objects[i]->Render(pCommandList, pCamera);
+	for (auto& i : m_Objects)
+		i->Render(pCommandList, pCamera);
 }

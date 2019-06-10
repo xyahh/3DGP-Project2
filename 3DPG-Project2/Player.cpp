@@ -279,8 +279,3 @@ void Player::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera)
 	if (CameraMode == Camera::MODE::THIRD_PERSON) 
 		GameObject::Render(pCommandList, pCamera);
 }
-
-bool Player::ProcessInput()
-{
-	return false;
-}

@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "WagonPlayer.h"
 
 _3DGP_BEGIN_
 
@@ -14,13 +15,16 @@ public:
 
 	virtual bool WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	virtual bool ProcessInput();
+	virtual void ProcessInput();
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation);
 	virtual void Update(float DeltaTime);
 
 	virtual void ReleaseUploadBuffers();
 
 private:
+	STD vector<WagonPlayer>		m_Wagons;
+	RailObjectShader*			m_pRailObjectShader; 
+
 	POINT m_CursorPos;
 	float m_CurrentTimeDilation	{ 1.f };
 	float m_TargetTimeDilation	{ 1.f };

@@ -72,6 +72,8 @@ public:
 
 	HWND GetWindowHandle() const;
 
+	Player* GetCurrentPlayer() const;
+
 private:
 
 	GameFramework();

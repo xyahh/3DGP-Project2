@@ -2,40 +2,15 @@
 #include "WagonPlayer.h"
 #include "GameFramework.h"
 
-#include "OBJMesh.h"
-#include "DiffusedCubeMesh.h"
-
 _3DGP_USE_
 DX_USE
 
 WagonPlayer::WagonPlayer(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, ID3D12RootSignature * pGraphicsRootSignature) 
 {
-	SetMesh		(new OBJMesh(pDevice, pCommandList, "Wagon1.obj", XMFLOAT3(75.f, 75.f, -75.f), XMFLOAT3(0.f, 0.f, 0.f)));
-	SetSubMesh	(new OBJMesh(pDevice, pCommandList, "Wagon2.obj", XMFLOAT3(75.f, 75.f, -75.f), XMFLOAT3(0.f, 0.f, -100.f)));
-	SetRailMesh	(new DiffusedCubeMesh(pDevice, pCommandList, 30.f, 30.f, 30.f));
-
-	m_Camera = ChangeCamera(Camera::MODE::THIRD_PERSON, 0.f);
-	CreateShaderVariables(pDevice, pCommandList);
-
-	m_Position = XMFLOAT3(0.f, 0.f, -50.f);
 }
 
 WagonPlayer::~WagonPlayer()
 {
-}
-
-void WagonPlayer::SetSubMesh(Mesh * pMesh)
-{
-	if (m_SubWagonMesh) m_SubWagonMesh->Release();
-	m_SubWagonMesh = pMesh;
-	if (m_SubWagonMesh) m_SubWagonMesh->AddRef();
-}
-
-void WagonPlayer::SetRailMesh(Mesh * pMesh)
-{
-	if (m_RailMesh) m_RailMesh->Release();
-	m_RailMesh = pMesh;
-	if (m_RailMesh) m_RailMesh->AddRef();
 }
 
 Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
@@ -104,53 +79,3 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 	return m_Camera;
 }
 
-void WagonPlayer::Update(float DeltaTime)
-{
-	
-
-
-
-	/* Increase Lifetime of every Rail */
-	for (auto& pRails : m_Rails)
-		pRails.Update(DeltaTime);
-
-	/* Check for Rails that are past their Lifetime */
-	for (auto i = m_Rails.begin(); i != m_Rails.end();)
-	{
-		if (i->IsExpired()) i = m_Rails.erase(i);
-		else break; //Stop loop when first encounter an object with lifetime remaining (objects added later have more lifetime remaining)
-	}
-}
-
-void WagonPlayer::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera)
-{
-	Player::Render(pCommandList, pCamera);
-	if (m_SubWagonMesh) m_SubWagonMesh->Render(pCommandList);
-	for (auto& pRails : m_Rails)
-		pRails.Render(pCommandList, pCamera);
-}
-
-bool WagonPlayer::ProcessInput()
-{
-	static UCHAR pKeyBuffer[256];
-	if (GetKeyboardState(pKeyBuffer))
-	{
-		if (KEY_PRESSED(pKeyBuffer, VK_F1))
-		{
-			ChangeCamera(Camera::MODE::FIRST_PERSON, Timer::GetDeltaTime());
-			return true;
-		}
-		if (KEY_PRESSED(pKeyBuffer, VK_F2))
-		{
-			ChangeCamera(Camera::MODE::THIRD_PERSON, Timer::GetDeltaTime());
-			return true;
-		}
-
-		if (KEY_PRESSED(pKeyBuffer, VK_F3))
-		{
-			ChangeCamera(Camera::MODE::SPACESHIP, Timer::GetDeltaTime());
-			return true;
-		}
-	}
-	return false;
-}

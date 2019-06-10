@@ -512,3 +512,8 @@ HWND GameFramework::GetWindowHandle() const
 {
 	return m_hWnd;
 }
+
+Player * GameFramework::GetCurrentPlayer() const
+{
+	return m_Player;
+}

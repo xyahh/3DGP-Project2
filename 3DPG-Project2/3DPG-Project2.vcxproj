@@ -124,6 +124,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="FunctionLibrary.h" />
+    <ClInclude Include="RailObjectShader.h" />
     <ClInclude Include="TimedObject.h" />
     <ClInclude Include="WagonPlayer.h" />
     <ClInclude Include="Camera.h" />
@@ -151,6 +153,8 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FunctionLibrary.cpp" />
+    <ClCompile Include="RailObjectShader.cpp" />
     <ClCompile Include="TimedObject.cpp" />
     <ClCompile Include="WagonPlayer.cpp" />
     <ClCompile Include="Camera.cpp" />

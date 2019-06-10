@@ -6,25 +6,18 @@ _3DGP_BEGIN_
 
 class WagonPlayer : public Player
 {
+
 public:
 	WagonPlayer(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, ID3D12RootSignature* pGraphicsRootSignature);
 	virtual ~WagonPlayer();
 
-	void SetSubMesh(Mesh* pMesh);
-	void SetRailMesh(Mesh* pMesh);
-
 	virtual Camera* ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime);
 
-	virtual void Update(float DeltaTime);
-	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera);
-	virtual bool ProcessInput();
-
+	UINT GetWagonNumber() const { return m_WagonNumber; }
+	void SetWagonNumber(UINT WagonNumber) { m_WagonNumber = WagonNumber; }
 
 protected:
-
-	Mesh*					m_RailMesh		{ NULL };
-	Mesh*					m_SubWagonMesh	{ NULL };
-	STD list<TimedObject>	m_Rails;
+	UINT m_WagonNumber;
 };
 
 _3DGP_END_

@@ -25,10 +25,7 @@ public:
 	virtual void						Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation);
 
 protected:
-	GameObject**	m_Objects		{ NULL };
-	int				m_ObjectCount	{ 0 };
-
-
+	STD vector<GameObject*>	m_Objects;
 };
 
 _3DGP_END_

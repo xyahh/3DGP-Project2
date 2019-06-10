@@ -20,7 +20,7 @@ public:
 
 	virtual bool WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
-	virtual bool ProcessInput() = 0;
+	virtual void ProcessInput() = 0;
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation) = 0;
 	virtual void Update(float DeltaTime) = 0;
 
@@ -33,10 +33,8 @@ public:
 
 protected:
 	
-	MWRL ComPtr<ID3D12RootSignature> m_RootSignature;
-	
-	Player*						m_Player{ NULL };
-	STD vector<ObjectsShader>	m_ObjectShaders;
+	MWRL ComPtr<ID3D12RootSignature>	m_RootSignature;
+	STD vector<ObjectsShader*>			m_ObjectShaders;
 };
 
 _3DGP_END_
