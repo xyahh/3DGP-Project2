@@ -27,7 +27,7 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-#define KEY_PRESSED(pKeyBuffer, VirtualKey) (pKeyBuffer[VirtualKey] & 0xF0)
+#define KEY_PRESSED(pKeyBuffer, VirtualKey) if(pKeyBuffer[VirtualKey] & 0xF0)
 
 /* to use in header files */
 #define _3DGP_BEGIN_ namespace _3DGP_ {
@@ -54,3 +54,4 @@
 #include "DXHelper.h"
 #include "DXMath.h"
 #include "Timer.h"
+#include "FunctionLibrary.h"

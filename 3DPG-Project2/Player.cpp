@@ -28,28 +28,51 @@ Player::~Player()
 		delete m_Camera;
 }
 
-void Player::Move(ULONG Direction, float Distance, bool bVelocity)
+void Player::SetFriction(float Friction)
 {
-	XMVECTOR Displacement = XMVectorZero();
-	XMVECTOR Look = GetLookVector();
-	XMVECTOR Right = GetRightVector();
-	XMVECTOR Up = GetUpVector();
+	m_Friction = Friction;
+}
 
-	if (Direction)
-	{
-		if (Direction & DIR_FORWARD) Displacement  = XMVectorAdd(Displacement, XMVectorScale(Look, Distance));
-		if (Direction & DIR_BACKWARD) Displacement = XMVectorSubtract(Displacement, XMVectorScale(Look, Distance));
+void Player::SetGravity(const DX XMFLOAT3 & Gravity)
+{
+	m_Gravity = Gravity;
+}
 
-		if (Direction & DIR_RIGHT) Displacement = XMVectorAdd(Displacement, XMVectorScale(Right, Distance));
-		if (Direction & DIR_LEFT) Displacement	= XMVectorSubtract(Displacement, XMVectorScale(Right, Distance));
+void Player::SetMaxVelocityXZ(float MaxVelocity)
+{
+	m_MaxVelocityXZ = MaxVelocity;
+}
 
-		if (Direction & DIR_UP) Displacement	= XMVectorAdd(Displacement, XMVectorScale(Up, Distance));
-		if (Direction & DIR_DOWN) Displacement	= XMVectorSubtract(Displacement, XMVectorScale(Up, Distance));
-	
-		XMFLOAT3 Result;
-		XMStoreFloat3(&Result, Displacement);
-		Move(Result, bVelocity);
-	}	
+void Player::SetMaxVelocityY(float MaxVelocity)
+{
+	m_MaxVelocityY = MaxVelocity;
+}
+
+void Player::SetVelocity(const DX XMFLOAT3 & Velocity)
+{
+	m_Velocity = Velocity;
+}
+
+DX XMFLOAT3 Player::GetVelocity() const
+{
+	return m_Velocity;
+}
+
+void Player::GetRotationValues(float * pPitchOut, float * pYawOut, float * pRollOut) const
+{
+	if (pPitchOut)	*pPitchOut = m_Rotation.x;
+	if (pYawOut)	*pYawOut = m_Rotation.y;
+	if (pRollOut)	*pRollOut = m_Rotation.z;
+}
+
+Camera * Player::GetCamera() const
+{
+	return m_Camera;
+}
+
+void Player::SetCamera(Camera * pCamera)
+{
+	m_Camera = pCamera;
 }
 
 void Player::Move(const DX XMFLOAT3 & Shift, bool bVelocity)
@@ -180,6 +203,24 @@ void Player::Update(float DeltaTime)
 	XMStoreFloat3(&m_Velocity, XMVectorAdd(XMLoadFloat3(&m_Velocity), XMVectorScale(XMVector3Normalize(XMLoadFloat3(&m_Velocity)), -Deceleration)));
 }
 
+void Player::OnPlayerUpdateCallback(float DeltaTime) 
+{
+}
+
+void Player::SetPlayerUpdatedContext(LPVOID pContext) 
+{ 
+	m_PlayerUpdatedContext = pContext; 
+}
+
+void Player::OnCameraUpdateCallback(float DeltaTime) 
+{
+}
+
+void Player::SetCameraUpdatedContext(LPVOID pContext) 
+{ 
+	m_CameraUpdatedContext = pContext; 
+}
+
 void Player::CreateShaderVariables(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	GameObject::CreateShaderVariables(pDevice, pCommandList);
@@ -195,6 +236,11 @@ void Player::ReleaseShaderVariables()
 void Player::UpdateShaderVariables(ID3D12GraphicsCommandList * pCommandList)
 {
 	GameObject::UpdateShaderVariables(pCommandList);
+}
+
+Camera * Player::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
+{
+	return NULL;
 }
 
 void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCameraMode)

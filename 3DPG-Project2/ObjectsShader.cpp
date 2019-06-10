@@ -11,15 +11,15 @@
 _3DGP_USE_
 DX_USE
 
-ObjectsShader::ObjectsShader()
+ObjectShader::ObjectShader()
 {
 }
 
-ObjectsShader::~ObjectsShader()
+ObjectShader::~ObjectShader()
 {
 }
 
-D3D12_INPUT_LAYOUT_DESC ObjectsShader::CreateInputLayout()
+D3D12_INPUT_LAYOUT_DESC ObjectShader::CreateInputLayout()
 {
 	UINT InputElementDescCount = 2;
 	D3D12_INPUT_ELEMENT_DESC* pInputElementDescs = new D3D12_INPUT_ELEMENT_DESC[InputElementDescCount];
@@ -34,7 +34,7 @@ D3D12_INPUT_LAYOUT_DESC ObjectsShader::CreateInputLayout()
 	return InputLayoutDesc;
 }
 
-D3D12_SHADER_BYTECODE ObjectsShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
+D3D12_SHADER_BYTECODE ObjectShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	D3D12_SHADER_BYTECODE ByteCode;
 	*pShaderBlob = CompileShader(L"Shaders.hlsl", "VSDiffused", "vs_5_1");
@@ -43,7 +43,7 @@ D3D12_SHADER_BYTECODE ObjectsShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* p
 	return ByteCode;
 }
 
-D3D12_SHADER_BYTECODE ObjectsShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
+D3D12_SHADER_BYTECODE ObjectShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	D3D12_SHADER_BYTECODE ByteCode;
 	*pShaderBlob = CompileShader(L"Shaders.hlsl", "PSDiffused", "ps_5_1");
@@ -52,14 +52,14 @@ D3D12_SHADER_BYTECODE ObjectsShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pS
 	return ByteCode;
 }
 
-void ObjectsShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
+void ObjectShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
 {
 	m_PipelineStateCount = 1;
 	m_PipelineStates = new MWRL ComPtr<ID3D12PipelineState>[m_PipelineStateCount];
 	Shader::CreateShader(pDevice, pRootSignature);
 }
 
-void ObjectsShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
+void ObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	WagonPlayer* pPlayer = dynamic_cast<WagonPlayer*>(GameFramework::Get()->GetCurrentPlayer());
 	if (!pPlayer)
@@ -73,7 +73,7 @@ void ObjectsShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandLi
 
 }
 
-void ObjectsShader::ReleaseUploadBuffers()
+void ObjectShader::ReleaseUploadBuffers()
 {
 	for (auto& i : m_Objects)
 	{
@@ -81,13 +81,13 @@ void ObjectsShader::ReleaseUploadBuffers()
 	}
 }
 
-void ObjectsShader::Update(float DeltaTime)
+void ObjectShader::Update(float DeltaTime)
 {
 	for (auto& i : m_Objects)
 		i->Update(DeltaTime);
 }
 
-void ObjectsShader::ReleaseObjects()
+void ObjectShader::ReleaseObjects()
 {
 	for (auto& i : m_Objects)
 	{
@@ -96,7 +96,7 @@ void ObjectsShader::ReleaseObjects()
 	m_Objects.clear();
 }
 
-void ObjectsShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, float Interpolation)
+void ObjectShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, float Interpolation)
 {
 	Shader::Render(pCommandList, pCamera);
 	for (auto& i : m_Objects)

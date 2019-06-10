@@ -12,6 +12,16 @@ TimedObject::~TimedObject()
 {
 }
 
+void TimedObject::SetLifetime(float Lifetime)
+{
+	m_TotalLifetime = Lifetime;
+}
+
+void TimedObject::SetBehindWagon(int WagonID)
+{
+	m_BehindWagonID = WagonID;
+}
+
 void TimedObject::Update(float DeltaTime)
 {
 	m_Lifetime += DeltaTime;

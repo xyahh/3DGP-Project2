@@ -9,6 +9,9 @@ public:
 	TimedObject();
 	~TimedObject();
 
+	void SetLifetime(float Lifetime);
+	void SetBehindWagon(int WagonID);
+
 	virtual void Update(float DeltaTime);
 	bool IsExpired() const { return m_Lifetime >= m_TotalLifetime; };
 

@@ -144,7 +144,7 @@
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="FunctionLibrary.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -222,9 +222,6 @@
     </ClCompile>
     <ClCompile Include="RailObjectShader.cpp">
       <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="FunctionLibrary.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

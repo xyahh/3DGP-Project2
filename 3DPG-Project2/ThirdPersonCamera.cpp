@@ -46,10 +46,8 @@ void ThirdPersonCamera::Update(const DX XMFLOAT3 & LookAt, float DeltaTime)
 		PlayerRotMat = XMLoadFloat4x4(&RotMat);
 	}
 
-	XMFLOAT3 PlayerPos = m_Player->GetPosition();
-
 	XMVECTOR Offset = XMVector3TransformCoord(XMLoadFloat3(&m_Offset), PlayerRotMat);
-	XMVECTOR Position = XMVectorAdd(XMLoadFloat3(&PlayerPos), Offset);
+	XMVECTOR Position = XMVectorAdd(m_Player->GetPositionVector(), Offset);
 
 	XMVECTOR Direction = XMVectorSubtract(Position, XMLoadFloat3(&m_Position));
 	float Length = XMVectorGetX(XMVector3Length(Direction));

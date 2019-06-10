@@ -43,22 +43,22 @@ public:
 	void XM_CALLCONV SetPosition(DX XMVECTOR_P0 Position);
 	void SetPosition(float x, float y, float z);
 
-	void MoveStrafe(float Distance);
+	void MoveRight(float Distance);
 	void MoveUp(float Distance);
 	void MoveForward(float Distance);
 
 	void Rotate(float Pitch, float Yaw, float Roll);
 
-protected:
 	void SetRight(const DX XMFLOAT3& Right);
 	void SetUp(const DX XMFLOAT3& Up);
 	void SetLook(const DX XMFLOAT3& Look);
-
 
 	void XM_CALLCONV SetRight(DX XMVECTOR_P0 Right);
 	void XM_CALLCONV SetUp(DX XMVECTOR_P0 Up);
 	void XM_CALLCONV SetLook(DX XMVECTOR_P0 Look);
 
+	void SetWorldTransform(const DX XMFLOAT4X4& World);
+	DX XMFLOAT4X4 GetWorldTransform() const;
 
 private:
 

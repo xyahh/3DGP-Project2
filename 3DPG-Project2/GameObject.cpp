@@ -136,28 +136,19 @@ void GameObject::SetPosition(float x, float y, float z)
 	m_World._43 = z;
 }
 
-void GameObject::MoveStrafe(float Distance)
+void GameObject::MoveRight(float Distance)
 {
-	XMFLOAT3 Position = GetPosition();
-	XMFLOAT3 Right = GetRight();
-	XMStoreFloat3(&Position, XMVectorAdd(XMLoadFloat3(&Position), XMVectorScale(XMLoadFloat3(&Right), Distance)));
-	SetPosition(Position);
+	SetPosition(XMVectorAdd(GetPositionVector(), XMVectorScale(GetRightVector(), Distance)));
 }
 
 void GameObject::MoveUp(float Distance)
 {
-	XMFLOAT3 Position = GetPosition();
-	XMFLOAT3 Up = GetUp();
-	XMStoreFloat3(&Position, XMVectorAdd(XMLoadFloat3(&Position), XMVectorScale(XMLoadFloat3(&Up), Distance)));
-	SetPosition(Position);
+	SetPosition(XMVectorAdd(GetPositionVector(), XMVectorScale(GetUpVector(), Distance)));
 }
 
 void GameObject::MoveForward(float Distance)
 {
-	XMFLOAT3 Position = GetPosition();
-	XMFLOAT3 Forward = GetLook();
-	XMStoreFloat3(&Position, XMVectorAdd(XMLoadFloat3(&Position), XMVectorScale(XMLoadFloat3(&Forward), Distance)));
-	SetPosition(Position);
+	SetPosition(XMVectorAdd(GetPositionVector(), XMVectorScale(GetLookVector(), Distance)));
 }
 
 void GameObject::Rotate(float Pitch, float Yaw, float Roll)
@@ -216,4 +207,14 @@ void XM_CALLCONV GameObject::SetLook(DX XMVECTOR_P0 Look)
 	XMFLOAT3 InLook;
 	XMStoreFloat3(&InLook, Look);
 	SetLook(InLook);
+}
+
+void GameObject::SetWorldTransform(const DX XMFLOAT4X4 & World)
+{
+	m_World = World;
+}
+
+DX XMFLOAT4X4 GameObject::GetWorldTransform() const
+{
+	return m_World;
 }

@@ -44,6 +44,7 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 	}
 
 	m_ObjectShaders.reserve(1);
+
 	m_pRailObjectShader = new RailObjectShader;
 	m_ObjectShaders.emplace_back(m_pRailObjectShader);
 
@@ -94,12 +95,10 @@ void GameplayScene::ProcessInput()
 	DWORD dwDirection = 0;
 	if (::GetKeyboardState(pKeyBuffer))
 	{
-		if (pKeyBuffer[VK_UP] & 0xF0)	dwDirection |= DIR_FORWARD;
-		if (pKeyBuffer[VK_DOWN] & 0xF0)	dwDirection |= DIR_BACKWARD;
-		if (pKeyBuffer[VK_LEFT] & 0xF0)	dwDirection |= DIR_LEFT;
-		if (pKeyBuffer[VK_RIGHT] & 0xF0)	dwDirection |= DIR_RIGHT;
-		if (pKeyBuffer[VK_PRIOR] & 0xF0)	dwDirection |= DIR_UP;
-		if (pKeyBuffer[VK_NEXT] & 0xF0)	dwDirection |= DIR_DOWN;
+		KEY_PRESSED(pKeyBuffer, 'A')
+		{
+			m_pRailObjectShader->SetSpawnRotation(XMFLOAT3(1.f, 0.f, 0.f));
+		}
 	}
 
 	float cxDelta = 0.0f, cyDelta = 0.0f;
@@ -111,21 +110,19 @@ void GameplayScene::ProcessInput()
 	{
 		::SetCursor(NULL);
 		::GetCursorPos(&ptCursorPos);
-		cxDelta = (float)(ptCursorPos.x - m_CursorPos.x) / 3.0f;
-		cyDelta = (float)(ptCursorPos.y - m_CursorPos.y) / 3.0f;
+		cxDelta = (float)(ptCursorPos.x - m_CursorPos.x);
+		cyDelta = (float)(ptCursorPos.y - m_CursorPos.y);
 		::SetCursorPos(m_CursorPos.x, m_CursorPos.y);
 	}
-	if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f))
+	if ((cxDelta != 0.0f) || (cyDelta != 0.0f))
 	{
 		if (cxDelta || cyDelta)
 		{
 			if (pKeyBuffer[VK_RBUTTON] & 0xF0)
-				m_Wagons[0].Rotate(cyDelta, 0.0f, -cxDelta);
+				m_Wagons[0].GetCamera()->Rotate(cyDelta, 0.0f, -cxDelta);
 			else
-				m_Wagons[0].Rotate(cyDelta, cxDelta, 0.0f);
+				m_Wagons[0].GetCamera()->Rotate(cyDelta, cxDelta, 0.0f);
 		}
-		if (dwDirection)
-			m_Wagons[0].Move(dwDirection, 100.0f * Timer::GetDeltaTime(), true);
 	}
 }
 
@@ -151,6 +148,7 @@ void GameplayScene::Update(float DeltaTime)
 		if (Equal(m_CurrentTimeDilation, m_TargetTimeDilation))
 			m_CurrentTimeDilation = m_TargetTimeDilation;
 	}
+
 	DeltaTime *= m_CurrentTimeDilation;
 
 	/* Updates */
@@ -164,16 +162,10 @@ void GameplayScene::Update(float DeltaTime)
 	float MoveDistance = DeltaTime * BLOCK_LENGTH * RAILS_PER_SEC;
 	for (auto& p : m_Wagons)
 	{
-		p.Move(DIR_FORWARD, MoveDistance);
+		p.MoveForward(MoveDistance);
 		m_pRailObjectShader->AdjustPlayerPosition(&p);
 	}
 }
-
-	
-
-
-
-	
 
 void GameplayScene::ReleaseUploadBuffers()
 {

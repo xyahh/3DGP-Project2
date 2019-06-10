@@ -5,11 +5,11 @@ _3DGP_BEGIN_
 
 class GameObject;
 
-class ObjectsShader : public Shader
+class ObjectShader : public Shader
 {
 public:
-	ObjectsShader();
-	virtual ~ObjectsShader();
+	ObjectShader();
+	virtual ~ObjectShader();
 
 	virtual D3D12_INPUT_LAYOUT_DESC		CreateInputLayout();
 	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(MWRL ComPtr<ID3DBlob>*pShaderBlob);

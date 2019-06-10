@@ -1,14 +1,6 @@
 #pragma once
 #include "GameObject.h"
 #include "Camera.h"
-
-#define DIR_FORWARD		0x01
-#define DIR_BACKWARD	0x02
-#define DIR_RIGHT		0x04
-#define DIR_LEFT		0x08
-#define DIR_UP			0x10
-#define DIR_DOWN		0x20
-
 _3DGP_BEGIN_
 
 class Player : public GameObject
@@ -17,79 +9,41 @@ public:
 	Player();
 	virtual ~Player();
 
-	void SetFriction(float Friction)
-	{
-		m_Friction = Friction;
-	}
+	void SetFriction(float Friction);
 
-	void SetGravity(const DX XMFLOAT3& Gravity)
-	{
-		m_Gravity = Gravity;
-	}
+	void SetGravity(const DX XMFLOAT3& Gravity);
 
-	void SetMaxVelocityXZ(float MaxVelocity)
-	{
-		m_MaxVelocityXZ = MaxVelocity;
-	}
+	void SetMaxVelocityXZ(float MaxVelocity);
 
-	void SetMaxVelocityY(float MaxVelocity)
-	{
-		m_MaxVelocityY = MaxVelocity;
-	}
+	void SetMaxVelocityY(float MaxVelocity);
 
-	void SetVelocity(const DX XMFLOAT3& Velocity)
-	{
-		m_Velocity = Velocity;
-	}
+	void SetVelocity(const DX XMFLOAT3& Velocity);
 
-	DX XMFLOAT3 GetVelocity() const
-	{
-		return m_Velocity;
-	}
+	DX XMFLOAT3 GetVelocity() const;
 
-	void GetRotationValues(float* pPitchOut, float* pYawOut, float* pRollOut) const
-	{
-		if (pPitchOut)	*pPitchOut = m_Rotation.x;
-		if (pYawOut)	*pYawOut   = m_Rotation.y;
-		if (pRollOut)	*pRollOut  = m_Rotation.z;
-	}
+	void GetRotationValues(float* pPitchOut, float* pYawOut, float* pRollOut) const;
 
-	Camera* GetCamera() const
-	{
-		return m_Camera;
-	}
+	Camera* GetCamera() const;
 
-	void SetCamera(Camera* pCamera)
-	{
-		m_Camera = pCamera;
-	}
+	void SetCamera(Camera* pCamera);
 
-	void Move(ULONG Direction, float Distance, bool bVelocity = false);
 	void Move(const DX XMFLOAT3& Shift, bool bVelocity = false);
-
 	void Rotate(float Pitch, float Yaw, float Roll);
-	
 	void Update(float DeltaTime);
 
+	virtual void OnPlayerUpdateCallback(float DeltaTime);
+	void SetPlayerUpdatedContext(LPVOID pContext);
 
-	virtual void OnPlayerUpdateCallback(float DeltaTime) {}
-	void SetPlayerUpdatedContext(LPVOID pContext) { m_PlayerUpdatedContext = pContext; }
-
-	virtual void OnCameraUpdateCallback(float DeltaTime) {}
-	void SetCameraUpdatedContext(LPVOID pContext) { m_CameraUpdatedContext = pContext; }
+	virtual void OnCameraUpdateCallback(float DeltaTime);
+	void SetCameraUpdatedContext(LPVOID pContext);
 
 	virtual void CreateShaderVariables(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual void ReleaseShaderVariables();
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pCommandList);
 
-	virtual Camera* ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
-	{
-		return NULL;
-	}
+	virtual Camera* ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime);
 
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera = NULL);
-
-protected:
 
 	void OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCameraMode);
 
