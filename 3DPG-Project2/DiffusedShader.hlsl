@@ -1,12 +1,12 @@
 cbuffer cbGameObjectInfo : register(b0)
 {
-	matrix gmtxWorld : packoffset(c0);
+    matrix gmtxWorld : packoffset(c0);
 };
 
 cbuffer cbCameraInfo : register(b1)
 {
-	matrix gmtxView : packoffset(c0);
-	matrix gmtxProj : packoffset(c4);
+    matrix gmtxView : packoffset(c0);
+    matrix gmtxProj : packoffset(c4);
 };
 
 struct VS_INPUT
@@ -29,8 +29,9 @@ VS_OUTPUT VSDiffused(VS_INPUT input)
 	return output;
 }
 
+
+
 float4 PSDiffused(VS_OUTPUT input) : SV_TARGET
 {
 	return input.color;
 }
-

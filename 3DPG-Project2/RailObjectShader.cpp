@@ -20,7 +20,8 @@ RailObjectShader::~RailObjectShader()
 void RailObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	m_RailMesh = new OBJMesh(pDevice, pCommandList, "Rail.obj", XMFLOAT3(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH));
-	m_RailObjects.reserve((int)(RAIL_LIFETIME / RAIL_SPAWN_RATE) + 50);
+	m_ObjectCount = static_cast<UINT>(RAIL_LIFETIME / RAIL_SPAWN_RATE) + 50;
+	m_RailObjects.reserve(static_cast<size_t>(m_ObjectCount));
 }
 
 void RailObjectShader::ReleaseObjects()
@@ -81,7 +82,6 @@ void RailObjectShader::SetSpawnOrientation(const DX XMFLOAT3 & Orientation)
 
 void RailObjectShader::Update(float DeltaTime)
 {
-	ObjectShader::Update(DeltaTime);
 	m_SpawnTimer += DeltaTime;
 	if (m_SpawnTimer > RAIL_SPAWN_RATE)
 	{

@@ -14,6 +14,8 @@ public:
 	void ReleaseUploadBuffers();
 
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList);
+	virtual void Render(ID3D12GraphicsCommandList* pCommandList, UINT InstanceCount);
+	virtual void Render(ID3D12GraphicsCommandList* pCommandList, UINT InstanceCount, D3D12_VERTEX_BUFFER_VIEW InstancingBufferView);
 
 protected:
 

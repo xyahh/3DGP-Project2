@@ -81,6 +81,8 @@ inline MWRL ComPtr<ID3D12Resource> CreateBufferResource(ID3D12Device * pDevice, 
 
 	pDevice->CreateCommittedResource(&HeapProperties, D3D12_HEAP_FLAG_NONE, &ResourceDesc, ResourceInitialState, NULL, IID_PPV_ARGS(&pBuffer));
 
+	if (!pData) return pBuffer;
+
 	switch (HeapType)
 	{
 	case D3D12_HEAP_TYPE_DEFAULT:

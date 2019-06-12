@@ -51,6 +51,13 @@ void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamer
 	if (m_Mesh) m_Mesh->Render(pCommandList);
 }
 
+void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, UINT InstanceCount, D3D12_VERTEX_BUFFER_VIEW InstancingBufferView)
+{
+	UpdateShaderVariables(pCommandList);
+	if (m_Shader) m_Shader->Render(pCommandList, pCamera);
+	if (m_Mesh) m_Mesh->Render(pCommandList, InstanceCount, InstancingBufferView);
+}
+
 void GameObject::Rotate(const DX XMFLOAT3& Axis, float Angle)
 {
 	XMMATRIX RotMat = XMMatrixRotationAxis(XMLoadFloat3(&Axis), XMConvertToRadians(Angle));

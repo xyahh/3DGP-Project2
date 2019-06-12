@@ -28,21 +28,12 @@ D3D12_INPUT_LAYOUT_DESC DiffusedShader::CreateInputLayout()
 
 D3D12_SHADER_BYTECODE DiffusedShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
-	D3D12_SHADER_BYTECODE ByteCode;
-	*pShaderBlob = CompileShader(L"Shaders.hlsl", "VSDiffused", "vs_5_1");
-	ByteCode.pShaderBytecode = (*pShaderBlob)->GetBufferPointer();
-	ByteCode.BytecodeLength = (*pShaderBlob)->GetBufferSize();
-
-	return ByteCode;
+	return CompileShaderFromFile(L"DiffusedShader.hlsl", "VSDiffused", "vs_5_1", pShaderBlob);
 }
 
 D3D12_SHADER_BYTECODE DiffusedShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
-	D3D12_SHADER_BYTECODE ByteCode;
-	*pShaderBlob = CompileShader(L"Shaders.hlsl", "PSDiffused", "ps_5_1");
-	ByteCode.pShaderBytecode = (*pShaderBlob)->GetBufferPointer();
-	ByteCode.BytecodeLength = (*pShaderBlob)->GetBufferSize();
-	return ByteCode;
+	return CompileShaderFromFile(L"DiffusedShader.hlsl", "PSDiffused", "ps_5_1", pShaderBlob);
 }
 
 void DiffusedShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)

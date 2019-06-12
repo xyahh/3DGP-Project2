@@ -36,20 +36,12 @@ D3D12_INPUT_LAYOUT_DESC ObjectShader::CreateInputLayout()
 
 D3D12_SHADER_BYTECODE ObjectShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
-	D3D12_SHADER_BYTECODE ByteCode;
-	*pShaderBlob = CompileShader(L"Shaders.hlsl", "VSDiffused", "vs_5_1");
-	ByteCode.pShaderBytecode = (*pShaderBlob)->GetBufferPointer();
-	ByteCode.BytecodeLength = (*pShaderBlob)->GetBufferSize();
-	return ByteCode;
+	return CompileShaderFromFile(L"DiffusedShader.hlsl", "VSDiffused", "vs_5_1", pShaderBlob);
 }
 
 D3D12_SHADER_BYTECODE ObjectShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
-	D3D12_SHADER_BYTECODE ByteCode;
-	*pShaderBlob = CompileShader(L"Shaders.hlsl", "PSDiffused", "ps_5_1");
-	ByteCode.pShaderBytecode = (*pShaderBlob)->GetBufferPointer();
-	ByteCode.BytecodeLength = (*pShaderBlob)->GetBufferSize();
-	return ByteCode;
+	return CompileShaderFromFile(L"DiffusedShader.hlsl", "PSDiffused", "ps_5_1", pShaderBlob);
 }
 
 void ObjectShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
@@ -61,15 +53,6 @@ void ObjectShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pR
 
 void ObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
-	WagonPlayer* pPlayer = dynamic_cast<WagonPlayer*>(GameFramework::Get()->GetCurrentPlayer());
-	if (!pPlayer)
-	{
-		printf("Player is not wagon player!\n");
-		return;
-	}
-
-	Mesh* pMesh = new OBJMesh(pDevice, pCommandList, "Rail.obj", XMFLOAT3(75.f, 75.f, -75.f), XMFLOAT3(0.f, 0.f, 0.f));
-	CreateShaderVariables(pDevice, pCommandList);
 
 }
 

@@ -140,6 +140,9 @@
     <ClInclude Include="RailObject.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="InstancingShader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DiffusedVertex.cpp">
@@ -211,9 +214,15 @@
     <ClCompile Include="RailObject.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="InstancingShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders.hlsl">
+    <FxCompile Include="InstancingShader.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
+    <FxCompile Include="DiffusedShader.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
   </ItemGroup>
