@@ -18,12 +18,10 @@ ThirdPersonCamera::~ThirdPersonCamera()
 void ThirdPersonCamera::Rotate(float Pitch, float Yaw, float Roll)
 {
 	 XMVECTOR q = XMLoadFloat4(&m_Rotation);
-
 	 XMVECTOR r = XMQuaternionRotationRollPitchYaw(
 		 XMConvertToRadians(Pitch),
 		 XMConvertToRadians(Yaw), 
 		 XMConvertToRadians(Roll));
-
 	 q = XMQuaternionMultiply(r, q);
 	 XMStoreFloat4(&m_Rotation, q);
 }

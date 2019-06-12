@@ -8,7 +8,7 @@ _3DGP_USE_
 DX_USE
 
 RailObjectShader::RailObjectShader()
-	: m_SpawnRotation(0.f, 0.f, 0.f)
+	: m_SpawnOrientation(0.f, 0.f, 0.f)
 {
 }
 
@@ -74,9 +74,9 @@ void RailObjectShader::AdjustPlayerPosition(WagonPlayer * pPlayer)
 	}
 }
 
-void RailObjectShader::SetSpawnRotation(const DX XMFLOAT3 & Rotation)
+void RailObjectShader::SetSpawnOrientation(const DX XMFLOAT3 & Orientation)
 {
-	m_SpawnRotation = Rotation;
+	m_SpawnOrientation = Orientation;
 }
 
 void RailObjectShader::Update(float DeltaTime)
@@ -92,12 +92,9 @@ void RailObjectShader::Update(float DeltaTime)
 	for (auto& i : m_RailObjects)
 		i.Update(DeltaTime);
 
-	for (auto i = m_RailObjects.begin(); i != m_RailObjects.end();)
-	{
-		if (i->IsExpired()) i = m_RailObjects.erase(i);
-		else break; //Stop loop when first encounter an object with lifetime remaining (objects added later have more lifetime remaining)
-	}
-
+	/* Remove Expired Rails */
+	static auto RemoveCondition = [](const RailObject& rail) { return rail.IsExpired();	};
+	m_RailObjects.erase(STD remove_if(m_RailObjects.begin(), m_RailObjects.end(), RemoveCondition), m_RailObjects.end());
 }
 
 void RailObjectShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, float Interpolation)
@@ -106,7 +103,6 @@ void RailObjectShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera *
 	for (auto& i : m_RailObjects)
 		i.Render(pCommandList, pCamera);
 }
-
 
 void RailObjectShader::SpawnRail()
 {
@@ -117,7 +113,7 @@ void RailObjectShader::SpawnRail()
 	{
 		RailObject.SetWorldTransform(m_RailObjects.back().GetWorldTransform());
 		RailObject.MoveForward(BLOCK_LENGTH);
-		RailObject.Rotate(m_SpawnRotation.x, m_SpawnRotation.y, m_SpawnRotation.z);
+		RailObject.Rotate(m_SpawnOrientation.x, m_SpawnOrientation.y, m_SpawnOrientation.z);
 
 		m_RailObjects.push_back(std::move(RailObject));
 		m_RailObjects.back().SetMesh(m_RailMesh);
@@ -125,12 +121,13 @@ void RailObjectShader::SpawnRail()
 	else
 	{
 		RailObject.SetPosition(XMVectorZero());
+		/*Start with 20 blocks*/
 		for (int i = 0; i < 20; ++i)
 		{
-			RailObject.SetLifetime(RAIL_LIFETIME + (20 - i) * RAIL_SPAWN_RATE);
+			RailObject.SetLifetime(RAIL_LIFETIME - (20 - i) * RAIL_SPAWN_RATE);
 			m_RailObjects.push_back(RailObject);
 			m_RailObjects.back().SetMesh(m_RailMesh);
-			RailObject.MoveForward(BLOCK_LENGTH); //10 blocks ahead
+			RailObject.MoveForward(BLOCK_LENGTH);
 		}
 
 		

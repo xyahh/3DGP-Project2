@@ -119,7 +119,7 @@ void GameplayScene::ProcessInput()
 			m_TargetTimeDilation = 1.f;
 	}
 
-	m_pRailObjectShader->SetSpawnRotation(Rotation);
+	m_pRailObjectShader->SetSpawnOrientation(Rotation);
 
 	float cxDelta = 0.0f, cyDelta = 0.0f;
 
@@ -130,15 +130,18 @@ void GameplayScene::ProcessInput()
 	{
 		::SetCursor(NULL);
 		::GetCursorPos(&ptCursorPos);
-		cxDelta = (float)(ptCursorPos.x - m_CursorPos.x);
-		cyDelta = (float)(ptCursorPos.y - m_CursorPos.y);
+		cxDelta = (float)(ptCursorPos.x - m_CursorPos.x) / 10.f;
+		cyDelta = (float)(ptCursorPos.y - m_CursorPos.y) / 10.f;
 		::SetCursorPos(m_CursorPos.x, m_CursorPos.y);
 	}
 	if ((cxDelta != 0.0f) || (cyDelta != 0.0f))
 	{
 		if (cxDelta || cyDelta)
 		{
-			m_Wagons[0].GetCamera()->Rotate(cyDelta, cxDelta, 0.f);
+			KEY_PRESSED(pKeyBuffer, VK_LBUTTON)
+				m_Wagons[0].GetCamera()->Rotate(cyDelta, cxDelta, 0.f);
+			KEY_PRESSED(pKeyBuffer, VK_RBUTTON)
+				m_Wagons[0].GetCamera()->Rotate(0.f, 0.f, cxDelta);
 		}
 	}
 }

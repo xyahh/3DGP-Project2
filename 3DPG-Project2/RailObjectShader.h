@@ -23,7 +23,7 @@ public:
 	virtual void	ReleaseUploadBuffers();
 
 	void			AdjustPlayerPosition(WagonPlayer* pPlayer);
-	void			SetSpawnRotation(const DX XMFLOAT3& Rotation);
+	void			SetSpawnOrientation(const DX XMFLOAT3& Rotation);
 
 	virtual void	Update(float DeltaTime);
 	virtual void	Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation);
@@ -31,10 +31,10 @@ public:
 	void			SpawnRail();
 
 protected:
+	STD vector<RailObject>  m_RailObjects;
 	Mesh*					m_RailMesh{ NULL };
-	STD vector<RailObject> m_RailObjects;
 	float					m_SpawnTimer{ 0.f };
-	DX XMFLOAT3				m_SpawnRotation;
+	DX XMFLOAT3				m_SpawnOrientation;
 };
 
 _3DGP_END_
