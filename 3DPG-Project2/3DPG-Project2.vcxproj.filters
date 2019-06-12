@@ -143,6 +143,12 @@
     <ClInclude Include="InstancingShader.h">
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="HeightMapGridMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DiffusedVertex.cpp">
@@ -216,6 +222,12 @@
     </ClCompile>
     <ClCompile Include="InstancingShader.cpp">
       <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapGridMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapImage.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -125,6 +125,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FunctionLibrary.h" />
+    <ClInclude Include="HeightMapGridMesh.h" />
+    <ClInclude Include="HeightMapImage.h" />
     <ClInclude Include="InstancingShader.h" />
     <ClInclude Include="RailObjectShader.h" />
     <ClInclude Include="RailObject.h" />
@@ -152,6 +154,8 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HeightMapGridMesh.cpp" />
+    <ClCompile Include="HeightMapImage.cpp" />
     <ClCompile Include="InstancingShader.cpp" />
     <ClCompile Include="RailObjectShader.cpp" />
     <ClCompile Include="RailObject.cpp" />
