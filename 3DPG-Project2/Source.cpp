@@ -6,5 +6,5 @@ using namespace _3DGP_;
 
 int main()
 {
-	GameFramework::Get()->Run<GameplayScene>("3DGP Project 2", TRUE, 1920, 1080);
+	GameFramework::Get()->Run<GameplayScene>("3DGP Project 2");
 }

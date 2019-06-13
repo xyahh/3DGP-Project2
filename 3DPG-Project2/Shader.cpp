@@ -89,20 +89,10 @@ D3D12_DEPTH_STENCIL_DESC Shader::CreateDepthStencilState()
 	return DepthStencilDesc;
 }
 
-D3D12_SHADER_BYTECODE Shader::CompileShaderFromFile(const STD wstring & filename, const STD string & entrypoint, const STD string & target, MWRL ComPtr<ID3DBlob>* pShaderBlob)
+D3D12_SHADER_BYTECODE Shader::CompileShaderFromFile(const STD wstring & filename, const STD string & entrypoint, const STD string & target, ID3DInclude* pInclude, MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	D3D12_SHADER_BYTECODE ByteCode;
-
-	ID3DInclude* pInclude = new ShaderInclude;
-	LPCVOID pData;
-	UINT	Bytes;
-
-	pInclude->Open(D3D_INCLUDE_LOCAL, "CBStruct.hlsl", NULL, &pData, &Bytes);
 	*pShaderBlob = CompileShader(filename, entrypoint, target, pInclude);
-	pInclude->Close(pData);
-	
-	delete pInclude;
-
 	ByteCode.pShaderBytecode = (*pShaderBlob)->GetBufferPointer();
 	ByteCode.BytecodeLength = (*pShaderBlob)->GetBufferSize();
 	return ByteCode;

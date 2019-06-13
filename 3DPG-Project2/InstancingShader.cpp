@@ -77,12 +77,32 @@ D3D12_INPUT_LAYOUT_DESC InstancingShader::CreateInputLayout()
 
 D3D12_SHADER_BYTECODE InstancingShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
-	return CompileShaderFromFile(L"InstancingShader.hlsl", "VSInstancing", "vs_5_1", pShaderBlob);
+	ID3DInclude* pInclude = new ShaderInclude;
+	LPCVOID pData; UINT	Bytes;
+	D3D12_SHADER_BYTECODE ByteCode;
+
+	pInclude->Open(D3D_INCLUDE_LOCAL, "CBStruct.hlsl", NULL, &pData, &Bytes);
+	ByteCode = CompileShaderFromFile(L"InstancingShader.hlsl", "VSInstancing", "vs_5_1", pInclude, pShaderBlob);
+	pInclude->Close(pData);
+
+	delete pInclude;
+
+	return ByteCode;
 }
 
 D3D12_SHADER_BYTECODE InstancingShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
-	return CompileShaderFromFile(L"InstancingShader.hlsl", "PSInstancing", "ps_5_1", pShaderBlob);
+	ID3DInclude* pInclude = new ShaderInclude;
+	LPCVOID pData; UINT	Bytes;
+	D3D12_SHADER_BYTECODE ByteCode;
+
+	pInclude->Open(D3D_INCLUDE_LOCAL, "CBStruct.hlsl", NULL, &pData, &Bytes);
+	ByteCode = CompileShaderFromFile(L"InstancingShader.hlsl", "PSInstancing", "ps_5_1", pInclude, pShaderBlob);
+	pInclude->Close(pData);
+
+	delete pInclude;
+
+	return ByteCode;
 }
 
 void InstancingShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
