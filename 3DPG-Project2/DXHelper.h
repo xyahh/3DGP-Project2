@@ -15,7 +15,8 @@ inline void ThrowIfFailed(HRESULT hr)
 		throw std::exception();
 }
 
-inline MWRL ComPtr<ID3DBlob> CompileShader(const STD wstring& filename,const STD string& entrypoint, const STD string& target)
+inline MWRL ComPtr<ID3DBlob> CompileShader(const STD wstring& filename,const STD string& entrypoint, const STD string& target,
+	ID3DInclude *pInclude = NULL)
 {
 	UINT uCompileFlags = 0;
 #if defined(_DEBUG)
@@ -24,7 +25,7 @@ inline MWRL ComPtr<ID3DBlob> CompileShader(const STD wstring& filename,const STD
 	 MWRL ComPtr<ID3DBlob> pByteCode;
 	 MWRL ComPtr<ID3DBlob> pErrors;
 
-	ThrowIfFailed(D3DCompileFromFile(filename.c_str(), NULL, NULL, entrypoint.c_str(), target.c_str(), uCompileFlags, 0, &pByteCode, &pErrors));
+	ThrowIfFailed(D3DCompileFromFile(filename.c_str(), NULL, pInclude, entrypoint.c_str(), target.c_str(), uCompileFlags, 0, &pByteCode, &pErrors));
 
 	if (pErrors)
 		OutputDebugStringA((char*)pErrors->GetBufferPointer());

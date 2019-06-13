@@ -59,5 +59,6 @@ _3DGP_END_
 
 #include "DXHelper.h"
 #include "DXMath.h"
+#include "DXInclude.h"
 #include "Timer.h"
 #include "FunctionLibrary.h"

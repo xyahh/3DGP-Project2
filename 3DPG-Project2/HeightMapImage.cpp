@@ -85,8 +85,8 @@ DX XMFLOAT3 HeightMapImage::GetHeightMapNormal(float x, float z) const
 	float y2 = (float)m_HeightMapPixels[HeightMapIndex + xHeightMapAdd] * m_Scale.y;
 	float y3 = (float)m_HeightMapPixels[HeightMapIndex + zHeightMapAdd] * m_Scale.y;
 
-	XMFLOAT3 Edge1(0.f, y3 - y1, m_Scale.z);
-	XMFLOAT3 Edge2(m_Scale.x, y2 - y1, 0.f);
+	XMFLOAT3 Edge1(0.f, y3 - y1, m_Scale.z); //Scale.z cause it might not be a 1x1x1 Scale.
+	XMFLOAT3 Edge2(m_Scale.x, y2 - y1, 0.f); //Scale.x same.
 
 	XMFLOAT3 Normal;
 	XMStoreFloat3(&Normal, XMVector3Normalize(XMVector3Cross(XMLoadFloat3(&Edge1), XMLoadFloat3(&Edge2))));

@@ -149,6 +149,9 @@
     <ClInclude Include="HeightMapImage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DXInclude.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DiffusedVertex.cpp">
@@ -235,6 +238,9 @@
       <Filter>Shader Files</Filter>
     </FxCompile>
     <FxCompile Include="DiffusedShader.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
+    <FxCompile Include="CBStruct.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
   </ItemGroup>
