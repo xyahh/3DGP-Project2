@@ -58,11 +58,11 @@ void Camera::UpdateShaderVariables(ID3D12GraphicsCommandList * pCommandList)
 {
 	XMFLOAT4X4 ViewT;
 	XMStoreFloat4x4(&ViewT, XMMatrixTranspose(XMLoadFloat4x4(&m_View)));
-	pCommandList->SetGraphicsRoot32BitConstants(1, 16, &ViewT, 0);
+	pCommandList->SetGraphicsRoot32BitConstants(ROOT_INDEX::CAM, Count32Bits(ViewT), &ViewT, 0);
 
 	XMFLOAT4X4 ProjT;
 	XMStoreFloat4x4(&ProjT, XMMatrixTranspose(XMLoadFloat4x4(&m_Proj)));
-	pCommandList->SetGraphicsRoot32BitConstants(1, 16, &ProjT, 16);
+	pCommandList->SetGraphicsRoot32BitConstants(ROOT_INDEX::CAM, Count32Bits(ProjT), &ProjT, Count32Bits(ViewT));
 }
 
 void Camera::GenerateViewMatrix()

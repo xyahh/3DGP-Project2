@@ -136,7 +136,6 @@
     <ClInclude Include="DiffusedCubeMesh.h" />
     <ClInclude Include="DiffusedShader.h" />
     <ClInclude Include="DiffusedVertex.h" />
-    <ClInclude Include="DXHelper.h" />
     <ClInclude Include="DXMath.h" />
     <ClInclude Include="FirstPersonCamera.h" />
     <ClInclude Include="GameFramework.h" />
@@ -155,6 +154,7 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FunctionLibrary.cpp" />
     <ClCompile Include="HeightMapGridMesh.cpp" />
     <ClCompile Include="HeightMapImage.cpp" />
     <ClCompile Include="InstancingShader.cpp" />

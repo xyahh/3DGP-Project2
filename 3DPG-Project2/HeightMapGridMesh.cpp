@@ -4,6 +4,7 @@
 #include "DiffusedVertex.h"
 
 _3DGP_USE_
+DX_USE
 
 HeightMapGridMesh::HeightMapGridMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, 
 	int xStart, int zStart, int width, int depth, const DX XMFLOAT3 & scale, const DX XMFLOAT4 & color, void * pContext)

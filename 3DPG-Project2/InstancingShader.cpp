@@ -3,7 +3,9 @@
 
 #include "RotatingObject.h"
 #include "DiffusedCubeMesh.h"
+
 _3DGP_USE_
+DX_USE
 
 InstancingShader::InstancingShader()
 {
