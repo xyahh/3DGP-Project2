@@ -3,11 +3,11 @@
 
 _3DGP_BEGIN_
 
-class ThirdPersonCamera : public Camera
+class OrbitalCamera : public Camera
 {
 public:
-	ThirdPersonCamera(Camera* pCamera);
-	virtual ~ThirdPersonCamera();
+	OrbitalCamera(Camera* pCamera);
+	virtual ~OrbitalCamera();
 
 	virtual void Rotate(float Pitch, float Yaw, float Roll);
 	virtual void Update(const DX XMFLOAT3& LookAt, float DeltaTime);

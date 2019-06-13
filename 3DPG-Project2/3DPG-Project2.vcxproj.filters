@@ -36,9 +36,6 @@
     <Filter Include="Header Files\Shader">
       <UniqueIdentifier>{a25d64c4-36a5-439f-bf17-54cc5453d026}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Objects">
-      <UniqueIdentifier>{d43c1719-54f9-4fd1-804b-db0467e7b929}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{4d17cd04-4f6f-4fcf-bae3-ed38505fceaf}</UniqueIdentifier>
     </Filter>
@@ -54,14 +51,26 @@
     <Filter Include="Source Files\Camera">
       <UniqueIdentifier>{0ced33bc-22a2-4caa-a2b8-632b2c700d02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Objects\Player">
-      <UniqueIdentifier>{3e8effed-d130-4fa9-a373-3a3509977cd1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Objects\Player">
       <UniqueIdentifier>{5e105fc9-0c0d-4e9f-87d7-12e4a722f11d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Scene">
       <UniqueIdentifier>{1db9a9f0-659d-4767-8f28-bd5fbac05a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Shader\Instance Shaders">
+      <UniqueIdentifier>{4e5b58bd-a830-4c93-91ed-4735f3560a92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader\Instance Shaders">
+      <UniqueIdentifier>{cd7b168b-2ea9-4b50-a98e-8420369c3452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{d92951f9-b903-4f7e-8e04-38fccfca7aeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mesh\Objects">
+      <UniqueIdentifier>{d43c1719-54f9-4fd1-804b-db0467e7b929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mesh\Objects\Player">
+      <UniqueIdentifier>{3e8effed-d130-4fa9-a373-3a3509977cd1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,43 +120,46 @@
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Header Files\Mesh\Objects</Filter>
     </ClInclude>
     <ClInclude Include="RotatingObject.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Header Files\Mesh\Objects</Filter>
     </ClInclude>
     <ClInclude Include="FirstPersonCamera.h">
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdPersonCamera.h">
-      <Filter>Header Files\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files\Objects\Player</Filter>
+      <Filter>Header Files\Mesh\Objects\Player</Filter>
     </ClInclude>
     <ClInclude Include="WagonPlayer.h">
-      <Filter>Header Files\Objects\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="RailObjectShader.h">
-      <Filter>Header Files\Shader</Filter>
+      <Filter>Header Files\Mesh\Objects\Player</Filter>
     </ClInclude>
     <ClInclude Include="FunctionLibrary.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="RailObject.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="InstancingShader.h">
-      <Filter>Header Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="HeightMapGridMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HeightMapImage.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Mesh\Objects</Filter>
     </ClInclude>
     <ClInclude Include="DXInclude.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingShader.h">
+      <Filter>Header Files\Shader\Instance Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="RailObjectShader.h">
+      <Filter>Header Files\Shader\Instance Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeObjectShader.h">
+      <Filter>Header Files\Shader\Instance Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapImage.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapGridMesh.h">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitalCamera.h">
+      <Filter>Header Files\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -205,32 +217,35 @@
     <ClCompile Include="FirstPersonCamera.cpp">
       <Filter>Source Files\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="ThirdPersonCamera.cpp">
-      <Filter>Source Files\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Objects\Player</Filter>
     </ClCompile>
     <ClCompile Include="WagonPlayer.cpp">
       <Filter>Source Files\Objects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="RailObjectShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="RailObject.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="InstancingShader.cpp">
-      <Filter>Source Files\Shader</Filter>
+      <Filter>Source Files\Shader\Instance Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="HeightMapGridMesh.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="CubeObjectShader.cpp">
+      <Filter>Source Files\Shader\Instance Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="HeightMapImage.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="RailObjectShader.cpp">
+      <Filter>Source Files\Shader\Instance Shaders</Filter>
     </ClCompile>
     <ClCompile Include="FunctionLibrary.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapGridMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapImage.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitalCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

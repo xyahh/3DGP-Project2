@@ -52,6 +52,7 @@
 */
 #define _3DGP_EXPLICIT_CHILD_OF_TEMPLATE_(T, Base) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value && !std::is_same<Base, T>::value>::type>
 #define _3DGP_IMPLICIT_CHILD_OF_TEMPLATE_(T, Base) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value>::type>
+#define _3DGP_IMPLICIT_CHILD_OF_TEMPLATE_EXT_(T, Base, Ext) template<class T, typename = std::enable_if<std::is_base_of<Base, T>::value>::type, Ext>
 
 #include "DXMath.h"
 #include "DXInclude.h"

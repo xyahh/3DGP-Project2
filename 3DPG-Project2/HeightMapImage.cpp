@@ -35,7 +35,7 @@ HeightMapImage::~HeightMapImage()
 
 float HeightMapImage::GetHeight(float x_, float z_) const
 {
-	if (!InRange(0.f, x_, m_Width) || !InRange(0.f, z_, m_Depth))
+	if (!InRange(0.f, x_, (float)m_Width) || !InRange(0.f, z_, (float)m_Depth))
 		return 0.f;
 
 	int x = (int)x_;
@@ -72,9 +72,9 @@ float HeightMapImage::GetHeight(float x_, float z_) const
 	return height;
 }
 
-DX XMFLOAT3 HeightMapImage::GetHeightMapNormal(float x, float z) const
+DX XMFLOAT3 HeightMapImage::GetHeightMapNormal(int x, int z) const
 {
-	if (!InRange(0.f, x, m_Width) || !InRange(0.f, z, m_Depth))
+	if (!InRange(0, x, m_Width) || !InRange(0, z, m_Depth))
 		return XMFLOAT3(0.f, 1.f, 0.f);
 
 	int HeightMapIndex = x + (z * m_Width);

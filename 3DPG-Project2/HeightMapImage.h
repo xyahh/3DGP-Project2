@@ -10,7 +10,7 @@ public:
 
 	float GetHeight(float x, float z) const;
 
-	DX XMFLOAT3 GetHeightMapNormal(float x, float z) const;
+	DX XMFLOAT3 GetHeightMapNormal(int x, int z) const;
 
 	DX XMFLOAT3 GetScale() const;
 

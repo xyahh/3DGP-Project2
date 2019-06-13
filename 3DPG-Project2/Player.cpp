@@ -2,7 +2,7 @@
 #include "Player.h"
 
 #include "FirstPersonCamera.h"
-#include "ThirdPersonCamera.h"
+#include "OrbitalCamera.h"
 
 _3DGP_USE_
 DX_USE
@@ -97,7 +97,7 @@ void Player::Rotate(float Pitch, float Yaw, float Roll)
 	switch (CameraMode)
 	{
 	case Camera::MODE::FIRST_PERSON:
-	case Camera::MODE::THIRD_PERSON:
+	case Camera::MODE::ORBITAL:
 		if (Pitch)
 		{
 			m_Rotation.x += Pitch;
@@ -164,7 +164,7 @@ void Player::Update(float DeltaTime)
 
 	if (m_CameraUpdatedContext) OnCameraUpdateCallback(DeltaTime);
 
-	if (CameraMode == Camera::MODE::THIRD_PERSON) 
+	if (CameraMode == Camera::MODE::ORBITAL) 
 		m_Camera->SetTarget(GetPosition());
 
 	m_Camera->RegenerateViewMatrix();
@@ -225,8 +225,8 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 	case Camera::MODE::FIRST_PERSON:
 		pNewCamera = new FirstPersonCamera(m_Camera);
 		break;
-	case Camera::MODE::THIRD_PERSON:
-		pNewCamera = new ThirdPersonCamera(m_Camera);
+	case Camera::MODE::ORBITAL:
+		pNewCamera = new OrbitalCamera(m_Camera);
 		break;
 	}
 	if (pNewCamera)
@@ -241,6 +241,6 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 void Player::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera)
 {
 	Camera::MODE CameraMode = (pCamera) ? pCamera->GetMode() : Camera::MODE::NONE;
-	if (CameraMode == Camera::MODE::THIRD_PERSON) 
+	if (CameraMode == Camera::MODE::ORBITAL)
 		GameObject::Render(pCommandList, pCamera);
 }

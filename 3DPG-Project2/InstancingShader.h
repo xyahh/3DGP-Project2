@@ -12,11 +12,10 @@ struct VS_VB_INSTANCE
 class InstancingShader : public ObjectShader
 {
 public:
-	InstancingShader();
-	virtual ~InstancingShader();
 
-	virtual void						BuildObjects(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual void						ReleaseObjects();
+	InstancingShader();
+
+	virtual ~InstancingShader();
 
 	virtual D3D12_INPUT_LAYOUT_DESC		CreateInputLayout();
 	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(MWRL ComPtr<ID3DBlob>*pShaderBlob);
@@ -31,7 +30,6 @@ public:
 	virtual void						Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation);
 
 protected:
-
 	MWRL ComPtr<ID3D12Resource>		m_ObjectsCB;
 	VS_VB_INSTANCE*					m_MappedGameObjects;
 

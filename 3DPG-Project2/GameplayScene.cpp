@@ -4,11 +4,10 @@
 
 #include "DiffusedShader.h"
 #include "RailObjectShader.h"
-#include "InstancingShader.h"
+#include "CubeObjectShader.h"
 
 #include "WagonPlayer.h"
 #include "OBJMesh.h"
-
 
 _3DGP_USE_
 DX_USE
@@ -34,7 +33,7 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 
 	m_Wagons.emplace_back(pDevice, pCommandList, m_RootSignature.Get());
 	m_Wagons[0].SetMesh(MainWagon);
-	m_Wagons[0].ChangeCamera(Camera::MODE::THIRD_PERSON, 0.f);
+	m_Wagons[0].ChangeCamera(Camera::MODE::ORBITAL, 0.f);
 	m_Wagons[0].CreateShaderVariables(pDevice, pCommandList);
 	m_Wagons[0].SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
 	m_Wagons[0].SetWagonNumber(0);
@@ -45,7 +44,7 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 		m_Wagons.emplace_back(pDevice, pCommandList, m_RootSignature.Get());
 		m_Wagons[i].SetMesh(SubWagon);
 		m_Wagons[i].SetShader(PlayerShader);
-		m_Wagons[i].ChangeCamera(Camera::MODE::THIRD_PERSON, 0.f);
+		m_Wagons[i].ChangeCamera(Camera::MODE::ORBITAL, 0.f);
 		m_Wagons[i].CreateShaderVariables(pDevice, pCommandList);
 		m_Wagons[i].SetPosition(XMFLOAT3(0.f, 0.f, i*-100.f));
 		m_Wagons[i].SetWagonNumber(i);
@@ -54,8 +53,9 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 	m_ObjectShaders.reserve(2);
 
 	m_pRailObjectShader = new RailObjectShader;
+
 	m_ObjectShaders.emplace_back(m_pRailObjectShader);
-	m_ObjectShaders.emplace_back(new InstancingShader);
+	m_ObjectShaders.emplace_back(new CubeObjectShader);
 
 	for (auto& p : m_ObjectShaders)
 	{

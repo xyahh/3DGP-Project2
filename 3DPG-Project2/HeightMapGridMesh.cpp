@@ -133,10 +133,10 @@ XMFLOAT4 HeightMapGridMesh::OnGetColor(int x_, int z_, void * pContext)
 	XMVECTOR IncidentLightColor = XMLoadFloat4(&IncidentLightColor_Pre);
 
 	float fScale = 0.f;
-	fScale += XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pHeightMapImage->GetHeightMapNormal(x  , z  )), LightDir));
-	fScale += XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pHeightMapImage->GetHeightMapNormal(x+1, z  )), LightDir));
-	fScale += XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pHeightMapImage->GetHeightMapNormal(x+1, z+1)), LightDir));
-	fScale += XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pHeightMapImage->GetHeightMapNormal(x  , z+1)), LightDir));
+	fScale += XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pHeightMapImage->GetHeightMapNormal(x_  , z_  )), LightDir));
+	fScale += XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pHeightMapImage->GetHeightMapNormal(x_+1, z_  )), LightDir));
+	fScale += XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pHeightMapImage->GetHeightMapNormal(x_+1, z_+1)), LightDir));
+	fScale += XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pHeightMapImage->GetHeightMapNormal(x_  , z_+1)), LightDir));
 
 	fScale = (fScale / 4.0f) + 0.05f;
 

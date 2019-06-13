@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CubeObjectShader.h" />
     <ClInclude Include="DXInclude.h" />
     <ClInclude Include="FunctionLibrary.h" />
     <ClInclude Include="HeightMapGridMesh.h" />
@@ -149,11 +150,12 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="ThirdPersonCamera.h" />
+    <ClInclude Include="OrbitalCamera.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CubeObjectShader.cpp" />
     <ClCompile Include="FunctionLibrary.cpp" />
     <ClCompile Include="HeightMapGridMesh.cpp" />
     <ClCompile Include="HeightMapImage.cpp" />
@@ -178,7 +180,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="ThirdPersonCamera.cpp" />
+    <ClCompile Include="OrbitalCamera.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>

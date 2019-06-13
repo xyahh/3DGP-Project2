@@ -23,14 +23,11 @@ inline STD string GetSystemDir(bool Wow64Dir = false)
 	return STD string(max_path) + "\\";
 }
 
-static const STD string WORKING_DIR{ GetWorkingDir() };
-static const STD string SYSTEM_DIR { GetSystemDir() };
-
 class ShaderInclude : public ID3DInclude 
 {
 public:
 
-	ShaderInclude(const STD string& shaderDir = WORKING_DIR, const STD string& systemDir = SYSTEM_DIR)
+	ShaderInclude(const STD string& shaderDir = GetWorkingDir(), const STD string& systemDir = GetSystemDir())
 		: m_ShaderDir(shaderDir), m_SystemDir(systemDir) {}
 
 	HRESULT __stdcall ShaderInclude::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID * ppData, UINT * pBytes)

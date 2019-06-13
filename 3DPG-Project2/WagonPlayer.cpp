@@ -38,7 +38,7 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 		m_Camera->SetOffset(XMFLOAT3(0.0f, 1.f, 0.0f));
 		break;
 
-	case Camera::MODE::THIRD_PERSON:
+	case Camera::MODE::ORBITAL:
 		SetFriction(50.f);
 		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "ObjectsShader.h"
+#include "InstancingShader.h"
 #include "WagonPlayer.h"
 
 #define RAIL_DEF_COLOR RGB(100, 100, 100)
@@ -12,7 +12,7 @@ constexpr float RAILS_PER_SEC{ 16.f };
 constexpr float RAIL_SPAWN_RATE{ 1.f / RAILS_PER_SEC };
 constexpr float RAIL_LIFETIME{ 10.f };
 
-class RailObjectShader : public ObjectShader
+class RailObjectShader : public InstancingShader
 {
 public:
 	RailObjectShader();
@@ -20,10 +20,11 @@ public:
 	
 	virtual void	BuildObjects(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual void	ReleaseObjects();
-	virtual void	ReleaseUploadBuffers();
 
 	void			AdjustPlayerPosition(WagonPlayer* pPlayer);
 	void			SetSpawnOrientation(const DX XMFLOAT3& Rotation);
+
+	virtual void	UpdateShaderVariables(ID3D12GraphicsCommandList* pCommandList);
 
 	virtual void	Update(float DeltaTime);
 	virtual void	Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation);

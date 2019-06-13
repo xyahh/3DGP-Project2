@@ -13,7 +13,7 @@ public:
 	{
 		NONE,
 		FIRST_PERSON,
-		THIRD_PERSON
+		ORBITAL
 	};
 
 private:

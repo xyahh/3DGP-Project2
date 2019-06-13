@@ -49,7 +49,8 @@ inline float InvSqrt(float n)
 	return 1.f / sqrtf(n);
 }
 
-inline bool InRange(float min, float n, float max, bool include_min = true, bool include_max = false)
+template<class T>
+inline bool InRange(T min, T n, T max, bool include_min = true, bool include_max = false)
 {
 	return !((include_min && n < min)
 		|| (!include_min && n <= min)

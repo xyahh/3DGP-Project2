@@ -12,7 +12,6 @@ RailObjectShader::RailObjectShader()
 {
 }
 
-
 RailObjectShader::~RailObjectShader()
 {
 }
@@ -20,21 +19,16 @@ RailObjectShader::~RailObjectShader()
 void RailObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	m_RailMesh = new OBJMesh(pDevice, pCommandList, "Rail.obj", XMFLOAT3(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH));
-	m_ObjectCount = static_cast<UINT>(RAIL_LIFETIME / RAIL_SPAWN_RATE) + 50;
+	m_ObjectCount = static_cast<UINT>(RAIL_LIFETIME / RAIL_SPAWN_RATE); //Make sure that the vector capacity is big enough for all the Rails to spawn/despawn
 	m_RailObjects.reserve(static_cast<size_t>(m_ObjectCount));
+
+	CreateShaderVariables(pDevice, pCommandList);
 }
 
 void RailObjectShader::ReleaseObjects()
 {
 	ObjectShader::ReleaseObjects();
 	m_RailObjects.clear();
-}
-
-void RailObjectShader::ReleaseUploadBuffers()
-{
-	ObjectShader::ReleaseUploadBuffers();
-	for (auto& i : m_RailObjects)
-		i.ReleaseUploadBuffers();
 }
 
 void RailObjectShader::AdjustPlayerPosition(WagonPlayer * pPlayer)
@@ -80,6 +74,12 @@ void RailObjectShader::SetSpawnOrientation(const DX XMFLOAT3 & Orientation)
 	m_SpawnOrientation = Orientation;
 }
 
+void RailObjectShader::UpdateShaderVariables(ID3D12GraphicsCommandList * pCommandList)
+{
+	for (int i = 0; i < m_RailObjects.size(); ++i)
+		XMStoreFloat4x4(&m_MappedGameObjects[i].m_Transform, XMMatrixTranspose(XMLoadFloat4x4(&m_RailObjects[i].GetWorldTransform())));
+}
+
 void RailObjectShader::Update(float DeltaTime)
 {
 	m_SpawnTimer += DeltaTime;
@@ -99,9 +99,9 @@ void RailObjectShader::Update(float DeltaTime)
 
 void RailObjectShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, float Interpolation)
 {
-	ObjectShader::Render(pCommandList, pCamera, Interpolation);
-	for (auto& i : m_RailObjects)
-		i.Render(pCommandList, pCamera);
+	Shader::Render(pCommandList, pCamera);
+	UpdateShaderVariables(pCommandList);
+	m_RailMesh->Render(pCommandList, m_ObjectCount, m_InstancingBufferView);
 }
 
 void RailObjectShader::SpawnRail()
@@ -116,7 +116,6 @@ void RailObjectShader::SpawnRail()
 		RailObject.Rotate(m_SpawnOrientation.x, m_SpawnOrientation.y, m_SpawnOrientation.z);
 
 		m_RailObjects.push_back(std::move(RailObject));
-		m_RailObjects.back().SetMesh(m_RailMesh);
 	}
 	else
 	{
@@ -126,7 +125,6 @@ void RailObjectShader::SpawnRail()
 		{
 			RailObject.SetLifetime(RAIL_LIFETIME - (20 - i) * RAIL_SPAWN_RATE);
 			m_RailObjects.push_back(RailObject);
-			m_RailObjects.back().SetMesh(m_RailMesh);
 			RailObject.MoveForward(BLOCK_LENGTH);
 		}
 
