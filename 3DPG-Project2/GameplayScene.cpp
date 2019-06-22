@@ -31,7 +31,7 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 
 	m_Wagons.reserve(5);
 
-	m_Wagons.emplace_back(pDevice, pCommandList, m_RootSignature.Get());
+	m_Wagons.emplace_back();
 	m_Wagons[0].SetMesh(MainWagon);
 	m_Wagons[0].ChangeCamera(Camera::MODE::ORBITAL, 0.f);
 	m_Wagons[0].CreateShaderVariables(pDevice, pCommandList);
@@ -41,7 +41,7 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 
 	for (int i = 1; i < 5; ++i)
 	{
-		m_Wagons.emplace_back(pDevice, pCommandList, m_RootSignature.Get());
+		m_Wagons.emplace_back();
 		m_Wagons[i].SetMesh(SubWagon);
 		m_Wagons[i].SetShader(PlayerShader);
 		m_Wagons[i].ChangeCamera(Camera::MODE::ORBITAL, 0.f);

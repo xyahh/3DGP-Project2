@@ -18,7 +18,7 @@ void Camera::Init()
 
 	m_Position = XMFLOAT3(0.f, 0.f, 0.f);
 	m_Right = XMFLOAT3(1.f, 0.f, 0.f);
-	m_Up = gWorldUp;
+	XMStoreFloat3(&m_Up, gWorldUp);
 	m_Look = XMFLOAT3(0.f, 0.f, 1.f);
 	m_Rotation = XMFLOAT4(0.f, 0.f, 0.f, 1.f);
 

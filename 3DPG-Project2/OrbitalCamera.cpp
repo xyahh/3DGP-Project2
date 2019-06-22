@@ -39,7 +39,7 @@ void OrbitalCamera::Update(const DX XMFLOAT3 & LookAt, float DeltaTime)
 
 void OrbitalCamera::SetTarget(const DX XMFLOAT3 & Target)
 {
-	XMVECTOR Up = XMLoadFloat3(&gWorldUp);
+	XMVECTOR Up = gWorldUp;
 	Up = XMVector3Transform(Up, XMMatrixRotationQuaternion(XMLoadFloat4(&m_Rotation)));
 
 	XMFLOAT4X4 LookAtMat;

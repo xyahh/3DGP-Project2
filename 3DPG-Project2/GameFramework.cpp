@@ -363,8 +363,8 @@ void GameFramework::CreateDepthStencilView()
 	DSVDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	DSVDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), &DSVDesc, d3dDsvCPUDescriptorHandle);
+	D3D12_CPU_DESCRIPTOR_HANDLE DSVCPUDescHandle = m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), &DSVDesc, DSVCPUDescHandle);
 }
 
 void GameFramework::PopulateCommandList()

@@ -70,9 +70,6 @@ protected:
 	DX XMFLOAT4X4	m_World;
 	Mesh*			m_Mesh		{ NULL };
 	Shader*			m_Shader	{ NULL };
-
-
-
 };
 
 _3DGP_END_

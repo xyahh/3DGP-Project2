@@ -12,7 +12,7 @@
 
 _3DGP_BEGIN_
 
-constexpr DX XMFLOAT3 gWorldUp{ DX XMFLOAT3(0.f, 1.f, 0.f) };
+constexpr DX XMVECTORF32 gWorldUp{ 0.f, 1.f, 0.f };
 
 class ROOT_INDEX
 {

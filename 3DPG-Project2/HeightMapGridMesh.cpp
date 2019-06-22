@@ -59,10 +59,12 @@ HeightMapGridMesh::HeightMapGridMesh(ID3D12Device * pDevice, ID3D12GraphicsComma
 			{
 				for (int x = 0; x < m_Width; ++x)
 				{
+					/* end of last row is left unfinished so join it with the start of this row */
 					if ((x == 0) && (z > 0)) pIndices[j++] = (UINT)(x + (z * m_Width));
 
-					pIndices[j++] = (UINT)(x + (z * m_Width));
-					pIndices[j++] = (UINT)((x + (z * m_Width)) + m_Width);
+					/* down, up, down up... since primitive topology is Triangle Strip, this creates the zigzag effect (triangles) |\|\|\|  */
+					pIndices[j++] = (UINT)(x + (z * m_Width)); //down
+					pIndices[j++] = (UINT)((x + (z * m_Width)) + m_Width); //up
 				}
 			}
 			else
@@ -115,15 +117,11 @@ float HeightMapGridMesh::OnGetHeight(int x, int z, void * pContext)
 	XMFLOAT3 Scale = pHeightMapImage->GetScale();
 	int Width = pHeightMapImage->GetHeightMapWidth();
 	float Height = pHeightMapPixels[x + (z*Width)] * Scale.y;
-
 	return Height;
 }
 
 XMFLOAT4 HeightMapGridMesh::OnGetColor(int x_, int z_, void * pContext)
 {
-	float x = static_cast<float>(x_);
-	float z = static_cast<float>(z_);
-
 	XMFLOAT3 LightDirection_Pre = XMFLOAT3(-1.0f, 1.0f, 1.0f);
 	XMVECTOR LightDir = XMVector3Normalize(XMLoadFloat3(&LightDirection_Pre));
 
@@ -143,8 +141,10 @@ XMFLOAT4 HeightMapGridMesh::OnGetColor(int x_, int z_, void * pContext)
 	if (fScale > 1.0f) 
 		fScale = 1.0f;
 
+
+	//simulate an ambient lighting i.e. do not let fScale become 0 and have the COlor be in complete darkness
 	if (fScale < 0.25f) 
-		fScale = 0.25f;
+		fScale = 0.25f; 
 
 	XMFLOAT4 Color;
 	XMStoreFloat4(&Color, XMVectorScale(IncidentLightColor, fScale));

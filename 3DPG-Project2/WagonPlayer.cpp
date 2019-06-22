@@ -5,7 +5,7 @@
 _3DGP_USE_
 DX_USE
 
-WagonPlayer::WagonPlayer(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, ID3D12RootSignature * pGraphicsRootSignature) 
+WagonPlayer::WagonPlayer() 
 {
 }
 

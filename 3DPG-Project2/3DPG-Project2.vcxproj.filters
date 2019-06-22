@@ -66,10 +66,10 @@
     <Filter Include="Source Files\Utilities">
       <UniqueIdentifier>{d92951f9-b903-4f7e-8e04-38fccfca7aeb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Mesh\Objects">
+    <Filter Include="Header Files\Objects">
       <UniqueIdentifier>{d43c1719-54f9-4fd1-804b-db0467e7b929}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Mesh\Objects\Player">
+    <Filter Include="Header Files\Objects\Player">
       <UniqueIdentifier>{3e8effed-d130-4fa9-a373-3a3509977cd1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -120,25 +120,25 @@
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files\Mesh\Objects</Filter>
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="RotatingObject.h">
-      <Filter>Header Files\Mesh\Objects</Filter>
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="FirstPersonCamera.h">
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files\Mesh\Objects\Player</Filter>
+      <Filter>Header Files\Objects\Player</Filter>
     </ClInclude>
     <ClInclude Include="WagonPlayer.h">
-      <Filter>Header Files\Mesh\Objects\Player</Filter>
+      <Filter>Header Files\Objects\Player</Filter>
     </ClInclude>
     <ClInclude Include="FunctionLibrary.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="RailObject.h">
-      <Filter>Header Files\Mesh\Objects</Filter>
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="DXInclude.h">
       <Filter>Header Files\Utilities</Filter>
