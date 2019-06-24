@@ -55,7 +55,10 @@ void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamer
 		m_Shader->Render(pCommandList, pCamera);
 
 	for (auto& pMesh : m_Meshes)
-		pMesh->Render(pCommandList);
+	{
+		if (IsVisibleToCamera(pMesh, pCamera))
+			pMesh->Render(pCommandList);
+	}
 }
 
 void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, UINT InstanceCount, D3D12_VERTEX_BUFFER_VIEW InstancingBufferView)
@@ -66,7 +69,9 @@ void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCame
 		m_Shader->Render(pCommandList, pCamera);
 
 	for (auto& pMesh : m_Meshes)
+	{
 		pMesh->Render(pCommandList, InstanceCount, InstancingBufferView);
+	}
 }
 
 void GameObject::Rotate(const DX XMFLOAT3& Axis, float Angle)
@@ -242,4 +247,17 @@ void GameObject::SetWorldTransform(const DX XMFLOAT4X4 & World)
 DX XMFLOAT4X4 GameObject::GetWorldTransform() const
 {
 	return m_World;
+}
+
+DX XMMATRIX GameObject::GetWorldTransformMatrix() const
+{
+	return XMLoadFloat4x4(&m_World);
+}
+
+bool GameObject::IsVisibleToCamera(Mesh * pMesh, Camera * pCamera)
+{
+	DX BoundingOrientedBox BoundingBox = pMesh->GetBoundingBox();
+	BoundingBox.Transform(BoundingBox, GetWorldTransformMatrix());
+	if (pCamera) return pCamera->IsInFrustum(BoundingBox);
+	return false;
 }

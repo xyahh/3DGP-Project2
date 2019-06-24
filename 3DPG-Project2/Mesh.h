@@ -17,7 +17,11 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, UINT InstanceCount);
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, UINT InstanceCount, D3D12_VERTEX_BUFFER_VIEW InstancingBufferView);
 
+	DX BoundingOrientedBox GetBoundingBox() const { return m_BoundingBox; }
+
 protected:
+
+	DX BoundingOrientedBox		m_BoundingBox;
 
 	MWRL ComPtr<ID3D12Resource> m_VertexBuffer;
 	MWRL ComPtr<ID3D12Resource> m_VertexUploadBuffer;

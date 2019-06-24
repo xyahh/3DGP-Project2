@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Camera.h"
 #include <stdexcept>
 
 #define RANDOM_COLOR DX XMFLOAT4(\

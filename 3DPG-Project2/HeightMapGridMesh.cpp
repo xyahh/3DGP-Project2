@@ -20,6 +20,16 @@ HeightMapGridMesh::HeightMapGridMesh(ID3D12Device * pDevice, ID3D12GraphicsComma
 
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
+	float fx = (float)m_Width * m_Scale.x / 2.f;
+	float fy = m_Scale.y / 2.f;
+	float fz = (float)m_Depth * m_Scale.z / 2.f;
+
+	m_BoundingBox = BoundingOrientedBox(
+		XMFLOAT3((float)xStart*m_Scale.x + fx, fy, zStart*m_Scale.x + fz),
+		XMFLOAT3(fx, fy, fz),
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+
 	//Vertices
 	{
 		DiffusedVertex* pVertices = new DiffusedVertex[m_VertexCount];

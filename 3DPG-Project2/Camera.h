@@ -13,7 +13,8 @@ public:
 	{
 		NONE,
 		FIRST_PERSON,
-		ORBITAL
+		ORBITAL,
+		THIRD_PERSON
 	};
 
 private:
@@ -144,7 +145,11 @@ public:
 	virtual void Update(const DX XMFLOAT3& LookAt, float DeltaTime) {}
 	virtual void SetTarget(const DX XMFLOAT3& LookAt) {}
 
+	void GenerateFrustum();
+	bool IsInFrustum(const DX BoundingOrientedBox& BoundingBox);
+
 protected:
+	DX BoundingFrustum	m_Frustum;
 
 	Player*			m_Player{ NULL };
 

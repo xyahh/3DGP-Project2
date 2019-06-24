@@ -15,6 +15,8 @@ DiffusedCubeMesh::DiffusedCubeMesh(ID3D12Device * pDevice, ID3D12GraphicsCommand
 		float fy = Height * 0.5f;
 		float fz = Depth * 0.5f;
 
+		m_BoundingBox = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
 		DiffusedVertex pVertices[] =
 		{
 			DiffusedVertex(XMFLOAT3(-fx, +fy, -fz), RANDOM_COLOR),

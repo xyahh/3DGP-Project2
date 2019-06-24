@@ -241,6 +241,9 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 void Player::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera)
 {
 	Camera::MODE CameraMode = (pCamera) ? pCamera->GetMode() : Camera::MODE::NONE;
-	if (CameraMode == Camera::MODE::ORBITAL)
+	if (CameraMode == Camera::MODE::ORBITAL || CameraMode == Camera::MODE::THIRD_PERSON)
 		GameObject::Render(pCommandList, pCamera);
 }
+
+
+

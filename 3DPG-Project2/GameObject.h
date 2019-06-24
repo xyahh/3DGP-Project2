@@ -62,6 +62,10 @@ public:
 
 	void SetWorldTransform(const DX XMFLOAT4X4& World);
 	DX XMFLOAT4X4 GetWorldTransform() const;
+	DX XMMATRIX GetWorldTransformMatrix() const;
+
+	bool IsVisibleToCamera(Mesh* pMesh, Camera* pCamera);
+
 
 private:
 

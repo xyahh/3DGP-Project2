@@ -33,6 +33,9 @@ OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandLis
 	STD vector<DiffusedVertex>	pVertices;
 	STD vector<UINT>			pIndices;
 
+	DX XMVECTOR MaxValues = DX XMVectorZero(); //Zeros
+	DX XMVECTOR MinValues = DX XMVectorTrueInt(); //Max value 0xFFFFFFFF
+
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	//Read OBJ File
@@ -56,11 +59,14 @@ OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandLis
 			case ATTRIBUTE_TYPE::VERTEX:
 				if (lineparser >> x >> y >> z)
 				{
-					pVertices.emplace_back(DX XMFLOAT3(
+					DX XMFLOAT3 Pos = DX XMFLOAT3(
 						(x * Scale.x) + Offset.x,
 						(y * Scale.y) + Offset.y,
-						(z * Scale.z) + Offset.z),
-						InterpolateColor(RANDOM_COLOR, DominantColor));
+						(z * Scale.z) + Offset.z);
+					pVertices.emplace_back(Pos, InterpolateColor(RANDOM_COLOR, DominantColor));
+
+					MaxValues = XMVectorMax(MaxValues, XMLoadFloat3(&Pos));
+					MinValues = XMVectorMin(MinValues, XMLoadFloat3(&Pos));
 				}
 					
 				break;
@@ -108,6 +114,14 @@ OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandLis
 		in.close();
 	}
 	
+	DX XMFLOAT3 Extents;
+	DX XMStoreFloat3(&Extents, XMVectorScale(XMVectorSubtract(MaxValues, MinValues), 0.5f));
+
+	DX XMFLOAT3 Center;
+	DX XMStoreFloat3(&Center, XMVectorScale(XMVectorAdd(MaxValues, MinValues), 0.5f));
+
+	m_BoundingBox = DX BoundingOrientedBox(Center, Extents, DX XMFLOAT4(0.f, 0.f, 0.f, 1.f));
+
 	//Create Vertex Buffer
 	{
 		m_VertexCount = static_cast<UINT>(pVertices.size());

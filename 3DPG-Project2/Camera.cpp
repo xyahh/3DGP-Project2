@@ -100,6 +100,8 @@ void Camera::RegenerateViewMatrix()
 	m_View._41 = -XMVectorGetX((XMVector3Dot(Position, Right)));
 	m_View._42 = -XMVectorGetX((XMVector3Dot(Position, Up)));
 	m_View._43 = -XMVectorGetX((XMVector3Dot(Position, Look)));
+
+	GenerateFrustum();
 }
 
 void Camera::GenerateProjMatrix(float Near, float Far, float AspectRatio, float FOVAngle)
@@ -130,4 +132,16 @@ void Camera::UpdateViewportsAndScissorRects(ID3D12GraphicsCommandList * pCommand
 {
 	pCommandList->RSSetViewports(1, &m_Viewport);
 	pCommandList->RSSetScissorRects(1, &m_ScissorRect);
+}
+
+void Camera::GenerateFrustum()
+{
+	m_Frustum.CreateFromMatrix(m_Frustum, XMLoadFloat4x4(&m_Proj));
+	XMMATRIX InverseView = XMMatrixInverse(NULL, XMLoadFloat4x4(&m_View));
+	m_Frustum.Transform(m_Frustum, InverseView);
+}
+
+bool Camera::IsInFrustum(const DX BoundingOrientedBox & BoundingBox)
+{
+	return m_Frustum.Intersects(BoundingBox);
 }
