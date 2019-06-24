@@ -13,6 +13,7 @@ public:
 	virtual ~SceneShader();
 
 	Player*								GetActivePlayer();
+	HeightMapTerrain**					GetTerrain();
 
 	virtual void						MoveWagonsForward(float Distance, RailObjectShader* pRailObjectShader);
 	virtual void						BuildObjects(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);

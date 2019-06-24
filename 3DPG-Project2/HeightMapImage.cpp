@@ -1,36 +1,49 @@
 #include "stdafx.h"
 #include "HeightMapImage.h"
+#include <atlimage.h>
 
 _3DGP_USE_
 DX_USE
 
-HeightMapImage::HeightMapImage(LPCTSTR filename, int width, int depth, const DX XMFLOAT3 & scale)
+HeightMapImage::HeightMapImage(const STD string& filename)
 {
-	m_Width = width;
-	m_Depth = depth;
-	m_Scale = scale;
+	CImage image;
+	image.Load(filename.c_str());
+	int PixelStride = image.GetBPP() / 8;
 
-	BYTE* pHeightMapPixels = new BYTE[m_Width * m_Depth];
+	m_Width = image.GetWidth();
+	m_Depth = image.GetHeight();
 
-	HANDLE hFile = ::CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
-	DWORD dwBytesRead;
-	ReadFile(hFile, pHeightMapPixels, (m_Width * m_Depth), &dwBytesRead, NULL);
-	CloseHandle(hFile);
+	m_HeightMapPixels.clear();
 
+	BITMAP bmp;
+	GetObject(image, sizeof(BITMAP), &bmp);
+	BITMAPINFOHEADER bmih{ 0 };
+	bmih.biSize = sizeof(BITMAPINFOHEADER);
+	bmih.biWidth = bmp.bmWidth;
+	bmih.biHeight = bmp.bmHeight;
+	bmih.biPlanes = 1;
+	bmih.biBitCount = image.GetBPP();
+	bmih.biCompression = (BI_RGB);
 
-	m_HeightMapPixels = new BYTE[m_Width * m_Depth];
+	HDC hdc = GetDC(NULL);
+	GetDIBits(hdc, image, 0, bmp.bmHeight, NULL, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
+	m_HeightMapPixels.resize(bmih.biSizeImage);
+	GetDIBits(hdc, image, 0, bmp.bmHeight, &(m_HeightMapPixels[0]), (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
+	ReleaseDC(NULL, hdc);
+
 	for (int y = 0; y < m_Depth; y++)
 		for (int x = 0; x < m_Width; x++)
-			m_HeightMapPixels[x + ((m_Depth - 1 - y)*m_Width)] = pHeightMapPixels[x + (y*m_Width)];
+		{
+			int IndexDst = x + y * m_Width;
+			int IndexSrc = (x + (y*m_Width)) * PixelStride;
+			m_HeightMapPixels[IndexDst] = m_HeightMapPixels[IndexSrc]; 
 
-	if (pHeightMapPixels) 
-		delete[] pHeightMapPixels;
+		}
 }
 
 HeightMapImage::~HeightMapImage()
 {
-	if (m_HeightMapPixels) delete[] m_HeightMapPixels;
-	m_HeightMapPixels = NULL;
 }
 
 float HeightMapImage::GetHeight(float x_, float z_) const
@@ -48,7 +61,7 @@ float HeightMapImage::GetHeight(float x_, float z_) const
 	float topLeft		= (float)	m_HeightMapPixels[x + ((z + 1)*m_Width)];
 	float topRight		= (float)	m_HeightMapPixels[(x + 1) + ((z + 1)*m_Width)];
 
-#ifdef _WITH_APPROXIMATE_OPPOSITE_CORNER
+#ifndef _WITH_APPROXIMATE_OPPOSITE_CORNER
 	bool bRightToLeft = ((z % 2) != 0);
 	if (bRightToLeft)
 	{
@@ -72,7 +85,7 @@ float HeightMapImage::GetHeight(float x_, float z_) const
 	return height;
 }
 
-DX XMFLOAT3 HeightMapImage::GetHeightMapNormal(int x, int z) const
+DX XMFLOAT3 HeightMapImage::GetHeightMapNormal(int x, int z, const DX XMFLOAT3& Scale) const
 {
 	if (!InRange(0, x, m_Width) || !InRange(0, z, m_Depth))
 		return XMFLOAT3(0.f, 1.f, 0.f);
@@ -81,26 +94,21 @@ DX XMFLOAT3 HeightMapImage::GetHeightMapNormal(int x, int z) const
 	int xHeightMapAdd = (x < (m_Width - 1)) ? 1 : -1;
 	int zHeightMapAdd = (z < (m_Depth - 1)) ? m_Width : -m_Width;
 
-	float y1 = (float)m_HeightMapPixels[HeightMapIndex] * m_Scale.y;
-	float y2 = (float)m_HeightMapPixels[HeightMapIndex + xHeightMapAdd] * m_Scale.y;
-	float y3 = (float)m_HeightMapPixels[HeightMapIndex + zHeightMapAdd] * m_Scale.y;
+	float y1 = (float)m_HeightMapPixels[HeightMapIndex] * Scale.y;
+	float y2 = (float)m_HeightMapPixels[HeightMapIndex + xHeightMapAdd] * Scale.y;
+	float y3 = (float)m_HeightMapPixels[HeightMapIndex + zHeightMapAdd] * Scale.y;
 
-	XMFLOAT3 Edge1(0.f, y3 - y1, m_Scale.z); //Scale.z cause it might not be a 1x1x1 Scale.
-	XMFLOAT3 Edge2(m_Scale.x, y2 - y1, 0.f); //Scale.x same.
+	XMFLOAT3 Edge1(0.f, y3 - y1, Scale.z); //Scale.z cause it might not be a 1x1x1 Scale.
+	XMFLOAT3 Edge2(Scale.x, y2 - y1, 0.f); //Scale.x same.
 
 	XMFLOAT3 Normal;
 	XMStoreFloat3(&Normal, XMVector3Normalize(XMVector3Cross(XMLoadFloat3(&Edge1), XMLoadFloat3(&Edge2))));
 	return Normal;
 }
 
-DX XMFLOAT3 HeightMapImage::GetScale() const
+BYTE * HeightMapImage::GetHeightMapPixels()
 {
-	return m_Scale;
-}
-
-BYTE * HeightMapImage::GetHeightMapPixels() const
-{
-	return m_HeightMapPixels;
+	return m_HeightMapPixels.data();
 }
 
 int HeightMapImage::GetHeightMapWidth() const

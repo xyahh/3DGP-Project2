@@ -15,8 +15,19 @@ STD map<STD string, ATTRIBUTE_TYPE> gAttributeMap =
 };
 
 _3DGP_USE_
+DX_USE
 
-OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, const STD string & filepath, const DX XMFLOAT3& Scale, const DX XMFLOAT3& Offset) 
+DX XMFLOAT4 InterpolateColor(const DX XMFLOAT4& A, const DX XMFLOAT4& B)
+{
+	DX XMFLOAT4 outColor;
+	XMStoreFloat4(&outColor, XMVectorLerp(XMLoadFloat4(&A), XMLoadFloat4(&B), 0.75f));
+	return outColor;
+}
+
+
+
+OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, const STD string & filepath
+	, const DX XMFLOAT4& DominantColor, const DX XMFLOAT3& Scale, const DX XMFLOAT3& Offset)
 	: Mesh(pDevice, pCommandList)
 {
 	STD vector<DiffusedVertex>	pVertices;
@@ -43,12 +54,15 @@ OBJMesh::OBJMesh(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandLis
 			switch (gAttributeMap[attribute])
 			{
 			case ATTRIBUTE_TYPE::VERTEX:
-				if(lineparser >> x >> y >> z)
+				if (lineparser >> x >> y >> z)
+				{
 					pVertices.emplace_back(DX XMFLOAT3(
-						(x * Scale.x) + Offset.x, 
-						(y * Scale.y) + Offset.y, 
-						(z * Scale.z) + Offset.z), 
-						RANDOM_COLOR);
+						(x * Scale.x) + Offset.x,
+						(y * Scale.y) + Offset.y,
+						(z * Scale.z) + Offset.z),
+						InterpolateColor(RANDOM_COLOR, DominantColor));
+				}
+					
 				break;
 			case ATTRIBUTE_TYPE::TEXCOORD:
 				TexCoordsEnabled = true;

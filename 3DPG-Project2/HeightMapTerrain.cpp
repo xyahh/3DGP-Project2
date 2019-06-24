@@ -5,20 +5,31 @@
 _3DGP_USE_
 DX_USE
 
-HeightMapTerrain::HeightMapTerrain(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, LPCTSTR pFilename, 
-	int terrain_width, int terrain_depth, int block_width, int block_depth, const DX XMFLOAT3 & scale, const DX XMFLOAT4 & color)
+
+HeightMapTerrain::HeightMapTerrain(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList, LPCTSTR pFilename, int block_count_x, int block_count_z, const DX XMFLOAT3 & scale, const DX XMFLOAT4 & color)
 {
-	m_TerrainWidth = terrain_width;
-	m_TerrainDepth = terrain_depth;
+	m_HeightMapImage = new HeightMapImage(pFilename);
+
+	m_TerrainWidth = m_HeightMapImage->GetHeightMapWidth();
+	m_TerrainDepth = m_HeightMapImage->GetHeightMapDepth();
 	m_TerrainScale = scale;
+
+	int block_width = m_TerrainWidth / block_count_x;
+	int block_depth = m_TerrainDepth / block_count_z;
 
 	int cxQuadsPerBlock = block_width - 1;
 	int czQuadsBerBlock = block_depth - 1;
 
-	m_HeightMapImage = new HeightMapImage(pFilename, m_TerrainWidth, m_TerrainDepth, m_TerrainScale);
+	//Center the terrain
+	m_Offset.x = -GetTerrainWidth() * 0.5f;
+	m_Offset.y = 0.f;
+	m_Offset.z = -GetTerrainDepth() * 0.5f;
 
-	int cxBlocks = (m_TerrainWidth - 1) / cxQuadsPerBlock;
-	int czBlocks = (m_TerrainDepth - 1) / czQuadsBerBlock;
+	SetPosition(m_Offset);
+
+
+	int cxBlocks = block_count_x;
+	int czBlocks = block_count_z;
 
 	m_Meshes.reserve(cxBlocks * czBlocks);
 
@@ -32,8 +43,6 @@ HeightMapTerrain::HeightMapTerrain(ID3D12Device * pDevice, ID3D12GraphicsCommand
 				block_width, block_depth, m_TerrainScale, color, m_HeightMapImage));
 		}
 	}
-
-
 }
 
 HeightMapTerrain::~HeightMapTerrain()
@@ -58,10 +67,16 @@ DX XMFLOAT3 HeightMapTerrain::GetNormal(float x, float z) const
 		return m_HeightMapImage->GetHeightMapNormal
 		(
 			int( x / m_TerrainScale.x),
-			int( z / m_TerrainScale.z)
+			int( z / m_TerrainScale.z),
+			m_TerrainScale
 		);
 
 	return XMFLOAT3();
+}
+
+DX XMFLOAT3 HeightMapTerrain::GetOffset() const
+{
+	return m_Offset;
 }
 
 int HeightMapTerrain::GetHeightMapWidth() const
@@ -76,6 +91,11 @@ int HeightMapTerrain::GetHeightMapDepth() const
 	if (m_HeightMapImage)
 		return m_HeightMapImage->GetHeightMapDepth();
 	return 0;
+}
+
+DX XMFLOAT3 HeightMapTerrain::GetScale() const
+{
+	return m_TerrainScale;
 }
 
 float HeightMapTerrain::GetTerrainWidth() const

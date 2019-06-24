@@ -76,6 +76,13 @@ void GameObject::Rotate(const DX XMFLOAT3& Axis, float Angle)
 	XMStoreFloat4x4(&m_World, World);
 }
 
+void GameObject::Rotate(const DX XMFLOAT4 & Quaternion)
+{
+	XMMATRIX RotMat = XMMatrixRotationQuaternion(XMLoadFloat4(&Quaternion));
+	XMMATRIX World = RotMat * XMLoadFloat4x4(&m_World);
+	XMStoreFloat4x4(&m_World, World);
+}
+
 void GameObject::CreateShaderVariables(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 }

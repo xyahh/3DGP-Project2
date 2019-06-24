@@ -18,7 +18,7 @@ RailObjectShader::~RailObjectShader()
 
 void RailObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
-	m_RailMesh = new OBJMesh(pDevice, pCommandList, "Rail.obj", XMFLOAT3(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH));
+	m_RailMesh = new OBJMesh(pDevice, pCommandList, "Rail.obj", DX XMFLOAT4(0.75f, 0.1f, 0.1f, 1.f), XMFLOAT3(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH));
 	m_ObjectCount = static_cast<UINT>(RAIL_LIFETIME / RAIL_SPAWN_RATE); //Make sure that the vector capacity is big enough for all the Rails to spawn/despawn
 	m_RailObjects.reserve(static_cast<size_t>(m_ObjectCount));
 

@@ -30,9 +30,9 @@ public:
 	virtual void						Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, float Interpolation);
 
 protected:
+
 	MWRL ComPtr<ID3D12Resource>		m_ObjectsCB;
 	VS_VB_INSTANCE*					m_MappedGameObjects;
-
 	D3D12_VERTEX_BUFFER_VIEW		m_InstancingBufferView;
 };
 

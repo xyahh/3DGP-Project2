@@ -5,6 +5,7 @@
 #include "DiffusedShader.h"
 #include "RailObjectShader.h"
 #include "CubeObjectShader.h"
+#include "TreeObjectsShader.h"
 
 #include "WagonPlayer.h"
 #include "OBJMesh.h"
@@ -32,7 +33,7 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 	m_ObjectShaders.emplace_back(m_RailObjectShader);
 	m_ObjectShaders.emplace_back(m_SceneShader);
 	m_ObjectShaders.emplace_back(new CubeObjectShader);
-
+	m_ObjectShaders.emplace_back(new TreeObjectsShader(m_SceneShader->GetTerrain()));
 	for (auto& p : m_ObjectShaders)
 	{
 		p->CreateShader(pDevice, m_RootSignature.Get());

@@ -5,26 +5,23 @@ _3DGP_BEGIN_
 class HeightMapImage
 {
 public:
-	HeightMapImage(LPCTSTR filename, int width, int depth, const DX XMFLOAT3& scale);
+	HeightMapImage(const STD string& filename);
 	~HeightMapImage();
 
 	float GetHeight(float x, float z) const;
 
-	DX XMFLOAT3 GetHeightMapNormal(int x, int z) const;
+	DX XMFLOAT3 GetHeightMapNormal(int x, int z, const DX XMFLOAT3& Scale) const;
 
-	DX XMFLOAT3 GetScale() const;
-
-	BYTE* GetHeightMapPixels() const;
+	BYTE* GetHeightMapPixels();
 
 	int GetHeightMapWidth() const;
 	int GetHeightMapDepth() const;
 
 private:
 
-	BYTE*		m_HeightMapPixels;
-	int			m_Width;
-	int			m_Depth;
-	DX XMFLOAT3 m_Scale;
+	STD vector<BYTE>	m_HeightMapPixels;
+	int					m_Width;
+	int					m_Depth;
 };
 
 _3DGP_END_

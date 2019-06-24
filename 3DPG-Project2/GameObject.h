@@ -26,6 +26,8 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList* pCommandList, Camera* pCamera, UINT InstanceCount, D3D12_VERTEX_BUFFER_VIEW InstancingBufferView);
 
 	void Rotate(const DX XMFLOAT3& Axis, float Angle);
+	void Rotate(const DX XMFLOAT4& Quaternion);
+	void Rotate(float Pitch, float Yaw, float Roll);
 
 	virtual void CreateShaderVariables(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pCommandList);
@@ -49,7 +51,6 @@ public:
 	void MoveUp(float Distance);
 	void MoveForward(float Distance);
 
-	void Rotate(float Pitch, float Yaw, float Roll);
 
 	void SetRight(const DX XMFLOAT3& Right);
 	void SetUp(const DX XMFLOAT3& Up);

@@ -4,5 +4,5 @@
 
 int main()
 {
-	_3DGP_::GameFramework::Get()->Run<_3DGP_::GameplayScene>("3DGP Project 2", TRUE, 800, 800);
+	_3DGP_::GameFramework::Get()->Run<_3DGP_::GameplayScene>("3DGP Project 2", FALSE);
 }

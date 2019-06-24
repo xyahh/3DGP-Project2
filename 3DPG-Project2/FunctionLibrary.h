@@ -168,4 +168,18 @@ inline bool SubjectBehindObject(const GameObject * Subject, const GameObject * O
 	return Dot >= 0.f;
 }
 
+
+inline DX XMFLOAT4 XM_CALLCONV GetLookAtQuat(DX XMVECTOR_P0 Source, DX XMVECTOR_P1 Target)
+{
+	DX XMFLOAT4 Quat;
+	DX XMFLOAT3  CrossRes;
+	DX XMStoreFloat3(&CrossRes, DX XMVector3Cross(Source, Target));
+	Quat.x = CrossRes.x;
+	Quat.y = CrossRes.y;
+	Quat.z = CrossRes.z;
+	Quat.w = sqrtf((DX XMVectorGetX(DX XMVector3LengthSq(Source)) * DX XMVectorGetX(DX XMVector3LengthSq(Target)))) + DX XMVectorGetX(DX XMVector3Dot(Source, Target));
+	DX XMStoreFloat4(&Quat, DX XMQuaternionNormalize(DX XMLoadFloat4(&Quat)));
+	return Quat;
+}
+
 _3DGP_END_

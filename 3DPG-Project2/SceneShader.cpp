@@ -20,6 +20,11 @@ Player* SceneShader::GetActivePlayer()
 	return &m_Wagons[0];
 }
 
+HeightMapTerrain** SceneShader::GetTerrain()
+{
+	return &m_Terrain;
+}
+
 void SceneShader::MoveWagonsForward(float Distance, RailObjectShader* pRailObjectShader)
 {
 	for (auto& p : m_Wagons)
@@ -34,14 +39,14 @@ void SceneShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList
 	
 	//Wagon Build
 	{
-		Mesh* MainWagon = new OBJMesh(pDevice, pCommandList, "Wagon1.obj", XMFLOAT3(75.f, 75.f, -75.f));
-		Mesh* SubWagon = new OBJMesh(pDevice, pCommandList, "Wagon2.obj", XMFLOAT3(75.f, 75.f, -75.f));
+		Mesh* MainWagon = new OBJMesh(pDevice, pCommandList, "Wagon1.obj", DX XMFLOAT4(0.75f, 0.f, 1.f, 1.f), XMFLOAT3(75.f, 75.f, -75.f));
+		Mesh* SubWagon = new OBJMesh(pDevice, pCommandList, "Wagon2.obj",DX XMFLOAT4(0.75f, 0.f, 0.75f, 1.f), XMFLOAT3(75.f, 75.f, -75.f));
 
 		UINT WagonCount = 5;
 
 		m_Wagons.reserve(WagonCount);
 
-		for (int i = 0; i < WagonCount; ++i)
+		for (UINT i = 0; i < WagonCount; ++i)
 		{
 			m_Wagons.emplace_back();
 			m_Wagons[i].AddMesh((i == 0) ? MainWagon : SubWagon);
@@ -54,10 +59,9 @@ void SceneShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList
 	
 	//Terrain Build
 	{
-		XMFLOAT3 Scale(8.f, 0.f, 8.f);
+		XMFLOAT3 Scale(20.f, 5.f, 20.f);
 		XMFLOAT4 Color(0.f, 0.2f, 0.f, 0.f);
-		m_Terrain = new HeightMapTerrain(pDevice, pCommandList, "heightmap.raw",
-			257, 257, 17, 17, Scale, Color);
+		m_Terrain = new HeightMapTerrain(pDevice, pCommandList, "heightmap.png", 8, 8, Scale, Color);
 	}
 }
 

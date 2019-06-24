@@ -167,6 +167,9 @@
     <ClInclude Include="HeightMapTerrain.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="TreeObjectsShader.h">
+      <Filter>Header Files\Shader\Instance Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DiffusedVertex.cpp">
@@ -258,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="HeightMapTerrain.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeObjectsShader.cpp">
+      <Filter>Source Files\Shader\Instance Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
