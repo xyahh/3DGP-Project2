@@ -27,7 +27,7 @@ void RailObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsComman
 
 void RailObjectShader::ReleaseObjects()
 {
-	ObjectShader::ReleaseObjects();
+	ObjectsShader::ReleaseObjects();
 	m_RailObjects.clear();
 }
 

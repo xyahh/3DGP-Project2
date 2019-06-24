@@ -2,9 +2,7 @@
 #include "GameFramework.h"
 #include "GameplayScene.h"
 
-using namespace _3DGP_;
-
 int main()
 {
-	GameFramework::Get()->Run<GameplayScene>("3DGP Project 2");
+	_3DGP_::GameFramework::Get()->Run<_3DGP_::GameplayScene>("3DGP Project 2", TRUE, 800, 800);
 }

@@ -11,15 +11,15 @@
 _3DGP_USE_
 DX_USE
 
-ObjectShader::ObjectShader()
+ObjectsShader::ObjectsShader()
 {
 }
 
-ObjectShader::~ObjectShader()
+ObjectsShader::~ObjectsShader()
 {
 }
 
-D3D12_INPUT_LAYOUT_DESC ObjectShader::CreateInputLayout()
+D3D12_INPUT_LAYOUT_DESC ObjectsShader::CreateInputLayout()
 {
 	UINT InputElementDescCount = 2;
 	D3D12_INPUT_ELEMENT_DESC* pInputElementDescs = new D3D12_INPUT_ELEMENT_DESC[InputElementDescCount];
@@ -34,7 +34,7 @@ D3D12_INPUT_LAYOUT_DESC ObjectShader::CreateInputLayout()
 	return InputLayoutDesc;
 }
 
-D3D12_SHADER_BYTECODE ObjectShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
+D3D12_SHADER_BYTECODE ObjectsShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	ID3DInclude* pInclude = new ShaderInclude;
 	LPCVOID pData; UINT	Bytes;
@@ -49,7 +49,7 @@ D3D12_SHADER_BYTECODE ObjectShader::CreateVertexShader(MWRL ComPtr<ID3DBlob>* pS
 	return ByteCode;
 }
 
-D3D12_SHADER_BYTECODE ObjectShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
+D3D12_SHADER_BYTECODE ObjectsShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pShaderBlob)
 {
 	ID3DInclude* pInclude = new ShaderInclude;
 	LPCVOID pData; UINT	Bytes;
@@ -64,19 +64,19 @@ D3D12_SHADER_BYTECODE ObjectShader::CreatePixelShader(MWRL ComPtr<ID3DBlob>* pSh
 	return ByteCode;
 }
 
-void ObjectShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
+void ObjectsShader::CreateShader(ID3D12Device * pDevice, ID3D12RootSignature * pRootSignature)
 {
 	m_PipelineStateCount = 1;
 	m_PipelineStates = new MWRL ComPtr<ID3D12PipelineState>[m_PipelineStateCount];
 	Shader::CreateShader(pDevice, pRootSignature);
 }
 
-void ObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
+void ObjectsShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 
 }
 
-void ObjectShader::ReleaseUploadBuffers()
+void ObjectsShader::ReleaseUploadBuffers()
 {
 	for (auto& i : m_Objects)
 	{
@@ -84,13 +84,13 @@ void ObjectShader::ReleaseUploadBuffers()
 	}
 }
 
-void ObjectShader::Update(float DeltaTime)
+void ObjectsShader::Update(float DeltaTime)
 {
 	for (auto& i : m_Objects)
 		i->Update(DeltaTime);
 }
 
-void ObjectShader::ReleaseObjects()
+void ObjectsShader::ReleaseObjects()
 {
 	for (auto& i : m_Objects)
 	{
@@ -99,7 +99,7 @@ void ObjectShader::ReleaseObjects()
 	m_Objects.clear();
 }
 
-void ObjectShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, float Interpolation)
+void ObjectsShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, float Interpolation)
 {
 	Shader::Render(pCommandList, pCamera);
 	for (auto& i : m_Objects)

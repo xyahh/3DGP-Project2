@@ -18,6 +18,8 @@ HeightMapGridMesh::HeightMapGridMesh(ID3D12Device * pDevice, ID3D12GraphicsComma
 
 	m_Scale = scale;
 
+	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+
 	//Vertices
 	{
 		DiffusedVertex* pVertices = new DiffusedVertex[m_VertexCount];

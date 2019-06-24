@@ -129,9 +129,11 @@
     <ClInclude Include="FunctionLibrary.h" />
     <ClInclude Include="HeightMapGridMesh.h" />
     <ClInclude Include="HeightMapImage.h" />
+    <ClInclude Include="HeightMapTerrain.h" />
     <ClInclude Include="InstancingShader.h" />
     <ClInclude Include="RailObjectShader.h" />
     <ClInclude Include="RailObject.h" />
+    <ClInclude Include="SceneShader.h" />
     <ClInclude Include="WagonPlayer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DiffusedCubeMesh.h" />
@@ -159,9 +161,11 @@
     <ClCompile Include="FunctionLibrary.cpp" />
     <ClCompile Include="HeightMapGridMesh.cpp" />
     <ClCompile Include="HeightMapImage.cpp" />
+    <ClCompile Include="HeightMapTerrain.cpp" />
     <ClCompile Include="InstancingShader.cpp" />
     <ClCompile Include="RailObjectShader.cpp" />
     <ClCompile Include="RailObject.cpp" />
+    <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="WagonPlayer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DiffusedCubeMesh.cpp" />

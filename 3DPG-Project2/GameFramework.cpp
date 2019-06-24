@@ -143,7 +143,6 @@ void GameFramework::GameLoop()
 
 		m_Timer.Tick();
 
-
 		while (m_Timer.FlushAccumulatedTime())
 		{
 			m_Scenes.top()->ProcessInput();

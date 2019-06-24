@@ -9,7 +9,7 @@ struct VS_VB_INSTANCE
 	DX XMFLOAT4		m_Color;
 };
 
-class InstancingShader : public ObjectShader
+class InstancingShader : public ObjectsShader
 {
 public:
 

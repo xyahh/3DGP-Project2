@@ -17,7 +17,8 @@ public:
 
 	void ReleaseUploadBuffers();
 	
-	void SetMesh(Mesh* pMesh);
+	void AddMesh(Mesh* pMesh);
+
 	void SetShader(Shader* pShader);
 
 	virtual void Update(float DeltaTime);
@@ -67,9 +68,9 @@ private:
 
 protected:
 
-	DX XMFLOAT4X4	m_World;
-	Mesh*			m_Mesh		{ NULL };
-	Shader*			m_Shader	{ NULL };
+	DX XMFLOAT4X4		m_World;
+	STD vector<Mesh*>	m_Meshes;
+	Shader*				m_Shader	{ NULL };
 };
 
 _3DGP_END_

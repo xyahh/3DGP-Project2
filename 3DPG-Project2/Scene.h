@@ -34,7 +34,7 @@ public:
 protected:
 	
 	MWRL ComPtr<ID3D12RootSignature>	m_RootSignature;
-	STD vector<ObjectShader*>			m_ObjectShaders;
+	STD vector<ObjectsShader*>			m_ObjectShaders;
 };
 
 _3DGP_END_

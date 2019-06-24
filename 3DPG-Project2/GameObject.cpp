@@ -11,8 +11,9 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	if (m_Mesh)		
-		m_Mesh->Release();
+	for(auto& pMesh : m_Meshes)
+		pMesh->Release();
+
 	if (m_Shader)
 	{
 		m_Shader->ReleaseShaderVariables();
@@ -22,14 +23,17 @@ GameObject::~GameObject()
 
 void GameObject::ReleaseUploadBuffers()
 {
-	if (m_Mesh) m_Mesh->ReleaseUploadBuffers();
+	for (auto& pMesh : m_Meshes)
+		pMesh->ReleaseUploadBuffers();
 }
 
-void GameObject::SetMesh(Mesh * pMesh)
+void GameObject::AddMesh(Mesh* pMesh)
 {
-	if (m_Mesh) m_Mesh->Release();
-	m_Mesh = pMesh;
-	if (m_Mesh) m_Mesh->AddRef();
+	if (pMesh)
+	{
+		pMesh->AddRef();
+		m_Meshes.emplace_back(pMesh);
+	}
 }
 
 void GameObject::SetShader(Shader * pShader)
@@ -47,15 +51,22 @@ void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCamer
 {
 	UpdateShaderVariables(pCommandList);
 
-	if (m_Shader) m_Shader->Render(pCommandList, pCamera);
-	if (m_Mesh) m_Mesh->Render(pCommandList);
+	if (m_Shader) 
+		m_Shader->Render(pCommandList, pCamera);
+
+	for (auto& pMesh : m_Meshes)
+		pMesh->Render(pCommandList);
 }
 
 void GameObject::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera, UINT InstanceCount, D3D12_VERTEX_BUFFER_VIEW InstancingBufferView)
 {
 	UpdateShaderVariables(pCommandList);
-	if (m_Shader) m_Shader->Render(pCommandList, pCamera);
-	if (m_Mesh) m_Mesh->Render(pCommandList, InstanceCount, InstancingBufferView);
+
+	if (m_Shader) 
+		m_Shader->Render(pCommandList, pCamera);
+
+	for (auto& pMesh : m_Meshes)
+		pMesh->Render(pCommandList, InstanceCount, InstancingBufferView);
 }
 
 void GameObject::Rotate(const DX XMFLOAT3& Axis, float Angle)

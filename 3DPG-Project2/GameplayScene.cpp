@@ -24,37 +24,13 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 {
 	m_RootSignature = CreateRootSignature(pDevice);
 
-	Mesh* MainWagon = new OBJMesh(pDevice, pCommandList, "Wagon1.obj", XMFLOAT3(75.f, 75.f, -75.f));
-	Mesh* SubWagon =  new OBJMesh(pDevice, pCommandList, "Wagon2.obj", XMFLOAT3(75.f, 75.f, -75.f));
-	Shader* PlayerShader = new DiffusedShader;
-	PlayerShader->CreateShader(pDevice, m_RootSignature.Get());
-
-	m_Wagons.reserve(5);
-
-	m_Wagons.emplace_back();
-	m_Wagons[0].SetMesh(MainWagon);
-	m_Wagons[0].ChangeCamera(Camera::MODE::ORBITAL, 0.f);
-	m_Wagons[0].CreateShaderVariables(pDevice, pCommandList);
-	m_Wagons[0].SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
-	m_Wagons[0].SetWagonNumber(0);
-	m_Wagons[0].SetShader(PlayerShader);
-
-	for (int i = 1; i < 5; ++i)
-	{
-		m_Wagons.emplace_back();
-		m_Wagons[i].SetMesh(SubWagon);
-		m_Wagons[i].SetShader(PlayerShader);
-		m_Wagons[i].ChangeCamera(Camera::MODE::ORBITAL, 0.f);
-		m_Wagons[i].CreateShaderVariables(pDevice, pCommandList);
-		m_Wagons[i].SetPosition(XMFLOAT3(0.f, 0.f, i*-100.f));
-		m_Wagons[i].SetWagonNumber(i);
-	}
-
 	m_ObjectShaders.reserve(2);
 
-	m_pRailObjectShader = new RailObjectShader;
+	m_RailObjectShader = new RailObjectShader;
+	m_SceneShader = new SceneShader;
 
-	m_ObjectShaders.emplace_back(m_pRailObjectShader);
+	m_ObjectShaders.emplace_back(m_RailObjectShader);
+	m_ObjectShaders.emplace_back(m_SceneShader);
 	m_ObjectShaders.emplace_back(new CubeObjectShader);
 
 	for (auto& p : m_ObjectShaders)
@@ -62,7 +38,8 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 		p->CreateShader(pDevice, m_RootSignature.Get());
 		p->BuildObjects(pDevice, pCommandList);
 	}
-	return &m_Wagons[0];
+	
+	return m_SceneShader->GetActivePlayer();
 }
 
 void GameplayScene::Destroy()
@@ -73,8 +50,6 @@ void GameplayScene::Destroy()
 		objShaders->ReleaseObjects();
 		delete objShaders;
 	}
-	for(auto& p : m_Wagons)
-		p.ReleaseShaderVariables();
 }
 
 bool GameplayScene::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -128,7 +103,7 @@ void GameplayScene::ProcessInput()
 			m_TargetTimeDilation = 1.f;
 	}
 
-	m_pRailObjectShader->SetSpawnOrientation(Rotation);
+	m_RailObjectShader->SetSpawnOrientation(Rotation);
 
 	float cxDelta = 0.0f, cyDelta = 0.0f;
 
@@ -147,10 +122,11 @@ void GameplayScene::ProcessInput()
 	{
 		if (cxDelta || cyDelta)
 		{
+			Camera* pCamera = m_SceneShader->GetActivePlayer()->GetCamera();
 			KEY_PRESSED(pKeyBuffer, VK_LBUTTON)
-				m_Wagons[0].GetCamera()->Rotate(cyDelta, cxDelta, 0.f);
+				pCamera->Rotate(cyDelta, cxDelta, 0.f);
 			KEY_PRESSED(pKeyBuffer, VK_RBUTTON)
-				m_Wagons[0].GetCamera()->Rotate(0.f, 0.f, cxDelta);
+				pCamera->Rotate(0.f, 0.f, cxDelta);
 		}
 	}
 }
@@ -163,9 +139,6 @@ void GameplayScene::Render(ID3D12GraphicsCommandList * pCommandList, Camera* pCa
 
 	for (auto& objShaders : m_ObjectShaders)
 		objShaders->Render(pCommandList, pCamera, Interpolation);
-
-	for (auto& p : m_Wagons)
-		p.Render(pCommandList, pCamera);
 }
 
 void GameplayScene::Update(float DeltaTime)
@@ -180,20 +153,10 @@ void GameplayScene::Update(float DeltaTime)
 
 	DeltaTime *= m_CurrentTimeDilation;
 
-	/* Updates */
-	for (auto& p : m_Wagons)
-		p.Update(DeltaTime);
-
 	for (auto& objShaders : m_ObjectShaders)
 		objShaders->Update(DeltaTime);
 
-	/* Move Forward */
-	float MoveDistance = DeltaTime * BLOCK_LENGTH * RAILS_PER_SEC;
-	for (auto& p : m_Wagons)
-	{
-		p.MoveForward(MoveDistance);
-		m_pRailObjectShader->AdjustPlayerPosition(&p);
-	}
+	m_SceneShader->MoveWagonsForward(DeltaTime * BLOCK_LENGTH * RAILS_PER_SEC, m_RailObjectShader);
 }
 
 void GameplayScene::ReleaseUploadBuffers()

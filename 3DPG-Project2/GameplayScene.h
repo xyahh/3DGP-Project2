@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.h"
-#include "WagonPlayer.h"
 #include "RailObjectShader.h"
+#include "SceneShader.h"
 
 _3DGP_BEGIN_
 
@@ -23,8 +23,8 @@ public:
 	virtual void ReleaseUploadBuffers();
 
 private:
-	STD vector<WagonPlayer>		m_Wagons;
-	RailObjectShader*			m_pRailObjectShader; 
+	RailObjectShader*			m_RailObjectShader; 
+	SceneShader*				m_SceneShader;
 
 	POINT m_CursorPos;
 	float m_CurrentTimeDilation	{ 1.f };

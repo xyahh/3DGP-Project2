@@ -44,6 +44,6 @@ void CubeObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsComman
 			}
 		}
 	}
-	m_Objects[0]->SetMesh(pMesh);
+	m_Objects[0]->AddMesh(pMesh);
 	CreateShaderVariables(pDevice, pCommandList);
 }

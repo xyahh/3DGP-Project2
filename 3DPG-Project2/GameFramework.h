@@ -1,5 +1,4 @@
 #pragma once
-#include <type_traits>
 #include <stack>
 #include "Scene.h"
 #include "Camera.h"
