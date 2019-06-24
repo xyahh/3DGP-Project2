@@ -170,7 +170,7 @@ inline bool SubjectBehindObject(const GameObject * Subject, const GameObject * O
 }
 
 
-inline DX XMFLOAT4 XM_CALLCONV GetLookAtQuat(DX XMVECTOR_P0 Source, DX XMVECTOR_P1 Target)
+inline DX XMFLOAT4 XM_CALLCONV GetLookRotationQuaternion(DX XMVECTOR_P0 Source, DX XMVECTOR_P1 Target)
 {
 	DX XMFLOAT4 Quat;
 	DX XMFLOAT3  CrossRes;

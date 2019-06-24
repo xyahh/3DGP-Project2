@@ -2,6 +2,7 @@
 #include "Player.h"
 
 #include "FirstPersonCamera.h"
+#include "ThirdPersonCamera.h"
 #include "OrbitalCamera.h"
 
 _3DGP_USE_
@@ -164,9 +165,7 @@ void Player::Update(float DeltaTime)
 
 	if (m_CameraUpdatedContext) OnCameraUpdateCallback(DeltaTime);
 
-	if (CameraMode == Camera::MODE::ORBITAL) 
-		m_Camera->SetTarget(GetPosition());
-
+	m_Camera->SetTarget(GetPosition());
 	m_Camera->RegenerateViewMatrix();
 
 	Length = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_Velocity)));
@@ -224,6 +223,9 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 	{
 	case Camera::MODE::FIRST_PERSON:
 		pNewCamera = new FirstPersonCamera(m_Camera);
+		break;
+	case Camera::MODE::THIRD_PERSON:
+		pNewCamera = new ThirdPersonCamera(m_Camera);
 		break;
 	case Camera::MODE::ORBITAL:
 		pNewCamera = new OrbitalCamera(m_Camera);

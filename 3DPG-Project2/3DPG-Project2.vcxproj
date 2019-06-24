@@ -134,6 +134,7 @@
     <ClInclude Include="RailObjectShader.h" />
     <ClInclude Include="RailObject.h" />
     <ClInclude Include="SceneShader.h" />
+    <ClInclude Include="ThirdPersonCamera.h" />
     <ClInclude Include="TreeObjectsShader.h" />
     <ClInclude Include="WagonPlayer.h" />
     <ClInclude Include="Camera.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="RailObjectShader.cpp" />
     <ClCompile Include="RailObject.cpp" />
     <ClCompile Include="SceneShader.cpp" />
+    <ClCompile Include="ThirdPersonCamera.cpp" />
     <ClCompile Include="TreeObjectsShader.cpp" />
     <ClCompile Include="WagonPlayer.cpp" />
     <ClCompile Include="Camera.cpp" />

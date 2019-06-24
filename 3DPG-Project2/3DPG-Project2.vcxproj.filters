@@ -170,6 +170,9 @@
     <ClInclude Include="TreeObjectsShader.h">
       <Filter>Header Files\Shader\Instance Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="ThirdPersonCamera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DiffusedVertex.cpp">
@@ -264,6 +267,9 @@
     </ClCompile>
     <ClCompile Include="TreeObjectsShader.cpp">
       <Filter>Source Files\Shader\Instance Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdPersonCamera.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

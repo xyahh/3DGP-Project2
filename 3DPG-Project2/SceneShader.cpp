@@ -50,7 +50,7 @@ void SceneShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsCommandList
 		{
 			m_Wagons.emplace_back();
 			m_Wagons[i].AddMesh((i == 0) ? MainWagon : SubWagon);
-			m_Wagons[i].ChangeCamera(Camera::MODE::ORBITAL, 0.f);
+			m_Wagons[i].ChangeCamera(Camera::MODE::THIRD_PERSON, 0.f);
 			m_Wagons[i].CreateShaderVariables(pDevice, pCommandList);
 			m_Wagons[i].SetPosition(XMFLOAT3(0.f, 0.f, i*-100.f));
 			m_Wagons[i].SetWagonNumber(i);

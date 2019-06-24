@@ -77,9 +77,19 @@ void GameplayScene::ProcessInput()
 	static UCHAR pKeyBuffer[256];
 	const static float RotationScale{ 3.f };
 	XMFLOAT3 Rotation = XMFLOAT3(0.f, 0.f, 0.f);
+	Player* pPlayer = m_SceneShader->GetActivePlayer();
 
 	if (::GetKeyboardState(pKeyBuffer))
 	{
+		KEY_PRESSED(pKeyBuffer, VK_F1)
+			pPlayer->ChangeCamera(Camera::MODE::FIRST_PERSON, Timer::GetDeltaTime());
+		KEY_PRESSED(pKeyBuffer, VK_F2)
+			pPlayer->ChangeCamera(Camera::MODE::ORBITAL, Timer::GetDeltaTime());
+		KEY_PRESSED(pKeyBuffer, VK_F3)
+			pPlayer->ChangeCamera(Camera::MODE::THIRD_PERSON, Timer::GetDeltaTime());
+
+
+
 		KEY_PRESSED(pKeyBuffer, VK_UP)
 			Rotation.x = 1.f * RotationScale;
 
@@ -123,7 +133,7 @@ void GameplayScene::ProcessInput()
 	{
 		if (cxDelta || cyDelta)
 		{
-			Camera* pCamera = m_SceneShader->GetActivePlayer()->GetCamera();
+			Camera* pCamera = pPlayer->GetCamera();
 			KEY_PRESSED(pKeyBuffer, VK_LBUTTON)
 				pCamera->Rotate(cyDelta, cxDelta, 0.f);
 			KEY_PRESSED(pKeyBuffer, VK_RBUTTON)

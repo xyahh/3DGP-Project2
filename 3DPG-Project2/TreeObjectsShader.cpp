@@ -50,7 +50,7 @@ void TreeObjectsShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsComma
 			delete pObject;
 		else
 		{
-			XMFLOAT4 Quat = GetLookAtQuat(gWorldUp, XMLoadFloat3(&(*m_Terrain)->GetNormal(Pos.x, Pos.z)));
+			XMFLOAT4 Quat = GetLookRotationQuaternion(gWorldUp, XMLoadFloat3(&(*m_Terrain)->GetNormal(Pos.x, Pos.z)));
 			pObject->Rotate(Quat);
 			pObject->Rotate(0.f, 180.f* ((float)rand() / (float)(RAND_MAX)), 0.f);
 
