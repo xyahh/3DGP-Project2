@@ -87,19 +87,20 @@ void GameplayScene::ProcessInput()
 			pPlayer->ChangeCamera(Camera::MODE::ORBITAL, Timer::GetDeltaTime());
 		KEY_PRESSED(pKeyBuffer, VK_F3)
 			pPlayer->ChangeCamera(Camera::MODE::THIRD_PERSON, Timer::GetDeltaTime());
+		KEY_PRESSED(pKeyBuffer, VK_F4)
+			pPlayer->ChangeCamera(Camera::MODE::FIXED, Timer::GetDeltaTime());
 
 
-
-		KEY_PRESSED(pKeyBuffer, VK_UP)
+		KEY_PRESSED(pKeyBuffer, 'W')
 			Rotation.x = 1.f * RotationScale;
 
-		KEY_PRESSED(pKeyBuffer, VK_DOWN)
+		KEY_PRESSED(pKeyBuffer, 'S')
 			Rotation.x = -1.f* RotationScale;
 
-		KEY_PRESSED(pKeyBuffer, VK_LEFT)
+		KEY_PRESSED(pKeyBuffer, 'A')
 			Rotation.y = -1.f* RotationScale;
 
-		KEY_PRESSED(pKeyBuffer, VK_RIGHT)
+		KEY_PRESSED(pKeyBuffer, 'D')
 			Rotation.y = 1.f* RotationScale;
 
 		KEY_PRESSED(pKeyBuffer, 'Q')

@@ -14,7 +14,8 @@ public:
 		NONE,
 		FIRST_PERSON,
 		ORBITAL,
-		THIRD_PERSON
+		THIRD_PERSON,
+		FIXED,
 	};
 
 private:

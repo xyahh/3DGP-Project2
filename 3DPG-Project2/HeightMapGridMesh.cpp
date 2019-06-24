@@ -151,7 +151,7 @@ XMFLOAT4 HeightMapGridMesh::OnGetColor(int x_, int z_, void * pContext)
 
 	XMFLOAT4 Color;
 	XMStoreFloat4(&Color, XMVectorScale(IncidentLightColor, fScale));
-	if (OnGetHeight(x_, z_, pContext) == 0.f)
+	if (OnGetHeight(x_, z_, pContext) == 0.0f)
 		Color = XMFLOAT4(0.f, 0.1f, 0.9f, 0.f); //return water color!
 	return Color;
 }

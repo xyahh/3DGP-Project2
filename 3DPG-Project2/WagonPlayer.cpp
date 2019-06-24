@@ -23,6 +23,9 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 	GameFramework::Get()->GetWindowSize(&WinWidth, &WinHeight);
 	float AspectRatio = GET_ASPECT_RATIO(WinWidth, WinHeight);
 
+	XMFLOAT3 Pos = GetPosition();
+	
+
 	switch (NewCameraMode)
 	{
 	case Camera::MODE::FIRST_PERSON:
@@ -36,6 +39,7 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 		OnCameraChange(CurrentCameraMode, NewCameraMode);
 		m_Camera->SetTimeLag(0.0f);
 		m_Camera->SetOffset(XMFLOAT3(0.0f, 50.f, 0.0f));
+		m_Camera->SetPosition(XMFLOAT3(0.f, 0.f, Pos.z + 0.1f)); //To avoid Eye == Target
 		break;
 
 	case Camera::MODE::ORBITAL:
@@ -48,6 +52,7 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 		OnCameraChange(CurrentCameraMode, NewCameraMode);
 		m_Camera->SetTimeLag(0.25f);
 		m_Camera->SetOffset(XMFLOAT3(0.0f, 150.0f, -250.f));
+		m_Camera->SetPosition(XMFLOAT3(0.f, 0.f, Pos.z + 0.1f)); //To avoid Eye == Target
 		break;
 
 	case Camera::MODE::THIRD_PERSON:
@@ -60,13 +65,19 @@ Camera * WagonPlayer::ChangeCamera(Camera::MODE NewCameraMode, float DeltaTime)
 		OnCameraChange(CurrentCameraMode, NewCameraMode);
 		m_Camera->SetTimeLag(0.25f);
 		m_Camera->SetOffset(XMFLOAT3(0.0f, 150.0f, -250.f));
+		m_Camera->SetPosition(XMFLOAT3(0.f, 0.f, Pos.z + 0.1f)); //To avoid Eye == Target
+		break;
+
+	case Camera::MODE::FIXED:
+	{
+		DX XMFLOAT3 Position = m_Camera->GetPosition();
+		OnCameraChange(CurrentCameraMode, NewCameraMode);
+		m_Camera->SetPosition(Position);
+	}
 		break;
 	default:
 		break;
 	}
-
-	XMFLOAT3 Pos = GetPosition();
-	m_Camera->SetPosition(XMFLOAT3(0.f, 0.f, Pos.z + 0.1f)); //To avoid Eye == Target
 
 	m_Camera->GenerateProjMatrix(1.01f, 50000.0f, AspectRatio, 60.0f);
 	m_Camera->SetViewport(0, 0, WinWidth, WinHeight, 0.0f, 1.0f);

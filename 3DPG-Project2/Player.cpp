@@ -4,6 +4,7 @@
 #include "FirstPersonCamera.h"
 #include "ThirdPersonCamera.h"
 #include "OrbitalCamera.h"
+#include "FixedCamera.h"
 
 _3DGP_USE_
 DX_USE
@@ -230,6 +231,9 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 	case Camera::MODE::ORBITAL:
 		pNewCamera = new OrbitalCamera(m_Camera);
 		break;
+	case Camera::MODE::FIXED:
+		pNewCamera = new FixedCamera(m_Camera);
+		break;
 	}
 	if (pNewCamera)
 	{
@@ -243,7 +247,7 @@ void Player::OnCameraChange(Camera::MODE CurrentCameraMode, Camera::MODE NewCame
 void Player::Render(ID3D12GraphicsCommandList * pCommandList, Camera * pCamera)
 {
 	Camera::MODE CameraMode = (pCamera) ? pCamera->GetMode() : Camera::MODE::NONE;
-	if (CameraMode == Camera::MODE::ORBITAL || CameraMode == Camera::MODE::THIRD_PERSON)
+	if (CameraMode != Camera::MODE::FIRST_PERSON)
 		GameObject::Render(pCommandList, pCamera);
 }
 

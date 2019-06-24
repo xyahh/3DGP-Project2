@@ -89,9 +89,6 @@
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
@@ -171,6 +168,12 @@
       <Filter>Header Files\Shader\Instance Shaders</Filter>
     </ClInclude>
     <ClInclude Include="ThirdPersonCamera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FixedCamera.h">
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
   </ItemGroup>
@@ -269,7 +272,10 @@
       <Filter>Source Files\Shader\Instance Shaders</Filter>
     </ClCompile>
     <ClCompile Include="ThirdPersonCamera.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

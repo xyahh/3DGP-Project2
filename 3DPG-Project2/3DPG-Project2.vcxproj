@@ -126,6 +126,7 @@
   <ItemGroup>
     <ClInclude Include="CubeObjectShader.h" />
     <ClInclude Include="DXInclude.h" />
+    <ClInclude Include="FixedCamera.h" />
     <ClInclude Include="FunctionLibrary.h" />
     <ClInclude Include="HeightMapGridMesh.h" />
     <ClInclude Include="HeightMapImage.h" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CubeObjectShader.cpp" />
+    <ClCompile Include="FixedCamera.cpp" />
     <ClCompile Include="FunctionLibrary.cpp" />
     <ClCompile Include="HeightMapGridMesh.cpp" />
     <ClCompile Include="HeightMapImage.cpp" />

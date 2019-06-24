@@ -7,7 +7,7 @@ class FirstPersonCamera : public Camera
 {
 public:
 	FirstPersonCamera(Camera* pCamera);
-	~FirstPersonCamera();
+	virtual ~FirstPersonCamera();
 
 	virtual void Rotate(float Pitch, float Yaw, float Roll);
 	virtual void Update(const DX XMFLOAT3& LookAt, float DeltaTime);
