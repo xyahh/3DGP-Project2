@@ -139,7 +139,6 @@ void GameFramework::GameLoop()
 			continue;
 		}
 
-		m_Camera = m_Player->GetCamera();
 
 		m_Timer.Tick();
 
@@ -148,6 +147,8 @@ void GameFramework::GameLoop()
 			m_Scenes.top()->ProcessInput();
 			m_Scenes.top()->Update(m_Timer.GetDeltaTime());
 		}
+
+		m_Camera = m_Player->GetCamera();
 
 		//Render is called in this function
 		PopulateCommandList();

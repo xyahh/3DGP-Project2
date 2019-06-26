@@ -28,13 +28,13 @@ void TreeObjectsShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsComma
 	float TerrainWidth = static_cast<float>((*m_Terrain)->GetHeightMapWidth());
 	float TerrainDepth = static_cast<float>((*m_Terrain)->GetHeightMapDepth());
 
-	UINT ObjectRow = (int)((TerrainWidth / DistanceBetweenTrees) + 1);
+	size_t ObjectRow = (size_t)((TerrainWidth / DistanceBetweenTrees) + 1);
 	DX XMFLOAT3 Scale = (*m_Terrain)->GetScale();
 	DX XMFLOAT3 Offset = (*m_Terrain)->GetOffset();
 
 	//나무 최대 갯수 계산해서 Memory Allocation 하기
-	m_ObjectCount = ObjectRow  * (UINT)((TerrainDepth / DistanceBetweenTrees) + 1);
-	m_Objects.reserve(m_ObjectCount);
+	size_t ObjectCount = ObjectRow  * (size_t)((TerrainDepth / DistanceBetweenTrees) + 1);
+	m_Objects.reserve(ObjectCount);
 
 	//Terrain따라서 나무 위치를 계산하기
 	auto GetNewTreePosition = [&](int r)->DX XMFLOAT3
@@ -46,7 +46,7 @@ void TreeObjectsShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsComma
 
 
 	GameObject *pObject = NULL;
-	for (UINT i = 0; i < m_ObjectCount; ++i)
+	for (UINT i = 0; i < ObjectCount; ++i)
 	{
 		pObject = new GameObject;
 		DX XMFLOAT3 Pos = GetNewTreePosition(i);

@@ -20,16 +20,8 @@ HeightMapGridMesh::HeightMapGridMesh(ID3D12Device * pDevice, ID3D12GraphicsComma
 
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
-	float fx = (float)m_Width * m_Scale.x / 2.f;
-	float fy = m_Scale.y / 2.f;
-	float fz = (float)m_Depth * m_Scale.z / 2.f;
 
-	m_BoundingBox = BoundingOrientedBox(
-		XMFLOAT3((float)xStart*m_Scale.x + fx, fy, zStart*m_Scale.x + fz),
-		XMFLOAT3(fx, fy, fz),
-		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
-
-
+	float MaxHeight = 0.f;
 	//Vertices
 	{
 		DiffusedVertex* pVertices = new DiffusedVertex[m_VertexCount];
@@ -39,11 +31,23 @@ HeightMapGridMesh::HeightMapGridMesh(ID3D12Device * pDevice, ID3D12GraphicsComma
 			{
 
 				XMFLOAT4 inColor = OnGetColor(x, z, pContext);
-				XMFLOAT3 inPos = XMFLOAT3((x*m_Scale.x), OnGetHeight(x, z, pContext), (z * m_Scale.z));
+				float Height = OnGetHeight(x, z, pContext);
+				MaxHeight = max(Height, MaxHeight);
+				XMFLOAT3 inPos = XMFLOAT3((x*m_Scale.x), Height, (z * m_Scale.z));
 				XMStoreFloat4(&inColor, XMVectorAdd(XMLoadFloat4(&inColor), XMLoadFloat4(&color)));
 				pVertices[i] = DiffusedVertex(inPos, inColor);
 			}
 		}
+
+		float fx = (float)(xStart + m_Width) * m_Scale.x / 2.f;
+		float fz = (float)(zStart + m_Depth) * m_Scale.z / 2.f;
+		float fy = MaxHeight / 2.f;
+
+		m_BoundingBox = BoundingOrientedBox(
+			XMFLOAT3((float)xStart*m_Scale.x + fx, fy, zStart*m_Scale.x + fz),
+			XMFLOAT3(fx, fy, fz),
+			XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
 
 		m_VertexBuffer = ::CreateBufferResource(pDevice, pCommandList, pVertices, Stride * m_VertexCount, D3D12_HEAP_TYPE_DEFAULT,
 			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_VertexUploadBuffer);

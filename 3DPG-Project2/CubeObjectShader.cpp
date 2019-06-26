@@ -22,8 +22,8 @@ void CubeObjectShader::BuildObjects(ID3D12Device * pDevice, ID3D12GraphicsComman
 	Mesh* pMesh = new DiffusedCubeMesh(pDevice, pCommandList, 12.f, 12.f, 12.f);
 
 	int xObjects = 10, yObjects = 10, zObjects = 10, i = 0;
-	m_ObjectCount = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
-	m_Objects.reserve(m_ObjectCount);
+	size_t ObjectCount = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
+	m_Objects.reserve(ObjectCount);
 	
 	float fxPitch = 12.0f * 2.5f;
 	float fyPitch = 12.0f * 2.5f;

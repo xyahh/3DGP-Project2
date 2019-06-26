@@ -81,15 +81,17 @@ void InstancingShader::CreateShaderVariables(ID3D12Device * pDevice, ID3D12Graph
 {
 	UINT Stride = sizeof(VS_VB_INSTANCE);
 
+	UINT ObjectCount = m_Objects.capacity();
+
 	m_ObjectsCB = CreateBufferResource(pDevice, pCommandList, NULL
-		, Stride * m_ObjectCount
+		, Stride * ObjectCount
 		, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, NULL);
 
 	m_ObjectsCB->Map(0, NULL, (void**)&m_MappedGameObjects);
 
 	m_InstancingBufferView.BufferLocation = m_ObjectsCB->GetGPUVirtualAddress();
 	m_InstancingBufferView.StrideInBytes = Stride;
-	m_InstancingBufferView.SizeInBytes = Stride * m_ObjectCount;
+	m_InstancingBufferView.SizeInBytes = Stride * ObjectCount;
 
 }
 
@@ -109,5 +111,5 @@ void InstancingShader::Render(ID3D12GraphicsCommandList * pCommandList, Camera *
 {
 	Shader::Render(pCommandList, pCamera);
 	UpdateShaderVariables(pCommandList);
-	m_Objects[0]->Render(pCommandList, pCamera, m_ObjectCount, m_InstancingBufferView);
+	m_Objects[0]->Render(pCommandList, pCamera, m_Objects.size(), m_InstancingBufferView);
 }

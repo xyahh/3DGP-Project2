@@ -27,11 +27,12 @@ Player* GameplayScene::Init(ID3D12Device * pDevice, ID3D12GraphicsCommandList* p
 
 	m_ObjectShaders.reserve(2);
 
-	m_RailObjectShader = new RailObjectShader;
 	m_SceneShader = new SceneShader;
+	m_RailObjectShader = new RailObjectShader(m_SceneShader->GetTerrain());
 
-	m_ObjectShaders.emplace_back(m_RailObjectShader);
+
 	m_ObjectShaders.emplace_back(m_SceneShader);
+	m_ObjectShaders.emplace_back(m_RailObjectShader);
 	m_ObjectShaders.emplace_back(new CubeObjectShader);
 	m_ObjectShaders.emplace_back(new TreeObjectsShader(m_SceneShader->GetTerrain()));
 	for (auto& p : m_ObjectShaders)

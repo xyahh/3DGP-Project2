@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ColumnObject.h" />
     <ClInclude Include="CubeObjectShader.h" />
     <ClInclude Include="DXInclude.h" />
     <ClInclude Include="FixedCamera.h" />
@@ -136,6 +137,7 @@
     <ClInclude Include="RailObject.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="ThirdPersonCamera.h" />
+    <ClInclude Include="TimedObject.h" />
     <ClInclude Include="TreeObjectsShader.h" />
     <ClInclude Include="WagonPlayer.h" />
     <ClInclude Include="Camera.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ColumnObject.cpp" />
     <ClCompile Include="CubeObjectShader.cpp" />
     <ClCompile Include="FixedCamera.cpp" />
     <ClCompile Include="FunctionLibrary.cpp" />
@@ -171,6 +174,7 @@
     <ClCompile Include="RailObject.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="ThirdPersonCamera.cpp" />
+    <ClCompile Include="TimedObject.cpp" />
     <ClCompile Include="TreeObjectsShader.cpp" />
     <ClCompile Include="WagonPlayer.cpp" />
     <ClCompile Include="Camera.cpp" />

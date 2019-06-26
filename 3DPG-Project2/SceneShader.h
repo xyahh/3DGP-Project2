@@ -27,8 +27,8 @@ public:
 
 private:
 
-	STD vector<WagonPlayer>			m_Wagons;
-	HeightMapTerrain*				m_Terrain { NULL };
+	STD vector<WagonPlayer>				m_Wagons;
+	HeightMapTerrain*					m_Terrain { NULL };
 };
 
 _3DGP_END_
